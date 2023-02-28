@@ -34,7 +34,7 @@ const Login = () => {
                     value={password}
                     />
                 <div>
-                    <button className="mt-6 bg-gray-50 hover:bg-gray-100 active:bg-gray-200 rounded-2xl font-bold w-full h-9">Avançar</button>
+                    <button className="text-black mt-6 bg-gray-50 hover:bg-gray-100 active:bg-gray-200 rounded-2xl font-bold w-full h-9">Avançar</button>
                 </div>
                 <div className="font-sm mt-20 flex text-gray-100 gap-1">
                     <p>Ainda não tem uma conta?</p>

@@ -6,7 +6,4 @@ module.exports = {
     extend: {},
   },
   mode: 'jit',
-  plugins: [
-    require('tailwind-scrollbar'),
-  ],
 }

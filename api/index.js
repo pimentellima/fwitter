@@ -18,18 +18,32 @@ app.use(cookieParser());
 
 app.use(express.static(__dirname));
 
-const storage = multer.diskStorage({
+const postImgStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, './upload')
+        cb(null, './upload/post')
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + file.originalname)
     }
 });
 
-const upload = multer({ storage })
+const userImgStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './upload/user')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + file.originalname)
+    }
+});
 
-app.post('/upload', upload.single('file'), (req, res) => {
+const postImgUpload = multer({ storage: postImgStorage })
+const userImgUpload = multer({ storage: postImgStorage })
+
+app.post('/upload/post', postImgUpload.single('file'), (req, res) => {
+    res.status(200).json(req.file.filename);
+});
+
+app.post('/upload/user', postImgUpload.single('file'), (req, res) => {
     res.status(200).json(req.file.filename);
 });
 

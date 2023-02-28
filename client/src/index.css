@@ -4,10 +4,18 @@
 
 @layer base {
     body {
-        @apply antialiased
+        @apply antialiased overflow-y-scroll bg-stone-800 text-white font-sans box-border
     }
 
     input {
         @apply outline-none
+    }
+
+    .submit-button {
+        @apply h-10 w-full py-1 px-5 text-lg transition ease-out duration-100 font-bold rounded-3xl bg-stone-500 hover:cursor-pointer hover:bg-stone-600
+    }
+
+    .submit-button-invalid {
+        @apply h-10 w-full py-1 px-5 text-lg transition ease-out duration-100 font-bold rounded-3xl bg-stone-500 opacity-50
     }
 }

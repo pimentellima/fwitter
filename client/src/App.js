@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PageLayout from "./pageLayout";
+import Layout from "./layout";
 import Settings from './components/settings'
 import Profile from './components/profile'
 import Home from './components/home'
@@ -13,7 +13,7 @@ const App = () => {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<PageLayout/>}>
+          <Route path='/' element={<Layout/>}>
             <Route index element={<Home/>}/>
             <Route path='explore' element={<Explore/>}/>
             <Route path='profile' element={<Profile/>}/>
