@@ -3,10 +3,9 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { AuthContext } from '../contexts/authContext';
 import moment from 'moment';
 import axios from 'axios';
-import { DateTime } from 'luxon';
 
 const WritePost = ({ fetchData }) => {
-    const { user } = useContext(AuthContext);
+    const { currentUser } = useContext(AuthContext);
 
     const { 
         register, 
@@ -17,6 +16,17 @@ const WritePost = ({ fetchData }) => {
         setFocus,
         formState: { isValid }
     } = useForm();    
+
+    const { 
+        fields: ingredientFieldsArray, 
+        append, 
+        remove
+     } = useFieldArray({
+            control,
+            name: 'ingredients'
+        });
+
+    const [description, setDescription] = useState(false)
 
     const upload = async (file) => {
         try {
@@ -31,15 +41,12 @@ const WritePost = ({ fetchData }) => {
     }
 
     const onSubmit = async (data) => {
-        const { id: user_id, name: user_name, username: user_username } = user;
         const { title, description, ingredients, file } = data;
         const fileUrl = file[0] ? await upload(file[0]) : '';
 
         try {
             await axios.post('//localhost:5000/posts', {
-                user_id, 
-                user_name,
-                user_username,
+                user_id: currentUser.id, 
                 title,
                 description,
                 ingredients: JSON.stringify(ingredients),
@@ -54,17 +61,6 @@ const WritePost = ({ fetchData }) => {
         fetchData();
     }
 
-    const { 
-        fields: ingredientFieldsArray, 
-        append, 
-        remove
-     } = useFieldArray({
-            control,
-            name: 'ingredients'
-        });
-
-    const [description, setDescription] = useState(false)
-
     useEffect(() => {
         if(!description) {
             unregister('description');
@@ -75,32 +71,87 @@ const WritePost = ({ fetchData }) => {
     }, [description])    
 
     return(
-        <form autoComplete='off' className="grid grid-flow-col grid-cols-10 py-2 pl-4 border-b border-stone-700 bg-inherit" onSubmit={handleSubmit(onSubmit)}>
-            <img className='w-12 rounded-[40px]' src={`http://localhost:5000/upload/user/${user.img ? user.img : 'default.jpg'}`}/>
-            <div className='col-span-9'>
-                <div className='flex flex-col pl-3 box-border'>
-                    <input {...register('title', { required: true })} className='py-2 placeholder:text-stone-400 text-lg bg-inherit text-white' placeholder='Qual receita você está fazendo agora?'/>
+        <form 
+            autoComplete='off' 
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-row py-2 border-b border-stone-700 bg-inherit" 
+            >
+            <div className='min-w-fit mx-3'>
+                <img src={`http://localhost:5000/upload/user/${currentUser.profile_img}`} alt='' className='w-12 h-12 rounded-[40px]'/>
+            </div>
+            <div>
+                <div className='flex flex-col box-border py-2'>
+                    <input 
+                        {...register('title', { required: true })} 
+                        placeholder='Qual receita você está fazendo agora?'
+                        className=' placeholder:text-stone-400 text-lg bg-inherit text-white' 
+                        />
                     {description && 
                         <div className='h-14 w-[90%] mt-2 grid grid-flow-col grid-cols-6'>
-                            <input id='description' {...register('description')} placeholder='Descrição' className='col-span-5 rounded-l-md border border-stone-700 hover:border-stone-600 focus:border-stone-600 pl-2 bg-inherit placeholder:text-stone-500'/>
-                            <button onClick={() => setDescription(false)} className='text-sm bg-stone-700 border border-stone-700 active:border-stone-500 hover:bg-stone-600 transition-colors'>-</button> 
+                            <input 
+                                {...register('description')} 
+                                placeholder='Descrição' 
+                                className='col-span-5 rounded-l-md border border-stone-700 hover:border-stone-600 focus:border-stone-600 pl-2 bg-inherit placeholder:text-stone-500'
+                                />
+                            <input 
+                                type='button'
+                                onClick={() => setDescription(false)} 
+                                value='-'
+                                className='hover:cursor-pointer text-sm bg-stone-700 border border-stone-700 active:border-stone-500 hover:bg-stone-600 transition-colors'
+                                /> 
                         </div>
                     }
                     {ingredientFieldsArray.length > 0 && ingredientFieldsArray.map((field, index) => (
                         <div key={field.id} className='h-14 w-[90%] mt-2 grid grid-flow-col grid-cols-6'>
-                            <input {...register(`ingredients.${index}.name`)} className='rounded-l-md border-t border-l border-b border-stone-700 hover:border-stone-600 focus:border-stone-600 pl-2 col-span-3 bg-inherit placeholder:text-stone-500 ' placeholder='Nome do ingrediente'/>
-                            <input {...register(`ingredients.${index}.quantity`)} className='pl-2 bg-inherit placeholder:text-stone-500 border-l border-t border-b border-stone-700 hover:border-stone-600 focus:border-stone-600' placeholder='Qtd'/>
-                            <input {...register(`ingredients.${index}.unity`)} className='pl-2 bg-inherit placeholder:text-stone-500 border border-stone-700 hover:border-stone-600 focus:border-stone-600' placeholder='Uni'/>
-                            <button onClick={() => remove(index)} className='text-sm bg-stone-700 border border-stone-700 active:border-stone-500 hover:bg-stone-600 transition-colors'>-</button> 
+                            <input 
+                                {...register(`ingredients.${index}.name`)} 
+                                placeholder='Nome do ingrediente'
+                                className='rounded-l-md border-t border-l border-b border-stone-700 hover:border-stone-600 focus:border-stone-600 pl-2 col-span-3 bg-inherit placeholder:text-stone-500' 
+                                />
+                            <input 
+                                {...register(`ingredients.${index}.quantity`)} 
+                                placeholder='Qtd'
+                                className='pl-2 bg-inherit placeholder:text-stone-500 border-l border-t border-b border-stone-700 hover:border-stone-600 focus:border-stone-600' 
+                                />
+                            <input 
+                                {...register(`ingredients.${index}.unity`)} 
+                                placeholder='Uni'
+                                className='pl-2 bg-inherit placeholder:text-stone-500 border border-stone-700 hover:border-stone-600 focus:border-stone-600' 
+                                />
+                            <input 
+                                type='button'
+                                onClick={() => remove(index)} 
+                                value='-'
+                                className='hover:cursor-pointer text-sm bg-stone-700 border border-stone-700 active:border-stone-500 hover:bg-stone-600 transition-colors'
+                                /> 
                         </div>
                     ))}
                 </div>
-                <div className="grid grid-flow-col mt-2 ml-2 mr-2 items-center justify-items-start">
-                    <button onClick={(e) => {e.preventDefault(); setDescription(true)}} className='text-stone-50 p-2 rounded-2xl transition-colors text-sm hover:bg-stone-700 active:bg-stone-600'>Adicionar descrição</button>
-                    <button onClick={(e) => {e.preventDefault(); append({ name: '', quantity: '', unity: '' })}} className='text-stone-50 p-2 rounded-2xl transition-colors text-sm hover:bg-stone-700 active:bg-stone-600'>Adicionar ingrediente</button>
-                    <label htmlFor='file' className='text-stone-50 p-2 rounded-2xl transition-colors text-sm hover:bg-stone-700 active:bg-stone-600 hover:cursor-pointer'>Adicionar imagem</label>
+                <div className="grid grid-flow-col mt-2 mr-1 items-center justify-items-start">
+                    <input 
+                        type='button' 
+                        value='Adicionar descrição' 
+                        onClick={(e) => {e.preventDefault(); setDescription(true)}} 
+                        className='text-stone-50 p-2 rounded-2xl transition-colors text-sm hover:bg-stone-700 active:bg-stone-600 hover:cursor-pointer'
+                        />
+                    <input 
+                        type='button' 
+                        value='Adicionar ingrediente'
+                        onClick={(e) => {e.preventDefault(); append({ name: '', quantity: '', unity: '' })}} 
+                        className='text-stone-50 p-2 rounded-2xl transition-colors text-sm hover:bg-stone-700 active:bg-stone-600 hover:cursor-pointer'
+                        />
+                    <label 
+                        htmlFor='file' 
+                        className='text-stone-50 p-2 rounded-2xl transition-colors text-sm hover:bg-stone-700 active:bg-stone-600 hover:cursor-pointer'
+                        >
+                        Adicionar imagem
+                    </label>
                     <input id='file' type='file' {...register('file')} className='hidden'/>
-                    <input type='submit' value='Fweet' className={`${isValid ? 'submit-button' : 'submit-button-invalid'} justify-self-end`}/>
+                    <input 
+                        type='submit' 
+                        value='Fweet' 
+                        className={`${isValid ? 'hover:cursor-pointer hover:bg-stone-600' : 'opacity-50'} justify-self-end  h-10 w-full py-1 px-5 text-lg transition ease-out duration-100 font-bold rounded-3xl bg-stone-500 `}
+                        />
                 </div>
             </div>
         </form>

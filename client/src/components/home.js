@@ -1,4 +1,3 @@
-import TabHeader from "./tabHeader";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
@@ -7,21 +6,23 @@ import { useNavigate } from "react-router-dom";
 import WritePost from "./writePost";
 import moment from "moment/moment";
 import Post from "./post";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
-    const { user } = useContext(AuthContext);
+    const { currentUser } = useContext(AuthContext);
     const [posts, setPosts] = useState([]);
+    const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
-        user ? fetchData() : navigate('/login');
+        currentUser ? fetchData() : navigate('/login');
     }, [])
 
     const fetchData = async() => {
         try {
             const res = await axios.get(`//localhost:5000/posts`, {
                 params: {
-                    id: user.id
+                    id: currentUser.id
                 }
             });
             const posts = res.data.map(post => ({
@@ -37,11 +38,11 @@ const Home = () => {
     }
     
     return(
-        <div className="flex flex-col">
-            <TabHeader>
-                <Link to='/'>Início</Link>
-            </TabHeader>
-            <div className="flex flex-col">
+        <div className="">
+            <div className='sticky top-0 border-b border-stone-700 pt-2 pb-4 pl-3 font-medium text-xl z-20 bg-stone-800'>
+                <p>Inicio</p>
+            </div>  
+            <div className="flex flex-col"> 
                 <WritePost fetchData={fetchData}/>
                 {posts.map(post => 
                     <Post key={post.id} postObj={post}/>

@@ -42,9 +42,9 @@ export const login = (req, res) => {
             return res.status(400).json("Incorrect password")
         }
         
-        const token = jwt.sign({id: data[0].id}, "jwtkey");
-
         const {password, ...other} = data[0];
+
+        const token = jwt.sign({id: data[0].id}, "jwtkey");
 
         res.status(200).json(other);
     })

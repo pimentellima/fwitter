@@ -1,12 +1,10 @@
-import TabHeader from "./tabHeader";
-import { Link } from "react-router-dom";
 
 const Settings = () => {
     return(
-        <TabHeader>
-            <Link to ='/settings'>Configurações</Link>
-        </TabHeader>
-    )
+        <div className='sticky top-0 border-b border-stone-700 pt-2 pb-4 pl-3 font-medium text-xl z-20 bg-stone-800'>
+            Configurações
+        </div>      
+        )
 }
 
 export default Settings;

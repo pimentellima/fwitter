@@ -1,30 +1,55 @@
 import moment from "moment";
-import { useContext } from "react";
-import { AuthContext } from "../contexts/authContext";
+import { useEffect } from "react";
 import 'moment/locale/pt-br'
+import axios from "axios";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import LikeButton from "./buttons/likeButton";
+import CommentButton from "./buttons/commentButton";
+import SaveButton from "./buttons/saveButton";
+import ShareIcon from "./buttons/shareButton";
 
 const Post = ({ postObj }) => {
-    const { user } = useContext(AuthContext);
-
+    const [user, setUser] = useState();
+    
     const { 
-        id, 
-        user_name, 
-        user_username, 
+        id,
+        user_id, 
         date, 
         title, 
         ingredients, 
         description, 
-        file 
+        file,
     } = postObj;
 
+    useEffect(() => {
+        fetchUser();
+    }, [postObj])
+
+    const fetchUser = async() => {
+        try {
+            const res = await axios.get(`//localhost:5000/user/`, {
+                params:
+                {
+                    id: user_id
+                }
+            });
+            setUser(res.data[0]);
+        } catch(err) {
+            console.error(err);
+        }
+    }
+
     return (
-        <div className="grid grid-cols-9 pt-2 pb-4 px-3 border-b border-stone-700" key={id}>
-            <img className='w-12 rounded-[40px]' src={`http://localhost:5000/upload/user/${user.img ? user.img : 'default.jpg'}`}/>
-            <div className="col-span-8 flex flex-col">
+        <div className="flex flex-row pt-2 pr-3 border-b border-stone-700" key={id}>
+            <div className="min-w-fit mx-3">
+                <img className='w-12 h-12 rounded-[40px]' src={user && `http://localhost:5000/upload/user/${user.profile_img}`} alt=''/>
+            </div>
+            <div className="flex flex-col w-full">
                 <div className="flex max-w-full gap-2 items-center">
-                    <p className="font-bold">{user_name}</p>
+                    {user && <Link to={`http://localhost:3000/${user.username}`} className="font-bold">{user.name}</Link>}
                     <div className="flex flex-row text-sm text-stone-400 gap-1">
-                        <p >{user_username}</p>
+                        <p>{user && '@' + user.username}</p>
                         <p >{"· " + moment(date, 'YYYY-MM-DD HH:mm:ss').fromNow(true)}</p>
                     </div>
                 </div>
@@ -42,6 +67,12 @@ const Post = ({ postObj }) => {
                         <p>{description}</p>
                     </div>}
                 {file && <img className="rounded-xl" src={'http://localhost:5000/upload/post/' + file} alt=''/>}
+                <div className="px-2 flex flex-row items-center justify-between h-14">
+                        <CommentButton active={false}/>
+                        <LikeButton active={false}/>
+                        <ShareIcon active={false}/>
+                        <SaveButton active={false}/>
+                </div>
             </div>
         </div>
     )
