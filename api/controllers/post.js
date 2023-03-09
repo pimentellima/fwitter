@@ -15,7 +15,15 @@ export const getUserPosts = (req, res) => {
         if(err) return res.json(err);
         return res.status(200).json(data);
     })
+}
 
+export const deletePost = (req, res) => {
+    const q = 'DELETE FROM posts WHERE id = ?'
+
+    db.query(q, [req.body.id], ((err, data) => {
+        if(err) return res.json(err);
+        return res.status(200).json(data) 
+    }))
 }
 
 export const addPost = (req, res) => {
