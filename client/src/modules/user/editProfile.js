@@ -1,97 +1,26 @@
-import Popup from "reactjs-popup"
-import {  useContext, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form'
+import { useContext } from 'react';
+import uploadIcon from '../../assets/upload.svg';
 import { AuthContext } from '../../contexts/authContext';
-import axios from "axios";
-import uploadIcon from '../../assets/upload.svg'
+import { useEditProfile } from './useEditProfile';
 
 const EditProfile = ({ closePopup }) => {
-    const { currentUser, setCurrentUser } = useContext(AuthContext);
-    const { register, handleSubmit, reset, watch } = useForm({
-        defaultValues: {    
-            name: currentUser.name,
-            bio: currentUser.bio,
-            profileImage: '',
-            backgroundImage: '',
-        }
-    });
+    const { currentUser } = useContext(AuthContext);
 
-    const [profileImgPreview, setProfileImgPreview] = useState();
-    const [backgroundImgPreview, setBackgroundImgPreview] = useState();
-    const profileImgWatch = watch('profileImage');
-    const backgroundImgWatch = watch('backgroundImage');
-
-    useEffect(() => {
-        if(profileImgWatch && profileImgWatch.length) {
-            const url = URL.createObjectURL(profileImgWatch[0])
-            setProfileImgPreview(url);
-        }
-        if(backgroundImgWatch && backgroundImgWatch.length) {
-            const url = URL.createObjectURL(backgroundImgWatch[0])
-            setBackgroundImgPreview(url);
-        }
-    }, [profileImgWatch, backgroundImgWatch])
-
-    const handleClose = (e) => {
-        e.preventDefault();
-        reset();
-        closePopup();
-    };
-
-    const uploadProfileImg = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("file", file);
-            const res = await axios.post('//localhost:5000/upload/userProfile', formData);
-            return res.data;
-        } 
-        catch(err) {
-            console.error(err);
-        }
-    }
-
-    const uploadBackgroundImg = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("file", file);
-            const res = await axios.post('//localhost:5000/upload/userBackground', formData);
-            return res.data;
-        } 
-        catch(err) {
-            console.error(err);
-        }
-    }
-
-    const updateUser = async (res, userData) => {
-        const {name, bio, profileImage, backgroundImage} = userData;
-        setCurrentUser(currentUser => ({
-            ...currentUser,
-            name,
-            bio,
-            profile_img: profileImage,
-            profile_bg_img: backgroundImage
-        }));
-    }
+    const { 
+        register, 
+        onSubmit, 
+        profileImgPreview, 
+        backgroundImgPreview, 
+        handleClose 
+    } = useEditProfile(closePopup);
     
-    const onSubmit = async (data) => {
-        const {name, bio, profileImage, backgroundImage} = data;
-        const profileImageUrl = profileImage[0] ? await uploadProfileImg(profileImage[0]) : '';
-        const backgroundImageUrl = backgroundImage[0] ? await uploadBackgroundImg(backgroundImage[0]) : '';
-        const userData = {
-            name,
-            bio,
-            id: currentUser.id,
-            profileImage: profileImageUrl ? profileImageUrl : currentUser.profile_img,
-            backgroundImage: backgroundImageUrl ? backgroundImageUrl : currentUser.profile_bg_img
-        }
-        const res = await axios.post('//localhost:5000/user', userData)
-        updateUser(res, userData);
-        reset();
+    const handleSubmit = () => {
+        onSubmit();
         closePopup();
     }
 
     return(
-        <form autoComplete="off" className="flex flex-col w-[600px] bg-stone-900 rounded-xl pb-14" onSubmit={handleSubmit(onSubmit)}>
+        <form autoComplete="off" className="flex flex-col w-[600px] bg-stone-900 rounded-xl pb-14" onSubmit={() => handleSubmit()}>
             <div className="flex items-center py-3 px-4">
                 <button type='button' className="hover:bg-stone-600 w-2 h-2 rounded-full p-3 flex items-center justify-center transition" onClick={(e) => handleClose(e)}>x</button>
                 <h1 className="ml-4 text-2xl font-sans font-medium antialiased tracking-tight text-white ">Editar perfil</h1>
