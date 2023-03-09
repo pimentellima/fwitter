@@ -1,13 +1,14 @@
 import axios from "axios";
 import { createContext, useEffect } from "react";
 import { useState } from "react";
+import { getUserById } from "../services/user";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(
         JSON.parse(localStorage.getItem('user')) || null
-        );
+    );
 
     useEffect(() => {
         localStorage.setItem('user', JSON.stringify(currentUser))
@@ -23,6 +24,7 @@ const AuthProvider = ({ children }) => {
 
     const logout = async() => {
         setCurrentUser(null);
+        localStorage.removeItem('user');
     }
 
     return (

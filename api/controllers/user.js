@@ -18,7 +18,7 @@ export const getUserById = (req, res) => {
 
 export const updateUserProfile = (req, res) => {
     const q = 'UPDATE USERS SET name = ?, bio = ?, profile_img = ?, profile_bg_img = ? WHERE id = ?'
-    db.query(q, [req.body.name, req.body.bio, req.body.profileImage, req.body.backgroundImage, req.body.id], (error, data) => {
+    db.query(q, [req.body.name, req.body.bio, req.body.profile_img, req.body.profile_bg_img, req.body.id], (error, data) => {
         if(error) return res.json(error);
         return res.status(204).json(data);
     })
