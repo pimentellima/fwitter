@@ -1,13 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Explore from "./components/explore";
-import Home from "./components/home";
-import Profile from "./components/profile";
-import Settings from "./components/settings";
-import Login from "./components/login";
-import Register from "./components/register";
-import AuthProvider from './contexts/authContext';
-import PostsProvider from "./contexts/postsContext";
-import Layout from './components/layout'
+import Explore from "./explore";
+import Home from "./home";
+import Profile from "../profile/profile";
+import Settings from "./settings";
+import Login from "../auth/login";
+import Register from "../auth/register";
+import AuthProvider from '../../contexts/authContext';
+import PostsProvider from "../../contexts/postsContext";
+import Layout from './layout'
 
 const App = () => {
   return (

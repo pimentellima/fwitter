@@ -1,12 +1,11 @@
-import moment from "moment";
-import { useContext, useEffect } from "react";
-import 'moment/locale/pt-br'
-import { getUserById } from '../services/user'
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { AuthContext } from "../contexts/authContext";
 import axios from "axios";
-import { PostsContext } from "../contexts/postsContext";
+import moment from "moment";
+import 'moment/locale/pt-br';
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/authContext";
+import { PostsContext } from "../../contexts/postsContext";
+import { getUserById } from '../../services/userService';
 
 const Post = ({ postObj }) => {
     const [user, setUser] = useState();

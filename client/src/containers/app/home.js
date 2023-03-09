@@ -1,9 +1,9 @@
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/authContext.js";
-import { PostsContext } from "../contexts/postsContext.js";
-import Write from './write';
-import Post from './post';
+import { AuthContext } from "../../contexts/authContext.js";
+import { PostsContext } from "../../contexts/postsContext.js";
+import Write from '../post/write';
+import Post from '../post/post';
 
 const Home = () => {
     const { currentUser } = useContext(AuthContext);

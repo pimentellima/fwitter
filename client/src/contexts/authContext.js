@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createContext, useEffect } from "react";
 import { useState } from "react";
-import { getUserById } from "../services/user";
+import { getUserById } from "../services/userService";
 
 export const AuthContext = createContext();
 

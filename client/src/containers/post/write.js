@@ -2,8 +2,9 @@ import axios from "axios";
 import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { AuthContext } from "../contexts/authContext";
-import { PostsContext } from "../contexts/postsContext";
+import PostButton from "../../components/postButton";
+import { AuthContext } from "../../contexts/authContext";
+import { PostsContext } from "../../contexts/postsContext";
 
 const Write = () => {
     const { currentUser } = useContext(AuthContext);
@@ -151,11 +152,7 @@ const Write = () => {
                         Adicionar imagem
                     </label>
                     <input id='file' type='file' {...register('file')} className='hidden'/>
-                    <input 
-                        type='submit' 
-                        value='Fweet' 
-                        className={`${isValid ? 'hover:cursor-pointer hover:bg-stone-600' : 'opacity-50'} justify-self-end  h-10 w-full py-1 px-5 text-lg transition ease-out duration-100 font-bold rounded-3xl bg-stone-500 `}
-                        />
+                    <PostButton type={'submit'}/>
                 </div>
             </div>
         </form>

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect } from "react";
 import { useState } from "react";
-import { getPostsById } from "../services/posts";
+import { getPostsById } from "../services/postsService";
 import { AuthContext } from "./authContext";
 
 export const PostsContext = createContext();

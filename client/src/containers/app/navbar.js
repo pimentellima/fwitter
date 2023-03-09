@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import {  useLocation, useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/authContext";
+import { AuthContext } from "../../contexts/authContext";
 import { Link } from "react-router-dom";
+import PostButton from "../../components/postButton";
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -69,7 +70,7 @@ const Navbar = () => {
                 </Link>
                 </li>
             </ul> 
-            <input type='button' value='Fweet' className='h-10 hover:cursor-pointer hover:bg-stone-600 py-1 px-5 text-lg transition ease-out duration-100 font-bold rounded-3xl bg-stone-500 w-48 my-10'/>
+            <PostButton onClick={() => {}}/>
             <div onClick={() => handleLogout()} className='justify-self-end row-start-5 w-5/6 hover:bg-stone-700 hover:cursor-pointer rounded-3xl py-2 px-6'>
                 <p className="text-base">{currentUser.name}</p>
                 <p className="text-base">Sair</p>
