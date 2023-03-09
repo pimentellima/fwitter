@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import Popup from 'reactjs-popup';
 import { AuthContext } from "../../contexts/authContext";
-import Post from "../posts/post";
+import Post from "../posts";
 import EditProfile from "./editProfile";
 import { useUserProfile } from "./useUserProfile";
 
