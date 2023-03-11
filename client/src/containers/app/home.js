@@ -3,8 +3,8 @@ import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/authContext.js";
 import { getPostsById } from "../../services/postsService.js";
-import Post from '../post/post';
-import Write from '../post/write';
+import Post from '../post';
+import Write from '../write';
 
 const Home = () => {
     const { currentUser } = useContext(AuthContext);
