@@ -1,16 +1,16 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import moment from "moment";
 import 'moment/locale/pt-br';
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/authContext";
-import { PostsContext } from "../../contexts/postsContext";
-import { getUserById } from '../../services/userService';
+import { deletePost } from "../../services/postsService";
+import { getUserById } from "../../services/userService";
 
 const Post = ({ postObj }) => {
-    const [user, setUser] = useState();
     const { currentUser } = useContext(AuthContext);
-    const { setPosts } = useContext(PostsContext);
+    const queryClient = useQueryClient();
     
     const { 
         id,
@@ -22,23 +22,19 @@ const Post = ({ postObj }) => {
         file,
     } = postObj;
 
-    useEffect(() => {
-        fetchUser();
-    }, [postObj])
+    const { data: user } = useQuery(
+        ['postUser', { user_id }], () => getUserById(user_id)
+    );
 
-    const fetchUser = async() => {
-        const user = await getUserById(user_id);
-        setUser(user);
-    }
-
-    const deletePost = async() => {
-        axios.delete('//localhost:5000/posts', {
-            data: {id}
-        })
-        .then(setPosts(prev =>
-            [...prev].filter(post => post.id != id)
-        ));
-    }
+    const deleteMutation = useMutation(
+        () => deletePost(id),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['posts']);
+                queryClient.invalidateQueries(['profilePosts']);
+            }
+        }
+    )
 
     return (
         <div className="flex flex-row pt-2 pr-3 border-b border-stone-700" key={id}>
@@ -56,7 +52,7 @@ const Post = ({ postObj }) => {
                     </div>
                     {user && user.id === currentUser.id && 
                         <button
-                            onClick={() => deletePost()}
+                            onClick={() => deleteMutation.mutate()}
                             >
                             ...
                         </button>

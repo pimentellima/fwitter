@@ -1,14 +1,23 @@
-import axios from "axios";
-import moment from "moment";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import PostButton from "../../components/postButton";
 import { AuthContext } from "../../contexts/authContext";
-import { PostsContext } from "../../contexts/postsContext";
+import { createPost } from "../../services/postsService";
 
 const Write = () => {
     const { currentUser } = useContext(AuthContext);
-    const { setPosts } = useContext(PostsContext);
+    const [description, setDescription] = useState(false);
+    const queryClient = useQueryClient();
+
+    useEffect(() => {
+        if(!description) {
+            unregister('description');
+        }
+        else {
+            setFocus('description');
+        }
+    }, [description])    
 
     const { 
         register, 
@@ -28,53 +37,22 @@ const Write = () => {
             control,
             name: 'ingredients'
         });
+
     
-    const uploadPostImg = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("file", file);
-            const res = await axios.post('//localhost:5000/upload/post', formData);
-            return res.data;
-        } 
-        catch(err) {
-            console.error(err);
-        }
-    }
-        
     const onSubmit = async (data) => {
-        const { title, description, ingredients, file } = data;
-        const fileUrl = file[0] ? await uploadPostImg(file[0]) : '';
-        const postObj = {
-            user_id: currentUser.id, 
-            title,
-            description,
-            ingredients,
-            date: moment().format("YYYY-MM-DD HH:mm:ss"),
-            file: fileUrl
-        }
-        axios.post('//localhost:5000/posts', 
-        {...postObj, 
-            ingredients: JSON.stringify(ingredients)})
-        .then(setPosts(prev => {
-            const posts = [...prev];
-            posts.unshift(postObj);
-            return posts;
-        }));
+        createMutation.mutate(data);
         reset();
         setDescription(false);
     }
-    
-    const [description, setDescription] = useState(false);
-    
-    useEffect(() => {
-        if(!description) {
-            unregister('description');
-        }
-        else {
-            setFocus('description');
-        }
-    }, [description])    
 
+    const createMutation = useMutation(
+        data => createPost(data, currentUser.id), 
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['posts']);
+            }
+    });
+    
     return(
         <form 
             autoComplete='off' 
@@ -152,7 +130,7 @@ const Write = () => {
                         Adicionar imagem
                     </label>
                     <input id='file' type='file' {...register('file')} className='hidden'/>
-                    <PostButton type={'submit'}/>
+                    <PostButton isValid={isValid} type={'submit'}/>
                 </div>
             </div>
         </form>

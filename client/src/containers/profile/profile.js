@@ -1,5 +1,6 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import moment from "moment";
+import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import { AuthContext } from "../../contexts/authContext";
@@ -7,7 +8,7 @@ import { getUserPostsById } from "../../services/postsService";
 import { getUserByUrl } from "../../services/userService";
 import Post from "../post/post";
 import EditProfile from "./editProfile";
-import { getFollowedById } from "./followService";
+import { createFollow, deleteFollow, getFollowedById } from "./profileService";
 
 const overlayStyle= {
     'background': 'rgba(255,255,255,0.1)',
@@ -18,54 +19,58 @@ const overlayStyle= {
 
 const Profile = () => {
     const { currentUser } = useContext(AuthContext);
-    const [posts, setPosts] = useState([]);
-    const [user, setUser] = useState();
-    const location = useLocation();
-    const [followed, setFollowed] = useState(false);
     const [openPopup, setOpenPopup] = useState(false);
+    const location = useLocation();
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        if(!user) {
-            fetchUser();
+    const { data: user, isLoading } = useQuery(['profileUser', { path: location.pathname }], 
+    () => getUserByUrl(location.pathname));
+
+    const { data: posts } = useQuery(['profilePosts'], 
+    () => getUserPostsById(user.id).then(data => 
+        data.map(post => ({
+            ...post, 
+            ingredients: JSON.parse(post.ingredients),
+            date: moment(post.date).format('YYYY-MM-DD HH:mm:ss')
+        }))
+    ), 
+    {
+        enabled: !isLoading
+    });
+
+    const { data: isFollowed } = useQuery(['profileFollow'], 
+    () => getFollowedById(user.id)
+    .then(follows => follows.filter(
+        follow => follow.follower_user_id === currentUser.id)
+        .length
+    ), {
+        enabled: !isLoading
+    })
+
+    const followMutation = useMutation(
+        () => createFollow({ 
+            followedId: user.id,
+            followerId: currentUser.id
+        }), {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['profileFollow'])
+            }
         }
-        if(user) {
-            fetchPosts();
-            fetchFollow();
+    );
+
+    const unfollowMutation = useMutation(
+        () => deleteFollow({ 
+            followedId: user.id,
+            followerId: currentUser.id
+        }), {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['profileFollow'])
+            }
         }
-    }, [user]);
+    );
 
-    const fetchFollow = async() => {
-        const followedUsers = await getFollowedById(user.id);
-        followedUsers.forEach((item) => {
-            if(item.follower_user_id === currentUser.id) {
-                setFollowed(true);
-            } 
-        })
-    }
-    
-    const fetchUser = async() => {
-        const user = await getUserByUrl(location.pathname);
-        setUser(user);
-    }
-
-    const fetchPosts = async () => {
-        const posts = await getUserPostsById(user.id);
-        setPosts(posts);
-    }
-
-    const handleFollow = async() => {
-        followed ? 
-            axios.delete('//localhost:5000/follow', {
-                data: {
-                    follower_user_id: currentUser.id,
-                    followed_user_id: user.id
-                }
-            }).then(() => setFollowed(false))
-        :
-            axios.post('//localhost:5000/follow', {
-                follower_user_id: currentUser.id,
-                followed_user_id: user.id
-            }).then(() => setFollowed(true))
+    const handleFollow = () => {
+        isFollowed ? unfollowMutation.mutate() : followMutation.mutate();
     }
     
     return ( 
@@ -74,7 +79,7 @@ const Profile = () => {
                 {user && <p>{user.name}</p>}
             </div>  
             <div className="flex flex-col">
-                    {user &&
+                    {!isLoading &&
                         <div className="h-[450px] flex flex-col border-b border-stone-700">
                             <div className="relative h-64">
                                 <img className="absolute h-44 w-full" src={`http://localhost:5000/upload/user/${user.profile_bg_img}`} alt=''/>
@@ -88,7 +93,7 @@ const Profile = () => {
                                             Editar perfil
                                         </button>
                                         :
-                                        followed ? 
+                                        isFollowed ? 
                                             <button onClick={() => handleFollow()}
                                                 className='h-10 hover:bg-stone-600 hover:cursor-pointer hover:border-stone-500 py-1 px-4 text-md transition ease-in-out duration-300 font-bold rounded-3xl my-2 mr-2 border border-stone-600'
                                                 >

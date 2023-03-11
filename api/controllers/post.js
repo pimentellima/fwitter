@@ -22,7 +22,7 @@ export const deletePost = (req, res) => {
 
     db.query(q, [req.body.id], ((err, data) => {
         if(err) return res.json(err);
-        return res.status(200).json(data) 
+        return res.status(200).json(data);
     }))
 }
 

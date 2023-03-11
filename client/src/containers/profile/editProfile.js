@@ -1,106 +1,78 @@
-import axios from "axios";
-import uploadIcon from '../../assets/upload.svg'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation } from "react-router-dom";
+import uploadIcon from '../../assets/upload.svg';
 import { AuthContext } from "../../contexts/authContext";
+import { updateUser } from "./profileService";
 
 const EditProfile = ({ onClose }) => {
     const { currentUser, setCurrentUser } = useContext(AuthContext);
-    const [profileImgPreview, setProfileImgPreview] = useState();
-    const [backgroundImgPreview, setBackgroundImgPreview] = useState();
+    const [imgPreview, setImgPreview] = useState();
+    const [bgPreview, setBgPreview] = useState();
+    const queryClient = useQueryClient();
+    const location = useLocation();
     const { register, handleSubmit, reset, watch } = useForm({
         defaultValues: {    
             name: currentUser.name,
             bio: currentUser.bio,
-            profileImage: '',
-            backgroundImage: '',
+            profile_img: '',
+            profile_bg_img: '',
         }
     });
-    const profileImgWatch = watch('profileImage');
-    const backgroundImgWatch = watch('backgroundImage');
+    const profileImgWatch = watch('profile_img');
+    const profileBgImgWatch = watch('profile_bg_img');
 
     useEffect(() => {
         if(profileImgWatch && profileImgWatch.length) {
             const url = URL.createObjectURL(profileImgWatch[0])
-            setProfileImgPreview(url);
+            setImgPreview(url);
         }
-        if(backgroundImgWatch && backgroundImgWatch.length) {
-            const url = URL.createObjectURL(backgroundImgWatch[0])
-            setBackgroundImgPreview(url);
+        if(profileBgImgWatch && profileBgImgWatch.length) {
+            const url = URL.createObjectURL(profileBgImgWatch[0])
+            setBgPreview(url);
         }
-    }, [profileImgWatch, backgroundImgWatch]);
+    }, [profileImgWatch, profileBgImgWatch]);
 
-    const handleClose = (e) => {
-        e.preventDefault();
+    const handleClose = () => {
         onClose();
         reset();
     };
 
-    const uploadProfileImg = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("file", file);
-            const res = await axios.post('//localhost:5000/upload/userProfile', formData);
-            return res.data;
-        } 
-        catch(err) {
-            console.error(err);
+    const updateMutation = useMutation(
+        data => updateUser({ data, currentUser }).then((userData) => {
+            setCurrentUser(userData);
+        }), {
+                onSuccess: () => {
+                    queryClient.invalidateQueries(['profileUser', { path: location.pathname }]);
+                    queryClient.invalidateQueries(['postUser', { user_id: currentUser.id }]);
+                    handleClose();
+                }
         }
-    }
+        )
 
-    const uploadBackgroundImg = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append("file", file);
-            const res = await axios.post('//localhost:5000/upload/userBackground', formData);
-            return res.data;
-        } 
-        catch(err) {
-            console.error(err);
-        }
-    }
-
-    const onSubmit = async (data) => {
-        const {name, bio, profileImage, backgroundImage} = data;
-        const profileImageUrl = profileImage[0] ? await uploadProfileImg(profileImage[0]) : '';
-        const backgroundImageUrl = backgroundImage[0] ? await uploadBackgroundImg(backgroundImage[0]) : '';
-
-        const userData = {
-            name,
-            username: currentUser.username,
-            bio,
-            id: currentUser.id,
-            profile_img: profileImageUrl ? profileImageUrl : currentUser.profile_img,
-            profile_bg_img: backgroundImageUrl ? backgroundImageUrl : currentUser.profile_bg_img
-        };
-        
-        axios.post('//localhost:5000/user', userData)
-        .then(setCurrentUser(userData))
-        .catch(err => {
-            console.log(err)
-        });
-        onClose(false);
-        reset();
+    const onSubmit = (data) => {
+        updateMutation.mutate(data);
     }
 
     return (
         <form autoComplete="off" className="flex flex-col w-[600px] bg-stone-900 rounded-xl pb-14" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center py-3 px-4">
-                <button type='button' className="hover:bg-stone-600 w-2 h-2 rounded-full p-3 flex items-center justify-center transition" onClick={(e) => handleClose(e)}>x</button>
+                <button type='button' className="hover:bg-stone-600 w-2 h-2 rounded-full p-3 flex items-center justify-center transition" onClick={() => handleClose()}>x</button>
                 <h1 className="ml-4 text-2xl font-sans font-medium antialiased tracking-tight text-white ">Editar perfil</h1>
                 <button type="submit">Salvar</button>
             </div>
             <div className="relative h-64">
-                <input id="backgroundImage" className="hidden" type='file' {...register('backgroundImage')}/>
+                <input id="backgroundImage" className="hidden" type='file' {...register('profile_bg_img')}/>
                 <div className="absolute w-full h-44 flex justify-center items-center">
-                    <img className="absolute h-full w-full" src={backgroundImgPreview ? backgroundImgPreview : currentUser.profile_img && `http://localhost:5000/upload/user/${currentUser.profile_bg_img}`} alt=''/>
+                    <img className="absolute h-full w-full" src={bgPreview ? bgPreview : currentUser.profile_img && `http://localhost:5000/upload/user/${currentUser.profile_bg_img}`} alt=''/>
                     <label htmlFor="backgroundImage" className="absolute rounded-full hover:cursor-pointer z-10 bg-opacity-50 bg-black hover:bg-opacity-40 p-2 h-10 w-10 ">
                         <img src={uploadIcon} alt=''/>
                     </label>
                 </div>
-                <input id="profileImage" className="hidden" type='file' {...register('profileImage')}/>
+                <input id="profileImage" className="hidden" type='file' {...register('profile_img')}/>
                 <div className="absolute top-1/2 w-32 h-32 flex justify-center items-center">
-                    <img className="absolute rounded-full w-full h-full p-4 z-20" src={profileImgPreview ? profileImgPreview : currentUser.profile_bg_img && `http://localhost:5000/upload/user/${currentUser.profile_img}`} alt=''/>
+                    <img className="absolute rounded-full w-full h-full p-4 z-20" src={imgPreview ? imgPreview : currentUser.profile_bg_img && `http://localhost:5000/upload/user/${currentUser.profile_img}`} alt=''/>
                     <label htmlFor="profileImage" className="absolute rounded-full hover:cursor-pointer z-30 bg-opacity-50 bg-black hover:bg-opacity-40 p-2 h-10 w-10 ">
                         <img src={uploadIcon} alt=''/>
                     </label>

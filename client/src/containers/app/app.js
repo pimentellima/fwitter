@@ -6,13 +6,21 @@ import Settings from "./settings";
 import Login from "../auth/login";
 import Register from "../auth/register";
 import AuthProvider from '../../contexts/authContext';
-import PostsProvider from "../../contexts/postsContext";
 import Layout from './layout'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,  
+    },
+  },
+})
 
 const App = () => {
   return (
-    <AuthProvider>
-      <PostsProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<Layout/>}>
@@ -25,8 +33,8 @@ const App = () => {
             <Route path='/register' element={<Register/>}/>
           </Routes>
         </BrowserRouter>
-      </PostsProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 
