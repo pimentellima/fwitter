@@ -3,8 +3,10 @@ import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation } from "react-router-dom";
 import uploadIcon from '../../assets/upload.svg';
+import { baseURL } from "../../utils/constants";
+import Input from "../../components/input";
 import { AuthContext } from "../../contexts/authContext";
-import { updateUser } from "./profileService";
+import { updateUser } from "../../services/profileService";
 
 const EditProfile = ({ onClose }) => {
     const { currentUser, setCurrentUser } = useContext(AuthContext);
@@ -65,14 +67,14 @@ const EditProfile = ({ onClose }) => {
             <div className="relative h-64">
                 <input id="backgroundImage" className="hidden" type='file' {...register('profile_bg_img')}/>
                 <div className="absolute w-full h-44 flex justify-center items-center">
-                    <img className="absolute h-full w-full" src={bgPreview ? bgPreview : currentUser.profile_img && `http://localhost:5000/upload/user/${currentUser.profile_bg_img}`} alt=''/>
+                    <img className="absolute h-full w-full" src={bgPreview ? bgPreview : currentUser.profile_img && baseURL + '/upload/user/' + currentUser.profile_bg_img} alt=''/>
                     <label htmlFor="backgroundImage" className="absolute rounded-full hover:cursor-pointer z-10 bg-opacity-50 bg-black hover:bg-opacity-40 p-2 h-10 w-10 ">
                         <img src={uploadIcon} alt=''/>
                     </label>
                 </div>
                 <input id="profileImage" className="hidden" type='file' {...register('profile_img')}/>
                 <div className="absolute top-1/2 w-32 h-32 flex justify-center items-center">
-                    <img className="absolute rounded-full w-full h-full p-4 z-20" src={imgPreview ? imgPreview : currentUser.profile_bg_img && `http://localhost:5000/upload/user/${currentUser.profile_img}`} alt=''/>
+                    <img className="absolute rounded-full w-full h-full p-4 z-20" src={imgPreview ? imgPreview : currentUser.profile_bg_img && baseURL + '/upload/user/' + currentUser.profile_img} alt=''/>
                     <label htmlFor="profileImage" className="absolute rounded-full hover:cursor-pointer z-30 bg-opacity-50 bg-black hover:bg-opacity-40 p-2 h-10 w-10 ">
                         <img src={uploadIcon} alt=''/>
                     </label>
@@ -80,18 +82,16 @@ const EditProfile = ({ onClose }) => {
             </div>
             <div className="flex flex-col px-4 gap-2">
                 <label htmlFor="name">Nome</label>
-                <input 
-                    id='name'
+                <Input 
+                    register={register}
+                    name='name'
                     placeholder="Digite aqui... "
-                    className='placeholder:text-stone-500 rounded-md text-gray-300 align-middle outline-none h-14 bg-inherit border border-stone-700 py-1 pl-2 focus:placeholder:invisible focus:border-stone-500 hover:border-stone-600 transition-colors'
-                    {...register('name')}
                     />
                 <label htmlFor="bio">Biografia</label>
-                <input 
-                    id='bio'
+                <Input 
+                    register={register}
+                    name='bio'
                     placeholder="Digite aqui... "
-                    className='placeholder:text-stone-500 rounded-md text-gray-300 align-middle outline-none h-14 bg-inherit border border-stone-700 p2-1 pl-2 focus:placeholder:invisible focus:border-stone-500 hover:border-stone-600 transition-colors'
-                    {...register('bio')}
                     />
             </div>
         </form>

@@ -1,6 +1,6 @@
 import { db } from "../db.js";
 
-export const getUser = (req, res) => {
+export const getUserByUsername = (req, res) => {
     const q = 'SELECT `id`, `name`, `username`, `bio`, `profile_img`, `profile_bg_img` FROM users WHERE username = ?';
     db.query(q, [req.params.username], (error, data) => {
         if(error) return res.json(error);

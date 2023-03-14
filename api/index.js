@@ -5,9 +5,12 @@ import multer from 'multer';
 import path from 'path';
 import url from 'url';
 import authRouter from './routes/auth.js';
+import followRouter from './routes/follow.js';
+import likesRouter from './routes/likes.js';
+import commentsRouter from './routes/comment.js'
 import postsRouter from './routes/posts.js';
 import userRouter from './routes/users.js';
-import followRouter from './routes/follow.js';
+import singleRouter from './routes/single.js';
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,8 +63,11 @@ app.post('/upload/userBackground', userBackgroundImgUpload.single('file'), (req,
 
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
+app.use('/likes', likesRouter);
+app.use('/comments', commentsRouter);
 app.use('/posts', postsRouter);
 app.use('/follow', followRouter);
+app.use('/single', singleRouter);
 
 app.listen(5000, (err) => {
     if(err) throw err;

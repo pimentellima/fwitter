@@ -1,13 +1,14 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthProvider from '../contexts/authContext';
-import Login from "./login";
-import Profile from "./profile/index";
-import Register from "./register";
-import Explore from "./explore";
-import Home from "./home";
+import HomeFeed from "./homeFeed";
+import ProfilePage from './profilePage';
+import ExplorePage from './explorePage';
+import Settings from './settings';
+import Login from './auth/login';
+import Register from './auth/register';
 import Layout from './layout';
-import Settings from "./settings";
+import ViewPost from "./post/viewPost";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,10 +25,11 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<Layout/>}>
-              <Route index element={<Home/>}/>
-              <Route path='explore' element={<Explore/>}/>
-              <Route path='/:username' element={<Profile/>}/>
+              <Route index element={<HomeFeed/>}/>
+              <Route path='explore' element={<ExplorePage/>}/>
+              <Route path='/:username' element={<ProfilePage/>}/>
               <Route path='settings' element={<Settings/>}/>
+              <Route path='/post/:post_id' element={<ViewPost/>}/>
             </Route>
             <Route path='/login' element={<Login/>}/>
             <Route path='/register' element={<Register/>}/>
