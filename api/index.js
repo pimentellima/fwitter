@@ -11,6 +11,7 @@ import commentsRouter from './routes/comment.js'
 import postsRouter from './routes/posts.js';
 import userRouter from './routes/users.js';
 import singleRouter from './routes/single.js';
+import shareRouter from './routes/share.js';
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -68,6 +69,7 @@ app.use('/comments', commentsRouter);
 app.use('/posts', postsRouter);
 app.use('/follow', followRouter);
 app.use('/single', singleRouter);
+app.use('/share', shareRouter);
 
 app.listen(5000, (err) => {
     if(err) throw err;

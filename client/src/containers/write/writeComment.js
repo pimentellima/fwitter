@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import PostButton from "../../components/postButton";
 import { AuthContext } from "../../contexts/authContext";
 import { createPost } from "../../services/postsService";
+import { baseURL } from "../../utils/constants";
 
 const WriteComment = ({ parent_id, closePopup }) => {
-    const { register, handleSubmit } = useForm({
+    const { register, handleSubmit, reset } = useForm({
         title: '',
         ingredients: [],
         description: '',
@@ -18,6 +19,7 @@ const WriteComment = ({ parent_id, closePopup }) => {
 
     const onSubmit = data => {
         commentMutation.mutate(data);
+        reset();
     }
 
     const commentMutation = useMutation(
@@ -27,21 +29,29 @@ const WriteComment = ({ parent_id, closePopup }) => {
             data
          }), {
             onSuccess: () => {
-                queryClient.invalidateQueries(['postComments', { post_id: parent_id }])
+                queryClient.invalidateQueries(['postComments', { parent_id }])
+                queryClient.invalidateQueries(['posts'])
                 closePopup && closePopup();
             }
          }
     );
 
     return(
-        <form autoComplete="off" className=" flex flex-col bg-inherit" onSubmit={handleSubmit(onSubmit)}>
+        <form autoComplete="off" className=" flex flex-col bg-inherit py-2" onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex flex-row py-2 pr-3 ">
+                <div className="w-20 flex justify-center">  
+                    <img 
+                        className='w-12 h-12 rounded-[40px]' 
+                        src={baseURL + '/upload/user/' + currentUser.profile_img}
+                        alt=''
+                        />
+                </div>
                 <input 
                     placeholder={'Comente algo ...'}
-                    className={`placeholder:text-stone-500 rounded-md text-white align-middle outline-none h-10 bg-inherit text-xl py-1 pl-2 focus:placeholder:invisible focus:border-stone-500 hover:border-stone-600 transition-colors`}
+                    className={`w-full placeholder:text-stone-500 rounded-md text-white align-middle outline-none h-12 bg-inherit text-xl py-1 pl-2 focus:placeholder:invisible focus:border-stone-500 hover:border-stone-600 transition-colors`}
                     {...register('title')}
                     />
-            <div className="flex justify-end">
-                <div className="mr-4 w-28">
+                <div className="w-24 flex items-center">
                     <PostButton isValid={true} type='submit'/>
                 </div>
             </div>

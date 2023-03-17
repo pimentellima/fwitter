@@ -60,7 +60,7 @@ const WritePost = () => {
         <form 
             autoComplete='off' 
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-row py-2 border-b border-stone-700 bg-inherit" 
+            className="flex flex-row py-2 bg-inherit" 
             >
             <div className='min-w-fit mx-3'>
                 <img src={`http://localhost:5000/upload/user/${currentUser.profile_img}`} alt='' className='w-12 h-12 rounded-[40px]'/>

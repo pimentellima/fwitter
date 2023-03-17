@@ -16,12 +16,28 @@ export const getPostsById = async(id) =>
     })
 ))
 
-export const getPostById = async id => {
-    const res = await request.get('/single', {
-        params: { id }
-    })
-    return res.data[0];
+export const getPostThread = async id => {
+    const postsArr = [];
+    let post = await getPostById(id);
+    while(post.parent_id) {
+        post = await getPostById(post.parent_id);
+        postsArr.unshift(post);
+    }
+    return postsArr;
 }
+
+export const getPostById = async id => 
+    request.get('/single', {
+        params: { id }
+    }).then(res => {
+        const post = res.data[0];
+        return {
+            ...res.data[0], 
+            ingredients: JSON.parse(post.ingredients),
+            date: moment(post.date).format('YYYY-MM-DD HH:mm:ss')
+        }
+    })
+
 
 export const uploadImg = async (file) => {
     const formData = new FormData();
@@ -81,6 +97,20 @@ export const deleteLike = async ({ post_id, user_id }) =>
             user_id
     }})
 
+export const createShare = async ({ post_id, user_id }) =>
+    await request.post('/share', {
+        post_id,
+        user_id
+    })
+
+export const getShares = async (post_id) => {
+    const res = await request.get('/share', {
+        params: {
+            post_id,
+        }
+    })
+    return res.data;
+}
 
 
 

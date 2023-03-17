@@ -2,14 +2,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import { useContext, useState } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import { AuthContext } from '../../contexts/authContext';
 import { deletePost, getPostById } from '../../services/postsService';
 import { getUserById } from '../../services/userService';
 import { baseURL } from '../../utils/constants';
-import PostActions from "./postActions";
 import WriteComment from '../write/writeComment';
+import PostActions from "./postActions";
 
 const overlayStyle= {
     'background': 'rgba(255,255,255,0.1)',
@@ -18,12 +18,13 @@ const overlayStyle= {
     'alignItems': 'center',
 };
 
-const Post = ({ postObj }) => {
+const Post = ({ postObj, type }) => {
     const [commentPopup, setCommentPopup] = useState(false);
     const { currentUser } = useContext(AuthContext);
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    
+    const location = useLocation();
+
     const { 
         id,
         user_id, 
@@ -52,9 +53,15 @@ const Post = ({ postObj }) => {
             onSuccess: () => {
                 queryClient.invalidateQueries(['posts']);
                 queryClient.invalidateQueries(['profilePosts']);
+                queryClient.invalidateQueries(['postComments', { parent_id }]);
             }
         }
     )
+
+    const handleRemove = (e) => {
+        e.stopPropagation();
+        deleteMutation.mutate();
+    }
 
     const handleUserClick = (e, user) => {
         e.stopPropagation();
@@ -102,7 +109,7 @@ const Post = ({ postObj }) => {
             </div>
             {isFetchedUser && user.id === currentUser.id && 
                 <button
-                    onClick={() => deleteMutation.mutate()}
+                    onClick={(e) => handleRemove(e)}
                     >
                     ...
                 </button>
@@ -111,26 +118,31 @@ const Post = ({ postObj }) => {
     )
 
     return (
-        <div className='border-b border-stone-700'>
-            <div className="flex flex-row pt-2 pr-3" key={id}>
-                {isFetchedUser && <div className="w-20 flex justify-center">  
+        <div className='pt-2 pr-3'>
+            <div className="flex flex-row " key={id}>
+                {isFetchedUser && 
+                <div className="w-20 flex flex-col items-center">  
                     <img 
                         onClick={(e) => handleUserClick(e, user)}
                         className='w-12 h-12 rounded-[40px] hover:cursor-pointer' 
                         src={baseURL + '/upload/user/' + user.profile_img} 
                         alt=''
                         />
+                    {type === 'thread' && <div className='h-full'>
+                        <div className={`w-[2px] rounded-full h-full bg-stone-400`}></div>
+                    </div>
+                    }
                 </div>}
                 <div className="w-full">
                     {isFetchedUser && renderUserInfo()}
                     {parentUser && 
                     <div className='text-sm text-stone-400 '>
                         <p className='inline'>{'Respondendo à '}</p>
-                        <p className='inline hover:underline text-stone-200' onClick={(e) => handleUserClick(e, parentUser)}>@{parentUser.username}</p>
+                        <p className='inline hover:cursor-pointer hover:underline text-stone-200' onClick={(e) => handleUserClick(e, parentUser)}>@{parentUser.username}</p>
                     </div>}
                     <p className="text-xl my-1">{title}</p>
                     {renderPostBody()} 
-                    <PostActions post_id={id} onClickComment={() => setCommentPopup(true)}/>
+                    <PostActions post_id={id} openCommentPopup={() => setCommentPopup(true)}/>
                 </div>
             </div>
             <Popup
@@ -157,18 +169,7 @@ const Post = ({ postObj }) => {
                             <p className="text-xl my-1">{title}</p>
                         </div>
                     </div>
-                    <div className="flex flex-row pt-2 pr-3">
-                        <div className="w-20 flex justify-center">  
-                            <img 
-                                className='w-12 h-12 rounded-[40px]' 
-                                src={baseURL + '/upload/user/' + currentUser.profile_img}
-                                alt=''
-                                />
-                        </div>
-                        <div className="w-full">
-                            <WriteComment closePopup={() => setCommentPopup(false)} parent_id={postObj.id}/>
-                        </div>
-                    </div>
+                    <WriteComment closePopup={() => setCommentPopup(false)} parent_id={postObj.id}/>
                 </div>
             </Popup>
         </div>
