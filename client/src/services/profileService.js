@@ -1,23 +1,29 @@
-import axios from "axios";
+import { request } from "../utils/axios";
 
 const uploadProfileImg = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    const res = await axios.post('//localhost:5000/upload/userProfile', formData);
+    const res = await request.post('/upload/userProfile', formData);
     return res.data;
 }
 
 const uploadBackgroundImg = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    const res = await axios.post('//localhost:5000/upload/userBackground', formData);
+    const res = await request.post('/upload/userBackground', formData);
     return res.data;
 }
 
 export const updateUser = async ({ data, currentUser }) => {
     const { name, bio, profile_img, profile_bg_img } = data;
-    const profileImageUrl = profile_img[0] ? await uploadProfileImg(profile_img[0]) : currentUser.profile_img;
-    const backgroundImageUrl = profile_bg_img[0] ? await uploadBackgroundImg(profile_bg_img[0]) : currentUser.profile_bg_img;
+    const profileImageUrl = profile_img[0] ? 
+        await uploadProfileImg(profile_img[0]) 
+        : 
+        currentUser.profile_img;
+    const backgroundImageUrl = profile_bg_img[0] ? 
+        await uploadBackgroundImg(profile_bg_img[0]) 
+        : 
+        currentUser.profile_bg_img;
 
     const userData = {
         name,
@@ -28,12 +34,12 @@ export const updateUser = async ({ data, currentUser }) => {
         profile_bg_img: backgroundImageUrl
     };
     
-    await axios.post('//localhost:5000/user', userData);
+    await request.post('/user', userData);
     return userData;
 }
 
 export const getFollowedById = async(id) => {
-    const res = await axios.get('//localhost:5000/follow', {
+    const res = await request.get('/follow', {
         params: {
             followed_user_id: id
         }
@@ -42,7 +48,7 @@ export const getFollowedById = async(id) => {
 }
 
 export const deleteFollow = async ({ followerId, followedId }) => 
-    await axios.delete('//localhost:5000/follow', {
+    await request.delete('/follow', {
         data: {
             follower_user_id: followerId,
             followed_user_id: followedId
@@ -50,7 +56,7 @@ export const deleteFollow = async ({ followerId, followedId }) =>
     })
 
 export const createFollow = async ({ followerId, followedId }) => 
-    await axios.post('//localhost:5000/follow', {
+    await request.post('/follow', {
         follower_user_id: followerId,
         followed_user_id: followedId
     })

@@ -6,7 +6,7 @@ import HomePage from "./homePage";
 import ExplorePage from './explorePage';
 import Settings from './settings';
 import Login from './auth/login';
-import Register from './auth/register';
+import Signup from "./auth/signup";
 import Layout from './layout';
 import ViewPost from "./post/viewPost";
 
@@ -31,7 +31,7 @@ const App = () => (
             <Route path='/post/:post_id' element={<ViewPost/>}/>
           </Route>
           <Route path='/login' element={<Login/>}/>
-          <Route path='/register' element={<Register/>}/>
+          <Route path='/register' element={<Signup/>}/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

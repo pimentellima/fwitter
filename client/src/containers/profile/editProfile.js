@@ -7,6 +7,9 @@ import { baseURL } from "../../utils/constants";
 import Input from "../../components/input";
 import { AuthContext } from "../../contexts/authContext";
 import { updateUser } from "../../services/profileService";
+import UserImg from "../../components/img/userImg";
+import UserBgImg from "../../components/img/userBgImg";
+import RemoveButton from "../../components/button/removeButton";
 
 const EditProfile = ({ onClose }) => {
     const { currentUser, setCurrentUser } = useContext(AuthContext);
@@ -46,36 +49,86 @@ const EditProfile = ({ onClose }) => {
             setCurrentUser(userData);
         }), {
                 onSuccess: () => {
-                    queryClient.invalidateQueries(['profileUser', { path: location.pathname }]);
-                    queryClient.invalidateQueries(['postUser', { user_id: currentUser.id }]);
+                    queryClient.invalidateQueries(['profileUser', { 
+                        path: location.pathname 
+                    }]);
+                    queryClient.invalidateQueries(['postUser', { 
+                        user_id: currentUser.id 
+                    }]);
                     handleClose();
                 }
         }
-        )
+    )
 
     const onSubmit = (data) => {
         updateMutation.mutate(data);
     }
 
     return (
-        <form autoComplete="off" className="flex flex-col w-[600px] bg-stone-900 rounded-xl pb-14" onSubmit={handleSubmit(onSubmit)}>
+        <form 
+            autoComplete="off" 
+            className="flex flex-col w-[600px] bg-stone-900 rounded-xl pb-14" 
+            onSubmit={handleSubmit(onSubmit)}
+            >
             <div className="flex items-center py-3 px-4">
-                <button type='button' className="hover:bg-stone-600 w-2 h-2 rounded-full p-3 flex items-center justify-center transition" onClick={() => handleClose()}>x</button>
-                <h1 className="ml-4 text-2xl font-sans font-medium antialiased tracking-tight text-white ">Editar perfil</h1>
+                <RemoveButton onClick={() => handleClose()}/>
+                <h1 className="ml-4 text-2xl font-sans font-medium antialiased 
+                                tracking-tight text-white">
+                    Editar perfil
+                </h1>
                 <button type="submit">Salvar</button>
             </div>
             <div className="relative h-64">
-                <input id="backgroundImage" className="hidden" type='file' {...register('profile_bg_img')}/>
-                <div className="absolute w-full h-44 flex justify-center items-center">
-                    <img className="absolute h-full w-full" src={bgPreview ? bgPreview : currentUser.profile_img && baseURL + '/upload/user/' + currentUser.profile_bg_img} alt=''/>
-                    <label htmlFor="backgroundImage" className="absolute rounded-full hover:cursor-pointer z-10 bg-opacity-50 bg-black hover:bg-opacity-40 p-2 h-10 w-10 ">
+                <input 
+                    id="backgroundImage" 
+                    className="hidden" 
+                    type='file' 
+                    {...register('profile_bg_img')}
+                    />
+                <div className="absolute w-full h-44 
+                                flex justify-center items-center">
+                    {bgPreview ? 
+                        <img 
+                            className="absolute h-full w-full" 
+                            src={bgPreview} 
+                            alt=''
+                            />
+                        :
+                        <UserBgImg user={currentUser}/>
+                    }
+                    <label 
+                        htmlFor="backgroundImage" 
+                        className="absolute rounded-full hover:cursor-pointer 
+                                z-10 bg-opacity-50 bg-black 
+                                hover:bg-opacity-40 p-2 h-10 w-1"
+                        >
                         <img src={uploadIcon} alt=''/>
                     </label>
                 </div>
-                <input id="profileImage" className="hidden" type='file' {...register('profile_img')}/>
-                <div className="absolute top-1/2 w-32 h-32 flex justify-center items-center">
-                    <img className="absolute rounded-full w-full h-full p-4 z-20" src={imgPreview ? imgPreview : currentUser.profile_bg_img && baseURL + '/upload/user/' + currentUser.profile_img} alt=''/>
-                    <label htmlFor="profileImage" className="absolute rounded-full hover:cursor-pointer z-30 bg-opacity-50 bg-black hover:bg-opacity-40 p-2 h-10 w-10 ">
+                <input 
+                    id="profileImage" 
+                    className="hidden" 
+                    type='file' 
+                    {...register('profile_img')}
+                    />
+                <div className="absolute top-1/2 w-32 h-32 flex 
+                                justify-center items-center">
+                    <div className='absolute p-4 z-20 w-full h-full'>
+                        {imgPreview ? 
+                            <img 
+                                className="rounded-full w-full h-full z-20" 
+                                src={imgPreview} 
+                                alt=''/>
+                            :
+                            <UserImg clickable={false} user={currentUser}/>
+                        }
+                    </div>
+                    <label 
+                        htmlFor="profileImage" 
+                        className="absolute rounded-full hover:cursor-pointer 
+                        z-30 bg-opacity-50 bg-black hover:bg-opacity-40 
+                        p-2 h-10 w-10"
+                        >
                         <img src={uploadIcon} alt=''/>
                     </label>
                 </div>

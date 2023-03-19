@@ -12,7 +12,11 @@ export const deletePost = (req, res) => {
     const q = 'DELETE FROM posts WHERE id = ?'
 
     db.query(q, [req.body.id], ((err, data) => {
-        if(err) return res.json(err);
+        if(err) {
+            console.log(err)
+            return res.json(err);
+            
+        } 
         return res.status(200).json(data);
     }))
 }

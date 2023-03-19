@@ -11,3 +11,4 @@ export const getUserById = async id => {
     });
     return res.data[0];
 }
+

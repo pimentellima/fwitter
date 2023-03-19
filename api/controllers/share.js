@@ -17,8 +17,8 @@ export const deleteShare = (req, res) => {
 }
 
 export const createShare = (req, res) => {
-    const q = 'INSERT INTO shares(`post_id`, `user_id`) VALUES (?)'
-    db.query(q, [[req.body.post_id, req.body.user_id]], (err, data) => {
+    const q = 'INSERT INTO shares(`post_id`, `user_id`, `date`) VALUES (?)'
+    db.query(q, [[req.body.post_id, req.body.user_id, req.body.date]], (err, data) => {
         if(err) return res.status(500).json(err);
         return res.json('Post created');
     })

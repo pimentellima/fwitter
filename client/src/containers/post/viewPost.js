@@ -3,6 +3,7 @@ import 'moment/locale/pt-br';
 import { useEffect, useRef } from "react";
 import { Navigate, useMatch, useNavigate } from "react-router-dom";
 import { getComments, getPostById } from "../../services/postsService";
+import { getUserById } from "../../services/userService";
 import { getPostThread } from '../../utils/getPostThread';
 import WriteComment from "../write/writeComment";
 import Post from "./post";
@@ -18,7 +19,14 @@ const ViewPost = () => {
         isFetched: isFetchedPost 
     } = useQuery(['post', { id }], () => 
         getPostById(id)
-        )
+    )
+
+    const { data: user, isFetched: isFetchedUser } = useQuery(
+        ['postUser', { id: postObj?.user_id }], () => 
+            getUserById(postObj.user_id), {
+                enabled: !!postObj
+            }
+    );
 
     const {
         data: postThread,
@@ -38,28 +46,9 @@ const ViewPost = () => {
     const handlePostClick = (post) => {
         navigate('/post/' + post.id)
     }
-
-    const renderThread = () => postThread.map((post, index) => 
-        <div 
-            onClick={() => handlePostClick(post)} 
-            className={`hover:backdrop-brightness-110 hover:cursor-pointer `}
-            key={post.id}
-            >
-            <Post type='thread' postObj={post}/>
-        </div>
-    )
-
-    const renderComments = () => commentPosts.map((post, index) => 
-        <div 
-            onClick={() => handlePostClick(post)} 
-            className='hover:backdrop-brightness-110 hover:cursor-pointer border-b border-stone-700'
-            key={post.id}
-            >
-            <Post postObj={post}/>
-        </div>
-    )
     
-    const isFetched = isFetchedThread && isFetchedPost && isFetchedComments;
+    const isFetched = isFetchedThread && isFetchedPost 
+                    && isFetchedComments && isFetchedUser;
     
     const scroll = () => {
         if(postThread.length == 0) window.scroll(0,0);
@@ -71,19 +60,42 @@ const ViewPost = () => {
     
     useEffect(() => {
         if(isFetched) scroll();
-    }, [id, postThread])
+    }, [id, isFetched])
 
     return (
         <div> 
-            <div className='sticky top-0 border-b border-stone-700 pt-2 pb-4 pl-3 font-medium text-xl z-20 bg-stone-800'>
+            <div className='sticky top-0 border-b border-stone-700 
+                            pt-2 pb-4 pl-3 font-medium text-xl 
+                            z-20 bg-stone-800'>
                 <p>Fweet</p>
             </div> 
-            {isFetched && renderThread()}
-            {isFetched && <div ref={postRef} className="[&_>*]:border-b [&_>*]:border-stone-700">
-                <Post postObj={postObj}/>
-                <WriteComment parent_id={postObj.id}/>
-            </div>}
-            {isFetched && renderComments()}
+            {isFetched && postThread.map((post, index) => 
+                <div 
+                    onClick={() => handlePostClick(post)} 
+                    className={`hover:backdrop-brightness-110 
+                                hover:cursor-pointer`}
+                    key={post.id}
+                    >
+                    <Post type='thread' postObj={post}/>
+                </div>
+            )}
+            {isFetched && 
+                <div ref={postRef} className="[&_>*]:border-b 
+                                            [&_>*]:border-stone-700">
+                    <Post postObj={postObj}/>
+                    <WriteComment user={user} post={postObj}/>
+                </div>
+            }
+            {isFetched && commentPosts.map((post, index) => 
+                <div 
+                    onClick={() => handlePostClick(post)} 
+                    key={post.id}
+                    className='hover:backdrop-brightness-110 
+                                hover:cursor-pointer border-b border-stone-700'
+                    >
+                    <Post postObj={post}/>
+                </div>
+            )}
         </div>
     )
 }

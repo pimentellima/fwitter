@@ -46,7 +46,8 @@ const ProfilePage = () => {
         posts.map(post => 
             <div 
                 onClick={() => handlePostClick(post)} 
-                className={`hover:backdrop-brightness-110 hover:cursor-pointer border-b border-stone-700`}
+                className={`hover:backdrop-brightness-110 
+                            hover:cursor-pointer border-b border-stone-700`}
                 key={post.id}
                 >
                 <Post postObj={post}/>
@@ -55,7 +56,9 @@ const ProfilePage = () => {
     return ( 
         <> 
             {isFetchedUser && 
-                <div className='sticky top-0 border-b border-stone-700 pt-2 pb-4 pl-3 font-medium text-xl z-20 bg-stone-800'>
+                <div className='sticky top-0 border-b border-stone-700 
+                            pt-2 pb-4 pl-3 font-medium text-xl 
+                            z-20 bg-stone-800'>
                     {user && <p>{user.name}</p>}
                 </div> 
             }

@@ -56,8 +56,8 @@ export const getComments = async (parent_id) => {
 }
 
 export const createPost = async ({ data, user_id, parent_id }) => {
-    const { title, description, ingredients, file } = data;
-    const fileUrl = (file && file[0]) ? await uploadImg(file[0]) : '';
+    const { title, description, ingredients, post_img } = data;
+    const fileUrl = post_img[0] ? await uploadImg(post_img[0]) : '';
     const postObj = {
         user_id,
         parent_id,
@@ -100,7 +100,8 @@ export const deleteLike = async ({ post_id, user_id }) =>
 export const createShare = async ({ post_id, user_id }) =>
     await request.post('/share', {
         post_id,
-        user_id
+        user_id,
+        date: moment().format("YYYY-MM-DD HH:mm:ss"),
     })
 
 export const getShares = async (post_id) => {

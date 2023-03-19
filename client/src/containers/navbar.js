@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {  useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from '../contexts/authContext';
 import { Link } from "react-router-dom";
-import PostButton from '../components/postButton'
+import PostButton from '../components/button/postButton'
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -15,11 +15,15 @@ const Navbar = () => {
     }
 
     return(
-        <div className='py-10 w-60 border-r border-stone-700 sticky top-0 h-screen flex flex-col font-normal tracking-tight text-[22px]'>
+        <div className='py-10 w-60 border-r border-stone-700 sticky top-0 
+                        h-screen flex flex-col font-normal 
+                        tracking-tight text-[22px]'>
             <ul className="flex flex-col gap-4">
                 <li>
                     <Link to='/' className="flex [&:hover_p]:bg-stone-700">
-                        <p className={`font-[22px] gap-2 flex pl-4 pr-7 py-2 transition ease-out duration-100 rounded-3xl ${location.pathname === '/' && 'font-medium'}`}>
+                        <p className={`font-[22px] gap-2 flex pl-4 pr-7 py-2 
+                                    transition ease-out duration-100 rounded-3xl
+                                    ${location.pathname === '/' && 'font-medium'}`}>
                             <svg fill="#ffffff" width="30px" height="30px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff" strokeWidth="0.00032">
                                 <g id="SVGRepo_bgCarrier" strokeWidth="0"/>
                                 <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"/>
