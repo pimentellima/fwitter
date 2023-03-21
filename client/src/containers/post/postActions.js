@@ -13,7 +13,7 @@ import {
 import { createLike, deleteLike, getLikes } from '../../services/likesService';
 import { createShare, deleteShare, getShares} from '../../services/sharesService';
 import { getComments } from '../../services/commentsService';
-import WriteComment from "../write/writeComment";
+import WriteComment from "./writeComment";
 import UserInfo from "../../components/userInfo";
 import Popup from "reactjs-popup";
 import UserImg from "../../components/img/userImg";

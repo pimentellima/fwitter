@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useContext, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Post from '../containers/post/post';
-import WritePost from '../containers/write/writePost';
+import WritePost from '../containers/post/writePost';
 import { AuthContext } from '../contexts/authContext';
 import { getPostsById } from '../services/postsService';
 

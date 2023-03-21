@@ -1,18 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import 'moment/locale/pt-br';
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from 'react-router-dom';
-import Popup from 'reactjs-popup';
 import UserImg from '../../components/img/userImg';
 import UserInfo from '../../components/userInfo';
 import { AuthContext } from '../../contexts/authContext';
 import { deletePost, getPostById } from '../../services/singleService';
 import { getUserById } from '../../services/userService';
 import { baseURL } from '../../utils/constants';
-import WriteComment from '../write/writeComment';
 import PostActions from "./postActions";
-
-
 
 const Post = ({ postObj, type }) => {
     const { currentUser } = useContext(AuthContext);

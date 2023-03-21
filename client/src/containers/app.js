@@ -7,7 +7,7 @@ import ExplorePage from '../pages/explorePage';
 import BookmarksPage from '../pages/bookmarksPage'
 import HomePage from '../pages/homePage'
 import Layout from './layout';
-import ViewPost from "./post/viewPost";
+import PostPage from "../pages/postPage";
 import ProfilePage from "../pages/profilePage";
 import SettingsPage from '../pages/settingsPage';
 
@@ -30,7 +30,7 @@ const App = () => (
             <Route path='/:username' element={<ProfilePage/>}/>
             <Route path='bookmarks' element={<BookmarksPage/>}/>
             <Route path='settings' element={<SettingsPage/>}/>
-            <Route path='/post/:post_id' element={<ViewPost/>}/>
+            <Route path='/post/:post_id' element={<PostPage/>}/>
           </Route>
           <Route path='/login' element={<Login/>}/>
           <Route path='/register' element={<Signup/>}/>
