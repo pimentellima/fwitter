@@ -18,7 +18,6 @@ const ProfilePage = () => {
     } = useQuery(['profileUser', { username }], () => 
     getUserByUsername(username));
 
-
     const { 
         data: posts,  
         isFetched: isFetchedPosts
@@ -42,17 +41,6 @@ const ProfilePage = () => {
         window.scroll(0, 0);
     }, [])
 
-    const renderPosts = () => 
-        posts.map(post => 
-            <div 
-                onClick={() => handlePostClick(post)} 
-                className={`hover:backdrop-brightness-110 
-                            hover:cursor-pointer border-b border-stone-700`}
-                key={post.id}
-                >
-                <Post postObj={post}/>
-            </div>)
-    
     return ( 
         <> 
             {isFetchedUser && 
@@ -63,7 +51,15 @@ const ProfilePage = () => {
                 </div> 
             }
             <Profile/>            
-            {isFetchedPosts && renderPosts()}
+            {isFetchedPosts && posts.map(post => 
+                <div 
+                    onClick={() => handlePostClick(post)} 
+                    className='border-b border-stone-700'
+                    key={post.id}
+                    >
+                    <Post postObj={post}/>
+                </div>
+            )}
         </>
     )
 }

@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import 'moment/locale/pt-br';
 import { useEffect, useRef } from "react";
-import { Navigate, useMatch, useNavigate } from "react-router-dom";
-import { getComments, getPostById } from "../../services/postsService";
+import { useMatch, useNavigate } from "react-router-dom";
+import { getComments } from '../../services/commentsService';
+import { getPostById } from "../../services/singleService";
 import { getUserById } from "../../services/userService";
 import { getPostThread } from '../../utils/getPostThread';
 import WriteComment from "../write/writeComment";

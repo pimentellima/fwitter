@@ -13,9 +13,9 @@ const HomePage = () => {
     const { isFetched, data: posts } = useQuery(['posts'], () =>
         getPostsById(currentUser.id)
     )
+    
     useEffect(() => {
-        !currentUser && navigate('/login');
-        window.scroll(0, 0);
+        if(!currentUser) navigate('/login');
     }, [])
 
     const handlePostClick = (post) => {
@@ -24,8 +24,8 @@ const HomePage = () => {
 
     return(
         <>
-            <div className='sticky top-0 pt-2 pb-4 pl-3 font-medium text-xl z-20
-                        bg-stone-800 border-b border-stone-700'>
+            <div className='sticky top-0 pt-2 pb-4 pl-3 font-medium text-xl 
+                        z-20 bg-stone-800 border-b border-stone-700'>
                 <p>Inicio</p>
             </div>  
             <div className="flex flex-col"> 
@@ -35,8 +35,7 @@ const HomePage = () => {
             {isFetched && posts.map(post => 
                 <div 
                     onClick={() => handlePostClick(post)} 
-                    className={`hover:backdrop-brightness-110 
-                                hover:cursor-pointer border-b border-stone-700`}
+                    className='border-b border-stone-700'
                     key={post.id}
                     >
                     <Post postObj={post}/>

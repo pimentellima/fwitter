@@ -1,4 +1,4 @@
-import { getPostById } from "../services/postsService";
+import { getPostById } from "../services/singleService";
 
 export const getPostThread = async id => {
     const postsArr = [];

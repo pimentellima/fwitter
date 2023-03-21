@@ -6,7 +6,7 @@ import Popup from 'reactjs-popup';
 import UserImg from '../../components/img/userImg';
 import UserInfo from '../../components/img/userInfo';
 import { AuthContext } from '../../contexts/authContext';
-import { deletePost, getPostById } from '../../services/postsService';
+import { deletePost, getPostById } from '../../services/singleService';
 import { getUserById } from '../../services/userService';
 import { baseURL } from '../../utils/constants';
 import WriteComment from '../write/writeComment';
@@ -76,8 +76,10 @@ const Post = ({ postObj, type }) => {
         navigate('/' + user.username)
     }
 
+
     return (
-        <div className='flex flex-col pt-2 pr-3'>
+        <div className='flex flex-col pt-2 pr-3 hover:backdrop-brightness-110
+                        hover:cursor-pointer'>
             {isFetchedShare && shareUser && 
                 <p onClick={(e) => handleUserClick(e, shareUser)} 
                     className='align-middle w-fit text-sm text-stone-400 
@@ -86,7 +88,7 @@ const Post = ({ postObj, type }) => {
                     {`${shareUser.name} refweetou`}
                 </p>
             }
-            <div className="flex flex-row " key={id}>
+            <div className="flex flex-row">
                 {isFetchedUser && 
                     <div className="w-20 flex flex-col items-center">  
                         <div className='w-12 h-12'>
@@ -102,7 +104,18 @@ const Post = ({ postObj, type }) => {
                     </div>
                 }
                 <div className="w-full">
-                    {isFetchedUser && <UserInfo user={user} date={date}/>}
+                    {isFetchedUser && 
+                        <div className='flex justify-between'>
+                            <UserInfo user={user} date={date}/>
+                            {user.id === currentUser.id && 
+                                <button
+                                    onClick={(e) => handleRemove(e)}
+                                    >
+                                    ...
+                                </button>
+                            }
+                        </div>
+                    }
                     {parentUser && 
                         <div className='text-sm text-stone-400 '>
                             <p className='inline'>{'Respondendo à '}</p>
@@ -161,7 +174,7 @@ const Post = ({ postObj, type }) => {
                 >   
                 <div className='bg-stone-900 rounded-xl 
                                 py-7 pb-10 px-4 w-[600px]'>
-                    <p className="ml-4 mb-4 text-sm">
+                    <p className="ml-4 mb-4 text-sm text-stone-300">
                         {isFetchedUser ? 'Respondendo à ' + user.name : ''}
                     </p>
                     <div className="flex flex-row pt-2">

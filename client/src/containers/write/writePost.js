@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import RemoveButton from "../../components/button/removeButton";
 import PostButton from "../../components/button/postButton";
+import RemoveImageButton from '../../components/button/removeImageButton';
 import UserImg from "../../components/img/userImg";
 import { AuthContext } from "../../contexts/authContext";
-import { createPost } from "../../services/postsService";
+import { createPost } from "../../services/singleService";
 
 const WritePost = () => {
     const { currentUser } = useContext(AuthContext);
@@ -167,7 +167,7 @@ const WritePost = () => {
                             alt=''
                         />
                         <div className='absolute top-0 z-10 ml-1 mt-1'>
-                            <RemoveButton 
+                            <RemoveImageButton 
                                 onClick={() => reset({ post_img: '' })}
                                 />
                         </div>

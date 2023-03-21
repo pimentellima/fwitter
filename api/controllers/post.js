@@ -1,10 +1,12 @@
 import { db } from "../db.js";
 
 export const getPosts = (req, res) => {
-    const follows = `(select followed_user_id from follow where follower_user_id = ?)`
+    const follows = `(select followed_user_id from follow 
+                        where follower_user_id = ?)`
     const q = `
         (
-            select *, "" as share_user_id from posts where user_id = ? or user_id in ${follows}
+            select *, "" as share_user_id from posts 
+                where user_id = ? or user_id in ${follows}
             union 
             (
                 select 
@@ -18,7 +20,8 @@ export const getPosts = (req, res) => {
                 posts.parent_id,
                 shares.user_id as share_user_id
                 from posts inner join shares
-                on shares.post_id = posts.id and shares.user_id in ${follows}
+                on shares.post_id = posts.id 
+                    and shares.user_id in ${follows}
             )
         ) order by date desc 
     `

@@ -3,13 +3,12 @@ import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation } from "react-router-dom";
 import uploadIcon from '../../assets/upload.svg';
-import { baseURL } from "../../utils/constants";
 import Input from "../../components/input";
 import { AuthContext } from "../../contexts/authContext";
 import { updateUser } from "../../services/profileService";
 import UserImg from "../../components/img/userImg";
 import UserBgImg from "../../components/img/userBgImg";
-import RemoveButton from "../../components/button/removeButton";
+import RemoveImageButton from '../../components/button/removeImageButton'
 
 const EditProfile = ({ onClose }) => {
     const { currentUser, setCurrentUser } = useContext(AuthContext);
@@ -71,7 +70,7 @@ const EditProfile = ({ onClose }) => {
             onSubmit={handleSubmit(onSubmit)}
             >
             <div className="flex items-center py-3 px-4">
-                <RemoveButton onClick={() => handleClose()}/>
+                <RemoveImageButton onClick={() => handleClose()}/>
                 <h1 className="ml-4 text-2xl font-sans font-medium antialiased 
                                 tracking-tight text-white">
                     Editar perfil

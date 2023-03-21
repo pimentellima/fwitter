@@ -1,13 +1,39 @@
-const ShareButton = ({ active, shares, onClick }) => {
-
+const shareButton = ({ active, shares, onClick }) => {
     return(
-        <button onClick={onClick} className="flex gap-2 p-2 hover:bg-green-400 hover:bg-opacity-10 [&:hover_svg]:fill-green-400 transition duration-100 rounded-full ">
-            <svg className={`${active ? 'fill-green-400 [&_path]:stroke-green-400' : 'fill-white'}  w-5 h-5`} viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8.013 22.033v-7.972h3.932l-5.902-6.892-6.026 6.893h3.947v11.896h17.468l-3.923-3.924h-9.496zM28.036 19.001v-11.958h-17.531l3.986 3.985h9.496v7.973h-3.932l5.901 6.893 6.026-6.893h-3.946z"></path>
+        <button 
+            onClick={onClick} 
+            className='group flex justify-center items-center 
+                    rounded-full [&:hover_path]:stroke-lime-500'
+            >
+            <div className='transition-all duration-200 bg-lime-500 
+                            bg-opacity-0 group-hover:bg-opacity-5
+                            p-2 rounded-full '>
+            <svg 
+                className={`${active && 'stroke-lime-500'} w-5 h-5`} 
+                viewBox="0 0 24 24" 
+                fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path 
+                    className={`transition-colors duration-200
+                                ${active ? 'stroke-lime-500' 
+                                : 'stroke-stone-400'}`}
+                    strokeWidth="1.5"
+                    d="M8.68439 10.6578L15.3125 7.34375M15.3156 16.6578L8.6938 
+                    13.3469M21 6C21 7.65685 19.6569 9 18 9C16.3431 9 15 
+                    7.65685 15 6C15 4.34315 16.3431 3 18 3C19.6569 3 21 4.34315 
+                    21 6ZM9 12C9 13.6569 7.65685 15 6 15C4.34315 15 3 13.6569
+                    3 12C3 10.3431 4.34315 9 6 9C7.65685 9 9 10.3431 9 12ZM21
+                    18C21 19.6569 19.6569 21 18 21C16.3431 21 15 19.6569 15 18C15
+                    16.3431 16.3431 15 18 15C19.6569 15 21 16.3431 21 18Z" 
+                    />
             </svg>
-            {shares}
+            </div>
+            <p className={`text-sm w-3 transition-colors 
+                    duration-200 group-hover:text-lime-500 
+                    ${active ? 'text-lime-500' : 'text-stone-400'}`}>
+                {shares > 0 ? shares : ''}
+            </p>
         </button>   
     )
 }
 
-export default ShareButton;   
+export default shareButton;   

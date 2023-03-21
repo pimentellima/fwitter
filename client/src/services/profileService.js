@@ -1,18 +1,5 @@
 import { request } from "../utils/axios";
-
-const uploadProfileImg = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await request.post('/upload/userProfile', formData);
-    return res.data;
-}
-
-const uploadBackgroundImg = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await request.post('/upload/userBackground', formData);
-    return res.data;
-}
+import { uploadBackgroundImg, uploadProfileImg } from "../utils/upload";
 
 export const updateUser = async ({ data, currentUser }) => {
     const { name, bio, profile_img, profile_bg_img } = data;
