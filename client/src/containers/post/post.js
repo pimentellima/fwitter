@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import UserImg from '../../components/img/userImg';
-import UserInfo from '../../components/img/userInfo';
+import UserInfo from '../../components/userInfo';
 import { AuthContext } from '../../contexts/authContext';
 import { deletePost, getPostById } from '../../services/singleService';
 import { getUserById } from '../../services/userService';
