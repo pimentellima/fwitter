@@ -12,15 +12,9 @@ import { baseURL } from '../../utils/constants';
 import WriteComment from '../write/writeComment';
 import PostActions from "./postActions";
 
-const overlayStyle= {
-    'background': 'rgba(255,255,255,0.1)',
-    'display': 'flex',
-    'justifyItems': 'center',
-    'alignItems': 'center',
-};
+
 
 const Post = ({ postObj, type }) => {
-    const [commentPopup, setCommentPopup] = useState(false);
     const { currentUser } = useContext(AuthContext);
     const queryClient = useQueryClient();
     const navigate = useNavigate();
@@ -75,7 +69,6 @@ const Post = ({ postObj, type }) => {
         e.stopPropagation();
         navigate('/' + user.username)
     }
-
 
     return (
         <div className='flex flex-col pt-2 pr-3 hover:backdrop-brightness-110
@@ -160,44 +153,15 @@ const Post = ({ postObj, type }) => {
                             />
                         }
                     </div>
-                    <PostActions 
-                        post_id={id} 
-                        openCommentPopup={() => setCommentPopup(true)}
-                        />
+                    {isFetchedUser && <PostActions 
+                        post_id={id}
+                        user={user} 
+                        date={date}
+                        title={title}
+                        />}
                 </div>
             </div>
-            <Popup
-                open={commentPopup}
-                onOpen={() => setCommentPopup(true)}
-                onClose={() => setCommentPopup(false)}
-                {...{overlayStyle}}
-                >   
-                <div className='bg-stone-900 rounded-xl 
-                                py-7 pb-10 px-4 w-[600px]'>
-                    <p className="ml-4 mb-4 text-sm text-stone-300">
-                        {isFetchedUser ? 'Respondendo à ' + user.name : ''}
-                    </p>
-                    <div className="flex flex-row pt-2">
-                        {isFetchedUser && 
-                            <div className="w-20 flex justify-center">  
-                                <div className='w-12 h-12'>
-                                    <UserImg clickable={false} user={user}/>
-                                </div>
-                            </div>
-                        }
-                        <div className="w-full">
-                            {isFetchedUser && 
-                                <UserInfo user={user} date={date}/>
-                            }
-                            <p className="text-xl my-1">{title}</p>
-                        </div>
-                    </div>
-                    <WriteComment 
-                        closePopup={() => setCommentPopup(false)} 
-                        parent_id={postObj.id}
-                        />
-                </div>
-            </Popup>
+            
         </div>
     )
 }

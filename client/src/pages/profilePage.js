@@ -1,0 +1,60 @@
+import { useQuery } from "@tanstack/react-query";
+import moment from "moment";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getUserPostsById } from "../services/postsService";
+import { getUserByUsername } from "../services/userService";
+import Post from "../containers/post/post";
+import Profile from '../containers/profile/profile'
+
+const ProfilePage = () => {
+    const location = useLocation();
+    const username = location.pathname.slice(1);
+    const navigate = useNavigate();
+
+    const { 
+        data: user, 
+        isFetched: isFetchedUser 
+    } = useQuery(['profileUser', { username }], () => 
+    getUserByUsername(username));
+
+    const { 
+        data: posts,  
+        isFetched: isFetchedPosts
+    } = useQuery(['profilePosts'], () => 
+            getUserPostsById(user.id), {
+                enabled: isFetchedUser
+            });
+
+    const handlePostClick = (post) => {
+        navigate('/post/' + post.id)
+    }
+
+    useEffect(() => {
+        window.scroll(0, 0);
+    }, [])
+
+    return ( 
+        <> 
+            {isFetchedUser && 
+                <div className='sticky top-0 border-b border-stone-700 
+                            pt-2 pb-4 pl-3 font-medium text-xl 
+                            z-20 bg-stone-800'>
+                    {user && <p>{user.name}</p>}
+                </div> 
+            }
+            <Profile/>            
+            {isFetchedPosts && posts.map(post => 
+                <div 
+                    onClick={() => handlePostClick(post)} 
+                    className='border-b border-stone-700'
+                    key={post.id}
+                    >
+                    <Post postObj={post}/>
+                </div>
+            )}
+        </>
+    )
+}
+
+export default ProfilePage;

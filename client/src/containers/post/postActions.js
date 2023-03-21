@@ -13,13 +13,25 @@ import {
 import { createLike, deleteLike, getLikes } from '../../services/likesService';
 import { createShare, deleteShare, getShares} from '../../services/sharesService';
 import { getComments } from '../../services/commentsService';
+import WriteComment from "../write/writeComment";
+import UserInfo from "../../components/userInfo";
+import Popup from "reactjs-popup";
+import UserImg from "../../components/img/userImg";
 
-const PostActions = ({ post_id, openCommentPopup }) => {
+const overlayStyle= {
+    'background': 'rgba(255,255,255,0.1)',
+    'display': 'flex',
+    'justifyItems': 'center',
+    'alignItems': 'center',
+};
+
+const PostActions = ({ post_id, user, title, date }) => {
     const [liked, setLiked] = useState(false);
     const [shared, setShared] = useState(false);
     const [bookmarked, setBookmarked] = useState(false);
     const queryClient = useQueryClient();
     const { currentUser } = useContext(AuthContext);
+    const [commentPopup, setCommentPopup] = useState(false);
                 
     const { data: likes, isFetched: isFetchedLikes } = useQuery(
         ['postLike', { post_id }], () => getLikes(post_id)
@@ -115,7 +127,7 @@ const PostActions = ({ post_id, openCommentPopup }) => {
 
     const handleComment = e => {
         e.stopPropagation();
-        openCommentPopup();
+        setCommentPopup(true);
     }
 
     const handleBookmark = e => {
@@ -125,27 +137,57 @@ const PostActions = ({ post_id, openCommentPopup }) => {
     }
 
     return (
-        <div className="flex flex-row items-center justify-between h-14">
-            <CommentPopupButton 
-                onClick={e => handleComment(e)}
-                comments={isFetchedComments ? comments.length : ''}
-                />
-            <ShareButton 
-                onClick={(e) => handleShare(e)} 
-                shares={isFetchedShares ? shares.length : ''} 
-                active={shared}
-                />
-            <LikeButton 
-                onClick={(e) => handleLike(e)} 
-                active={liked}
-                likes={isFetchedLikes ? likes.length : ''} 
-                />
-            <BookmarkButton 
-                onClick={(e) => handleBookmark(e)}
-                active={bookmarked}
-                bookmarks={isFetchedBookmarks ? bookmarks.length : ''}
-                />
-        </div>
+        <>
+            <div className="flex flex-row items-center justify-between h-14">
+                <CommentPopupButton 
+                    onClick={e => handleComment(e)}
+                    comments={isFetchedComments ? comments.length : ''}
+                    />
+                <ShareButton 
+                    onClick={(e) => handleShare(e)} 
+                    shares={isFetchedShares ? shares.length : ''} 
+                    active={shared}
+                    />
+                <LikeButton 
+                    onClick={(e) => handleLike(e)} 
+                    active={liked}
+                    likes={isFetchedLikes ? likes.length : ''} 
+                    />
+                <BookmarkButton 
+                    onClick={(e) => handleBookmark(e)}
+                    active={bookmarked}
+                    bookmarks={isFetchedBookmarks ? bookmarks.length : ''}
+                    />
+            </div>
+            <Popup
+                open={commentPopup}
+                onOpen={() => setCommentPopup(true)}
+                onClose={() => setCommentPopup(false)}
+                {...{overlayStyle}}
+                >   
+                <div className='bg-stone-900 rounded-xl
+                                py-7 pb-10 px-4 w-[600px]'>
+                    <p className="ml-4 mb-4 text-sm text-stone-300">
+                        {'Respondendo à ' + user.name}
+                    </p>
+                    <div className="flex flex-row pt-2">
+                        <div className="w-20 flex justify-center">  
+                            <div className='w-12 h-12'>
+                                <UserImg clickable={false} user={user}/>
+                            </div>
+                        </div>
+                        <div className="w-full">
+                            <UserInfo user={user} date={date}/>
+                            <p className="text-xl my-1">{title}</p>
+                        </div>
+                    </div>
+                    <WriteComment 
+                        closePopup={() => setCommentPopup(false)} 
+                        parent_id={post_id}
+                        />
+                </div>
+            </Popup>
+        </>
     )
 }
 
