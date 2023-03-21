@@ -13,7 +13,6 @@ const HomePage = () => {
     const { isFetched, data: posts } = useQuery(['posts'], () =>
         getPostsById(currentUser.id)
     )
-    
     useEffect(() => {
         if(!currentUser) navigate('/login');
     }, [])
@@ -21,7 +20,7 @@ const HomePage = () => {
     const handlePostClick = (post) => {
         navigate('/post/' + post.id)
     }
-
+    
     return(
         <>
             <div className='sticky top-0 pt-2 pb-4 pl-3 font-medium text-xl 
