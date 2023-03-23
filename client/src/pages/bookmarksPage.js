@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import PostController from "../containers/post/postController";
 import { AuthContext } from "../contexts/authContext";
-import Post from "../containers/post/post";
 import { getBookmarkedPosts } from "../services/bookmarksService";
 
 const BookmarksPage = () => {
@@ -37,7 +37,7 @@ const BookmarksPage = () => {
                     className='border-b border-stone-700'
                     key={post.id}
                     >
-                    <Post postObj={post}/>
+                    <PostController post={post}/>
                 </div>
             )}
         </>

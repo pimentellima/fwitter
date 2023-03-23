@@ -9,12 +9,12 @@ export const getUserPostsById = async(id) =>
     })
 ));
 
-export const getPostsById = async(id) => 
+export const getPostsById = async(id) =>  
     request.get('/posts/', {
         params: { id }
     }).then(res => res.data.map(post => ({
-            ...post, 
-            ingredients: JSON.parse(post.ingredients),
-            date: moment(post.date).format('YYYY-MM-DD HH:mm:ss')
+        ...post, 
+        ingredients: JSON.parse(post.ingredients),
+        date: moment(post.date).format('YYYY-MM-DD HH:mm:ss')
     })
 ))

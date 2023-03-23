@@ -7,7 +7,7 @@ export const getUserByUsername = async username => {
 
 export const getUserById = async id => {
     const res = await request.get('/user', {
-        params:{ id }
+        params: { id }
     });
     return res.data[0];
 }

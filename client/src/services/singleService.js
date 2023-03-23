@@ -4,7 +4,8 @@ import { uploadPostImg } from "../utils/upload";
 
 export const createPost = async ({ data, user_id, parent_id }) => {
     const { title, description, ingredients, post_img } = data;
-    const fileUrl = post_img[0] ? await uploadPostImg(post_img[0]) : '';
+    const fileUrl = post_img && post_img[0] ? 
+        await uploadPostImg(post_img[0]) : '';
     const postObj = {
         user_id,
         parent_id,

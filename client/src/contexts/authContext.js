@@ -12,18 +12,6 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(currentUser))
     }, [currentUser])
 
-    const loginUser = async ({ username, password }) =>
-        request.post('/auth/login', {
-            username,
-            password
-    }).then(res => setCurrentUser(res.data));
-
-    const createUser = async({ username, name, password }) =>
-        request.post('/auth/register', {
-            username,
-            name,
-            password
-        });
 
     const logout = async() => {
         setCurrentUser(null);
@@ -35,8 +23,6 @@ const AuthProvider = ({ children }) => {
             value={{ 
                 currentUser, 
                 setCurrentUser, 
-                loginUser, 
-                createUser,
                 logout 
             }}>
             {children}

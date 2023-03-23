@@ -5,7 +5,7 @@ import ExploreLink from '../components/link/exploreLink'
 import ProfileLink from '../components/link/profileLink'
 import BookmarksLink from '../components/link/bookmarksLink'
 import SettingsLink from '../components/link/settingsLink'
-import PostButton from '../components/button/postButton'
+import PostButton from '../components/postButton'
 
 import { AuthContext } from '../contexts/authContext';
 
