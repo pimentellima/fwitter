@@ -8,13 +8,13 @@ const ProfileLink = () => {
 
     return(
         <Link 
-            to={`/` + currentUser.username} 
+            to={`/` + currentUser?.username} 
             className="flex [&:hover_p]:bg-stone-700"
             >
             <p className={`font-[22px] gap-2 flex pl-4 pr-7 py-2
                     transition ease-out duration-150 rounded-full
                     items-center
-                    ${location.pathname === '/' + currentUser.username && 'font-medium'}`}>
+                    ${location.pathname === '/' + currentUser?.username && 'font-medium'}`}>
                 <svg 
                     fill="#ffffff" 
                     width="25px" 

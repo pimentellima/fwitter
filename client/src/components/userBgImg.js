@@ -1,4 +1,4 @@
-import { baseURL } from "../utils/constants";
+import { baseURL } from "../utils/urls";
 
 const UserBgImg = ({ user }) => {
     return(
