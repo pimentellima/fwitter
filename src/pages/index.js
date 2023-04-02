@@ -7,7 +7,7 @@ import WritePost from '../containers/writePost';
 import { getPostsByUserId } from '../server/api/post/get-posts-by-user-id';
 
 const HomePage = () => {
-  const { user, isLoaded} = useUser();
+  const { user } = useUser();
 
   const { data: posts, isLoading } = useQuery(['home'], () =>
       getPostsByUserId(user.id), {
@@ -19,13 +19,7 @@ const HomePage = () => {
           <header className='main-header'>
             Inicio
           </header> 
-          <div className='h-48 border-b border-stone-700'>
-            {isLoaded ?
-             <WritePost/>
-             :
-             <Spinner center={true}/>
-             }
-          </div>
+          <WritePost/>
           {isLoading ?
             <Spinner/>
             :

@@ -1,4 +1,4 @@
-const Spinner = ({ center }) => {
+const Spinner = ({ center = false }) => {
     return ( 
         <div className={`flex ${center ? 'items-center' : 'mt-10'} justify-center h-full w-full`}>
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"

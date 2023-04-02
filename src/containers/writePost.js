@@ -53,8 +53,14 @@ const WritePost = () => {
         });
     }
 
+    if(!isLoaded) return (
+        <div className='h-44 py-3 border-b border-stone-700'>
+            <Spinner center={true}/>
+        </div> 
+    ) 
+
     return(
-        <div className='flex flex-row py-3'>
+        <div className='flex flex-row h-44 py-3 border-b border-stone-700'>
             <img 
                 className='user-img hover:cursor-pointer'
                 src={user?.profileImageUrl} 
