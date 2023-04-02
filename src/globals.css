@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply antialiased overflow-y-scroll bg-stone-800 text-white font-sans box-border
+    }
+
+    input {
+        @apply pl-2 outline-none bg-inherit placeholder:text-stone-400
+    }
+
+    .square-btn {
+        @apply hover:cursor-pointer bg-stone-700 border border-stone-700 active:border-stone-500 hover:bg-stone-600 transition-colors
+    }
+
+    .remove-icon {
+        @apply rounded-full bg-opacity-60 hover:cursor-pointer hover:bg-opacity-40 bg-black transition ease-in duration-150 p-2 h-9 w-9
+    }
+
+    .fweet-btn {
+        @apply h-10 py-1 px-5 text-lg font-bold transition ease-out duration-100 rounded-3xl bg-stone-500 
+    }
+
+    .btn-invalid {
+        @apply opacity-50 cursor-default
+    }
+
+    .btn-valid {
+        @apply hover:cursor-pointer hover:bg-stone-600
+    }
+
+    .border-stone {
+        @apply border border-stone-700 hover:border-stone-600 focus:border-stone-600 transition-all ease-out
+    }
+
+    .post-icon {
+        @apply hover:cursor-pointer rounded-full hover:bg-stone-700 text-stone-300 h-10 w-10 p-2 transition-colors ease-out
+    }
+
+    .user-img {
+        @apply w-12 h-12 mx-4 rounded-full
+    }
+
+    .nav-icon {
+        @apply transition ease-out duration-100 items-center w-10 h-10
+    }
+
+    .nav-item {
+        @apply text-[22px] font-normal tracking-tight flex gap-2 group-hover:bg-stone-700 rounded-xl py-1 px-3 mr-3 items-center transition-colors ease-out
+    }
+
+}
