@@ -96,7 +96,8 @@ const Post = ({ post }) => {
             <div className='flex flex-col w-full mr-6'>
                 <div className="flex justify-between">
                     <div className="flex gap-2 items-center">
-                        <p className="font-bold hover:underline hover:cursor-pointer">
+                        <p className="font-bold 
+                            hover:underline hover:cursor-pointer">
                             {author?.firstName}
                         </p>
                         <div className="hover:cursor-pointer flex flex-row 
@@ -122,21 +123,26 @@ const Post = ({ post }) => {
                                 }
                             </p>
                         ))}
-                    <div className="flex flex-row items-center justify-between pt-4">
+                    <div className="flex flex-row 
+                        items-center justify-between pt-4">
                         <ChatBubbleOvalLeftIcon
                             className={`post-icon`} 
                             />
                         <ShareIcon
-                            className={`post-icon ${reactions.shared && 'text-green-400'}`}
                             onClick={handleClickShare}
-                            />
+                            className={`post-icon 
+                                ${reactions.shared && 'text-green-400'}`}
+                                />
                         <HandThumbUpIcon
                             onClick={handleClickLike}
-                            className={`post-icon ${reactions.liked && 'text-red-400'}`} />
+                            className={`post-icon 
+                                ${reactions.liked && 'text-red-400'}`}
+                                />
                         <BookmarkIcon
-                            className={`post-icon ${reactions.bookmarked && 'text-orange-400'}`}
                             onClick={handleClickBookmark}
-                            />
+                            className={`post-icon 
+                                ${reactions.bookmarked && 'text-orange-400'}`}
+                                />
                     </div>
                 </div>
             </div>

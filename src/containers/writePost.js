@@ -4,7 +4,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useCreatePostMutation } from '../server/api/post/create-post';
 import Spinner from "../components/spinner";
-import { ClipLoader } from "react-spinners";
+import { PhotoIcon } from '@heroicons/react/24/outline';
 
 const WritePost = () => {
     const [imgPreview, setImgPreview] = useState(null);
@@ -60,7 +60,7 @@ const WritePost = () => {
     ) 
 
     return(
-        <div className='flex flex-row h-44 py-3 border-b border-stone-700'>
+        <div className='flex flex-row py-3 border-b border-stone-700'>
             <img 
                 className='user-img hover:cursor-pointer'
                 src={user?.profileImageUrl} 
@@ -69,7 +69,7 @@ const WritePost = () => {
             <form 
                 autoComplete='off' 
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col mr-6 gap-1" 
+                className="flex flex-col mr-4 gap-2" 
                 >
                 <input 
                     {...register('title', { required: true })} 
@@ -126,14 +126,12 @@ const WritePost = () => {
                         <XMarkIcon/>
                     </div>
                 </div>}
-                <div className='mt-2 grid grid-cols-2'>
+                <div className='grid grid-cols-2'>
                     {!imgPreview && <label 
                         htmlFor='image' 
-                        className='p-2 rounded-2xl text-sm justify-self-start
-                            transition-colors hover:bg-stone-700 
-                            active:bg-stone-600 hover:cursor-pointer'
+                        className='post-icon'
                         >
-                        Adicionar imagem
+                        <PhotoIcon/>
                     </label>}
                     <input 
                         id='image' 

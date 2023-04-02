@@ -7,10 +7,17 @@ import {
     UserIcon
  } from '@heroicons/react/24/outline';
 import Link from "next/link";
+import { useRouter } from 'next/router';
 
 const NavigationBar = () => {
     const { user } = useUser();
+    const router = useRouter();
     const { signOut } = useClerk();
+
+    const handleSignOut = () => {
+        router.push('/signin');
+        signOut();
+    }
 
     return(
         <nav className='py-10 w-60 border-r border-stone-700 
@@ -57,7 +64,7 @@ const NavigationBar = () => {
                     </Link>
                 </li>
             </ul> 
-            <button onClick={() => signOut()}>
+            <button onClick={handleSignOut}>
                 Sair
             </button>
         </nav>

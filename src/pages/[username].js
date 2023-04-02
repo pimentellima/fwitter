@@ -15,15 +15,15 @@ const ProfilePage = ({ user, followers, following, posts }) => {
     const { user: userLoggedIn, isLoaded } = useUser();
     const { isFallback } = useRouter();
 
-    const [numFollowers, setNumFollowers] = 
-        useState(followers?.length || 0);
+    const [numFollowers, setNumFollowers] = useState(0);
 
     const [isFollowedByUser, setIsFollowedByUser] = useState(false);
 
     useEffect(() => {
         if(isLoaded) {
-            setIsFollowedByUser(followers.filter(userId => 
-                userId === userLoggedIn.id).length);
+            setIsFollowedByUser(followers?.filter(userId => 
+                userId === userLoggedIn?.id).length);
+            setNumFollowers(followers?.length || 0)
         } 
     }, [isLoaded])
     
@@ -31,19 +31,19 @@ const ProfilePage = ({ user, followers, following, posts }) => {
         createFollowMutation, 
         deleteFollowMutation 
     } = useFollowMutations({ 
-        userId: user.id, userLoggedIn: userLoggedIn?.id 
+        userId: user?.id, userLoggedIn: userLoggedIn?.id 
     })
 
     const handleFollow = () => {
         if(!isFollowedByUser) {
             createFollowMutation.mutate();
             setIsFollowedByUser(true);
-            setNumFollowers(n => n++);
+            setNumFollowers(n => ++n);
         }
         else {
             deleteFollowMutation.mutate();
             setIsFollowedByUser(false);
-            setNumFollowers(n => n--);
+            setNumFollowers(n => --n);
         }
     }
 
@@ -91,7 +91,7 @@ export const getStaticProps = async (context) => {
 }
 
 export const getStaticPaths = () => {
-    return { paths: [], fallback: "blocking" };
+    return { paths: [], fallback: true };
   };
 
   
