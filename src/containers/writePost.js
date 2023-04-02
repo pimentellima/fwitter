@@ -1,13 +1,15 @@
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import RemoveIcon from '../assets/remove.svg';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useCreatePostMutation } from '../server/api/post/create-post';
+import Spinner from "../components/spinner";
+import { ClipLoader } from "react-spinners";
 
 const WritePost = () => {
     const [imgPreview, setImgPreview] = useState(null);
     const createPostMutation = useCreatePostMutation();
-    const { user } = useUser();
+    const { user, isLoaded } = useUser();
 
     const { 
         register, 
@@ -52,7 +54,7 @@ const WritePost = () => {
     }
 
     return(
-        <div className='flex flex-row py-3 border-b border-stone-700'>
+        <div className='flex flex-row py-3'>
             <img 
                 className='user-img hover:cursor-pointer'
                 src={user?.profileImageUrl} 
@@ -111,12 +113,12 @@ const WritePost = () => {
                         src={imgPreview} 
                         alt=''
                     />
-                    <img 
-                        className='absolute top-0 z-10 ml-1 mt-1 remove-icon'
+                    <div 
                         onClick={() => reset({image: ''})}
-                        src={RemoveIcon}
-                        alt=''
-                        />
+                        className='absolute top-0 z-10 ml-1 mt-1 remove-icon'
+                        >
+                        <XMarkIcon/>
+                    </div>
                 </div>}
                 <div className='mt-2 grid grid-cols-2'>
                     {!imgPreview && <label 

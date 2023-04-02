@@ -8,7 +8,7 @@ const Profile = (props) => {
         followers, 
         following,
         handleFollow, 
-        onOpenModal 
+        onOpenModal,
     } = props;
     
     return ( 

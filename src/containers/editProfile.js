@@ -1,8 +1,7 @@
+import { XMarkIcon, ArrowUpIcon } from '@heroicons/react/24/outline';
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import uploadIcon from '../../assets/upload.svg';
 import Input from "../../components/input";
-import RemoveButton from '../../components/removeButton';
 import UserBgImg from "../../components/userBgImg";
 import UserImg from "../../components/userImg";
 import { AuthContext } from "../contexts/authContext";
@@ -45,7 +44,7 @@ const EditProfile = ({ onSubmit, onCloseModal }) => {
             onSubmit={handleSubmit(onSubmit)}
             >
             <div className="flex items-center py-3 px-4">
-                <RemoveButton onClick={() => handleClose()}/>
+                <XMarkIcon/>
                 <h1 className="ml-4 text-2xl font-sans font-medium antialiased 
                                 tracking-tight text-white">
                     Editar perfil
@@ -103,7 +102,7 @@ const EditProfile = ({ onSubmit, onCloseModal }) => {
                         z-30 bg-opacity-50 bg-black hover:bg-opacity-40 
                         p-2 h-10 w-10"
                         >
-                        <img src={uploadIcon} alt=''/>
+                        <ArrowUpIcon/>
                     </label>
                 </div>
             </div>

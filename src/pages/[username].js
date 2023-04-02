@@ -8,9 +8,12 @@ import { getFollowersByUserId } from '../server/api/user/get-followers-by-user-i
 import { getFollowingByUserId } from '../server/api/user/get-following-by-user-id';
 import { getUserByUsername } from '../server/api/user/get-user-by-username';
 import { useFollowMutations } from "../server/api/user/use-follow-mutations";
+import Spinner from "../components/spinner";
+import { useRouter } from "next/router";
 
 const ProfilePage = ({ user, followers, following, posts }) => {
     const { user: userLoggedIn, isLoaded } = useUser();
+    const { isFallback } = useRouter();
 
     const [numFollowers, setNumFollowers] = 
         useState(followers?.length || 0);
@@ -35,16 +38,16 @@ const ProfilePage = ({ user, followers, following, posts }) => {
         if(!isFollowedByUser) {
             createFollowMutation.mutate();
             setIsFollowedByUser(true);
-            setNumFollowers(num => num + 1);
+            setNumFollowers(n => n++);
         }
         else {
             deleteFollowMutation.mutate();
             setIsFollowedByUser(false);
-            setNumFollowers(num => num - 1);
+            setNumFollowers(n => n--);
         }
     }
 
-    if(!userLoggedIn) return <></>
+    if(!isLoaded || isFallback) return <Spinner/>
 
     return(
         <div>
@@ -57,7 +60,7 @@ const ProfilePage = ({ user, followers, following, posts }) => {
                 handleFollow={handleFollow}
                 onOpenModal={() => {}}
                 />
-            {posts?.map(post => 
+            {posts.map(post => 
                 <div 
                     className='border-b border-stone-700' 
                     key={post.id}

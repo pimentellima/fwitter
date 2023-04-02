@@ -16,6 +16,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "flowbite": "^1.6.4",
     "luxon": "^3.2.1",
     "moment": "^2.29.4",
     "multer": "^1.4.5-lts.1",
@@ -25,6 +26,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.2",
     "react-icons": "^4.8.0",
+    "react-spinners": "^0.13.8",
     "reactjs-popup": "^2.0.5",
     "url": "^0.11.0",
     "web-vitals": "^2.1.4"

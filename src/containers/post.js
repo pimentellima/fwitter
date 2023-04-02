@@ -16,6 +16,7 @@ const Post = ({ post }) => {
     const { user } = useUser();
 
     const { 
+        id: post_id,
         author_id,
         createdAt,
         title,
@@ -26,9 +27,9 @@ const Post = ({ post }) => {
     } = post;
 
     const [reactions, setReactions] = useState({
-        liked: likes.find(item => item.author_id === user.id),
-        bookmarked: bookmarks.find(item => item.author_id === user.id),
-        shared: shares.find(item => item.author_id === user.id),
+        liked: likes.filter(item => item.author_id === user.id).length,
+        bookmarked: bookmarks.filter(item => item.author_id === user.id).length,
+        shared: shares.filter(item => item.author_id === user.id).length,
     });
 
     const { 
@@ -38,7 +39,7 @@ const Post = ({ post }) => {
         deleteBookmarkMutation,
         createShareMutation,
         deleteShareMutation
-    } = usePostMutations(post.id)
+    } = usePostMutations(post_id)
 
     const handleClickBookmark = (e) => {
         e.stopPropagation();

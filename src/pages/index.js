@@ -1,34 +1,42 @@
 import { useUser } from '@clerk/nextjs';
 import { useQuery } from '@tanstack/react-query';
 import Layout from '../components/layout';
+import Spinner from '../components/spinner';
 import Post from '../containers/post';
 import WritePost from '../containers/writePost';
 import { getPostsByUserId } from '../server/api/post/get-posts-by-user-id';
 
 const HomePage = () => {
-  const { user } = useUser();
+  const { user, isLoaded} = useUser();
 
-  const { data: posts, isFetching } = useQuery(['home'], () =>
+  const { data: posts, isLoading } = useQuery(['home'], () =>
       getPostsByUserId(user.id), {
           enabled: !!user
       })
-
-  if(isFetching) return <></>
 
     return (
         <>
           <header className='main-header'>
             Inicio
           </header> 
-          <WritePost/>
-          {posts?.map(post => 
-                <div 
-                    className='border-b border-stone-700' 
-                    key={post.id}
-                    >
-                    <Post post={post}/>
-                </div>
-            )}
+          <div className='h-48 border-b border-stone-700'>
+            {isLoaded ?
+             <WritePost/>
+             :
+             <Spinner center={true}/>
+             }
+          </div>
+          {isLoading ?
+            <Spinner/>
+            :
+            posts?.map(post => 
+              <div 
+                className='border-b border-stone-700' 
+                key={post.id}
+                >
+                <Post post={post}/>
+              </div>
+          )}
         </>
     )
 }
