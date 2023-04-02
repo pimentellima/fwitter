@@ -7,7 +7,7 @@ import UserBgImg from "../../components/userBgImg";
 import UserImg from "../../components/userImg";
 import { AuthContext } from "../contexts/authContext";
 
-const EditProfileForm = ({ onSubmit, onCloseModal }) => {
+const EditProfile = ({ onSubmit, onCloseModal }) => {
     const { currentUser } = useContext(AuthContext);
     const [imgPreview, setImgPreview] = useState();
     const [bgPreview, setBgPreview] = useState();
@@ -125,4 +125,4 @@ const EditProfileForm = ({ onSubmit, onCloseModal }) => {
     )
 }
 
-export default EditProfileForm;
+export default EditProfile;

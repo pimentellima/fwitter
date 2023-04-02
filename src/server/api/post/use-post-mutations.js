@@ -1,8 +1,8 @@
 import { useUser } from "@clerk/nextjs";
 import { useMutation } from "@tanstack/react-query"
-import { request } from "../../utils/axios"
+import { request } from "../../../utils/axios"
 
-export const usePostActions = (postId) => {
+export const usePostMutations = (postId) => {
     const { user } = useUser();
 
     const createLikeMutation = useMutation(() =>

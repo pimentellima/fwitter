@@ -11,7 +11,8 @@ const handler = async (req, res) => {
                         post_id
                     }
                 })
-                return res.status(200).json(newLike);
+                if(newLike) return res.status(200).json(newLike);
+                return res.status(500).json("Error");
             case 'DELETE':
                 const deletedLike = await prisma.like.deleteMany({
                     where: {

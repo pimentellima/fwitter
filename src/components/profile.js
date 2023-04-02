@@ -1,75 +1,75 @@
-import UserBgImg from "./userBgImg";
-import UserImg from "./userImg";
+import moment from "moment";
 
 const Profile = (props) => {
     const { 
         user, 
-        currentUser, 
-        isFollowed, 
+        isFollowedByUser,
+        userLoggedIn, 
+        followers, 
+        following,
         handleFollow, 
         onOpenModal 
     } = props;
     
     return ( 
-        <div className="h-[450px] flex flex-col 
-                        border-b border-stone-700">
+        <div className="pb-10 flex flex-col 
+                border-b border-stone-700">
             <div className="relative h-64">
-                <UserBgImg user={user}/>
+                <div className='bg-stone-600 w-full h-44'></div>
                 <div className="absolute top-1/2 flex 
-                                justify-between w-full items-end">
-                    <div className='h-32 w-32 ml-3'>
-                        <UserImg clickable={true} user={user}/>
-                    </div>
-                    {user.id === currentUser.id ? 
+                        justify-between w-full items-end">
+                    <img 
+                        className='h-28 w-28 ml-2 
+                            rounded-full hover:cursor-pointer'
+                        src={user.profileImageUrl} 
+                        alt='profileImage'
+                        />
+                    {user.id === userLoggedIn.id ? 
                         <button 
                             onClick={() => onOpenModal()}
-                            className='h-10 hover:bg-stone-600 
-                                    hover:cursor-pointer 
-                                    hover:border-stone-500 py-1 px-4 
-                                    text-md transition ease-in-out 
-                                    duration-300 font-bold rounded-3xl 
-                                    my-2 mr-2 border border-stone-600'
+                            className='default-btn 
+                            rounded-full h-10 font-bold mr-2'
                             >
                             Editar perfil
                         </button>
                         :
-                        isFollowed ? 
+                        isFollowedByUser ? 
                             <button 
                                 onClick={() => handleFollow()}
-                                className='h-10 hover:bg-stone-600 
-                                        hover:cursor-pointer py-1 px-4
-                                        hover:border-stone-500 
-                                        text-md transition ease-in-out 
-                                        duration-300 font-bold 
-                                        rounded-3xl my-2 mr-2 border 
-                                        border-stone-600'
+                                className='default-btn 
+                                rounded-full h-10 font-bold mr-2'
                                 >
                                 Deixar de seguir
                             </button>
                             :
                             <button 
                                 onClick={() => handleFollow()}
-                                className='h-10 hover:bg-stone-600 
-                                        hover:cursor-pointer 
-                                        hover:border-stone-500 py-1 px-4
-                                        text-md transition ease-in-out 
-                                        duration-300 font-bold 
-                                        rounded-3xl my-2 mr-2 border 
-                                        border-stone-600'
+                                className='default-btn 
+                                rounded-full h-10 font-bold mr-2'
                                 >
                                 Seguir
-                            </button>
-                    }
+                            </button>}
                 </div>
             </div>
             <div className="mt-3 pl-5 flex flex-col">
-                <p className=" text-2xl">{user.name + "  "}</p>
+                <p className="text-2xl">{user.firstName + "  "}</p>
                 <p className="text-stone-400">{'@' + user.username}</p>
-                <p className="mt-2 text-md">{user.bio}</p>
+                <p className='mt-3 text-stone-400'>
+                    {`Juntou-se em ${
+                        moment(user.createdAt).format('ll')
+                    }`}
+                </p>
+                <div className='flex gap-2 mt-2 font-medium'>
+                    <p className="first-letter:text-white">
+                        {`${following}  Seguindo`}
+                    </p>
+                    <p className='first-letter:text-white'>
+                        {`${followers}  Seguidores`}
+                    </p>
+                </div>
             </div>  
         </div>
     )
 }
-
 
 export default Profile;

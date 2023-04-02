@@ -1,3 +1,4 @@
+import { useClerk, useUser } from '@clerk/nextjs';
 import { 
     HomeIcon,
     HashtagIcon,
@@ -8,6 +9,9 @@ import {
 import Link from "next/link";
 
 const NavigationBar = () => {
+    const { user } = useUser();
+    const { signOut } = useClerk();
+
     return(
         <nav className='py-10 w-60 border-r border-stone-700 
                 sticky top-0 h-screen flex flex-col'>
@@ -29,7 +33,7 @@ const NavigationBar = () => {
                     </Link>
                 </li>
                 <li>
-                    <Link href='/' className='group'>
+                    <Link href={`/${user?.username}`} className='group'>
                         <p className='nav-item'>
                             <UserIcon className='w-10 h-10'/>
                             Perfil
@@ -53,6 +57,9 @@ const NavigationBar = () => {
                     </Link>
                 </li>
             </ul> 
+            <button onClick={() => signOut()}>
+                Sair
+            </button>
         </nav>
     )
 }

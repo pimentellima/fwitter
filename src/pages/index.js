@@ -1,11 +1,17 @@
+import { useUser } from '@clerk/nextjs';
+import { useQuery } from '@tanstack/react-query';
 import Layout from '../components/layout';
 import Post from '../containers/post';
 import WritePost from '../containers/writePost';
-import { useGetHomePagePosts } from '../server/api/get-home-page-posts';
+import { getPostsByUserId } from '../server/api/post/get-posts-by-user-id';
 
-const Home = () => {
+const HomePage = () => {
+  const { user } = useUser();
 
-  const { data: posts, isFetching } = useGetHomePagePosts();
+  const { data: posts, isFetching } = useQuery(['home'], () =>
+      getPostsByUserId(user.id), {
+          enabled: !!user
+      })
 
   if(isFetching) return <></>
 
@@ -27,7 +33,7 @@ const Home = () => {
     )
 }
 
-Home.getLayout = (page) => {
+HomePage.getLayout = (page) => {
   return(
     <Layout>
       {page}
@@ -35,4 +41,4 @@ Home.getLayout = (page) => {
   )
 }
 
-export default Home;
+export default HomePage;

@@ -8,7 +8,7 @@ import {
     ShareIcon,
     BookmarkIcon
 } from '@heroicons/react/20/solid';
-import { usePostActions } from '../server/api/post-actions';
+import { usePostMutations } from '../server/api/post/use-post-mutations';
 import { useUser } from '@clerk/nextjs';
 import { useState } from 'react';
 
@@ -38,7 +38,7 @@ const Post = ({ post }) => {
         deleteBookmarkMutation,
         createShareMutation,
         deleteShareMutation
-    } = usePostActions(post.id)
+    } = usePostMutations(post.id)
 
     const handleClickBookmark = (e) => {
         e.stopPropagation();
@@ -80,7 +80,7 @@ const Post = ({ post }) => {
         data: author, 
         isFetching 
     } = useQuery(['user', { id: author_id }], () => 
-            request.get(`/api/user/id/${author_id}`)
+            request.get(`/api/user/${author_id}`)
                 .then(res => res.data));
 
     if(isFetching) return <></>

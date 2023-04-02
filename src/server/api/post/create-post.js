@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { request } from "../../utils/axios"
+import { request } from "../../../utils/axios"
 
 export const uploadPostImg = async (file) => {
      const formData = new FormData();

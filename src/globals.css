@@ -15,8 +15,8 @@
         @apply pl-2 outline-none bg-inherit placeholder:text-stone-400
     }
 
-    .square-btn {
-        @apply hover:cursor-pointer bg-stone-700 border border-stone-700 active:border-stone-500 hover:bg-stone-600 transition-colors
+    .default-btn {
+        @apply px-4 hover:cursor-pointer bg-stone-700 border border-stone-700 active:border-stone-500 hover:bg-stone-600 transition-colors
     }
 
     .remove-icon {

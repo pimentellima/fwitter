@@ -2,7 +2,7 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import RemoveIcon from '../assets/remove.svg';
-import { useCreatePostMutation } from '../server/api/create-post';
+import { useCreatePostMutation } from '../server/api/post/create-post';
 
 const WritePost = () => {
     const [imgPreview, setImgPreview] = useState(null);
@@ -90,7 +90,7 @@ const WritePost = () => {
                             />
                         {index === 0 ?
                             <button 
-                                className='square-btn'
+                                className='default-btn'
                                 onClick={() => append(
                                     { name: '', qt: '', unity: '' })
                                 }>
@@ -98,7 +98,7 @@ const WritePost = () => {
                             </button>
                             :
                             <button 
-                                className='square-btn'
+                                className='default-btn'
                                 onClick={() => remove(index)}>
                                 -
                             </button>
