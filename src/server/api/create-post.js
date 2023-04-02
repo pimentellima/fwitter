@@ -1,16 +1,17 @@
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { request } from "../utils/axios"
+import { request } from "../../utils/axios"
+
+export const uploadPostImg = async (file) => {
+     const formData = new FormData();
+     formData.append("file", file);
+     const res = await request.post('/upload/post/', formData);
+     return res.data;
+}
 
 export const useCreatePostMutation = () => {
     const queryClient = useQueryClient();
     const { user } = useUser();
-   /*  const uploadPostImg = async (file) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await request.post('/upload/post/', formData);
-        return res.data;
-    } */
     
     return useMutation((data) => {
         const { parent_post_id, post_img, ...other } = data;

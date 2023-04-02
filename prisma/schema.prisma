@@ -37,6 +37,7 @@ model Bookmark {
   id        Int     @id @default(autoincrement())
   post      Post    @relation(fields: [post_id], references: [id])
   post_id   Int 
+  author_id String @db.VarChar(255)
 }
 
 model Share {

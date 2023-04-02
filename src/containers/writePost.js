@@ -2,7 +2,7 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import RemoveIcon from '../assets/remove.svg';
-import { useCreatePostMutation } from '../hooks/useCreatePostMutation';
+import { useCreatePostMutation } from '../server/api/create-post';
 
 const WritePost = () => {
     const [imgPreview, setImgPreview] = useState(null);

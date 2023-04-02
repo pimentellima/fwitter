@@ -1,21 +1,28 @@
-import Header from '../components/header';
 import Layout from '../components/layout';
+import Post from '../containers/post';
 import WritePost from '../containers/writePost';
-import Feed from '../containers/feed';
-import { useUser } from '@clerk/nextjs';
+import { useGetHomePagePosts } from '../server/api/get-home-page-posts';
 
 const Home = () => {
-    const { isLoaded: userLoaded } = useUser();
 
-    if(!userLoaded) return <></>
+  const { data: posts, isFetching } = useGetHomePagePosts();
+
+  if(isFetching) return <></>
 
     return (
         <>
-            <Header>
-                Inicio
-            </Header>
-            <WritePost/>
-           <Feed/>
+          <header className='main-header'>
+            Inicio
+          </header> 
+          <WritePost/>
+          {posts?.map(post => 
+                <div 
+                    className='border-b border-stone-700' 
+                    key={post.id}
+                    >
+                    <Post post={post}/>
+                </div>
+            )}
         </>
     )
 }
