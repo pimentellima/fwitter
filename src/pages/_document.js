@@ -1,13 +1,11 @@
-import { Html, Main, NextScript } from "next/document";
-import Head from "next/head";
-import '../globals.css';
+import { Head, Html, Main, NextScript } from "next/document";
 
 const Document = () => {
   
   return(
     <Html>
       <Head>
-        <title>fwitter</title>
+        <title>Fwitter</title>
       </Head>
       <body>
         <Main/>

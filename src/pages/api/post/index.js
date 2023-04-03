@@ -1,4 +1,4 @@
-import prisma from "../../server/prismaClient";
+import prisma from "../../../server/prismaClient";
 
 const handler = async (req, res) => {
     try {
