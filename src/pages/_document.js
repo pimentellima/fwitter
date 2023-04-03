@@ -5,9 +5,9 @@ const Document = () => {
   return(
     <Html>
       <Head>
-        <title>Fwitter</title>
       </Head>
       <body>
+        <title>Fwitter</title>
         <Main/>
         <NextScript/>
       </body>
