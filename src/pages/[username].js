@@ -1,107 +1,57 @@
-import { useUser } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
-import Layout from "../components/layout";
-import Profile from "../components/profile";
+import { clerkClient } from "@clerk/nextjs/server";
+import Layout from '../components/layout';
 import Post from '../containers/post';
-import { getPostsByUserId } from "../server/api/post/get-posts-by-user-id";
-import { getFollowersByUserId } from '../server/api/user/get-followers-by-user-id';
-import { getFollowingByUserId } from '../server/api/user/get-following-by-user-id';
-import { getUserByUsername } from '../server/api/user/get-user-by-username';
-import { useFollowMutations } from "../server/api/user/use-follow-mutations";
-import Spinner from "../components/spinner";
+import Profile from '../containers/profile';
+import { useUserPostsById } from '../server/api/post/use-user-posts-by-id';
 import { useRouter } from "next/router";
+import Spinner from "../components/spinner";
 
-const ProfilePage = ({ user, followers, following, posts }) => {
-    const { user: userLoggedIn, isLoaded } = useUser();
-    const { isFallback } = useRouter();
+const ProfilePage = ({ userJson }) => {
+	const user = JSON.parse(userJson)
+	const { isFallback } = useRouter();
 
-    const [numFollowers, setNumFollowers] = useState(0);
+	const { 
+		data: posts, 
+		isLoading
+	} = useUserPostsById(user?.id);
 
-    const [isFollowedByUser, setIsFollowedByUser] = useState(false);
+	if(isLoading || isFallback) return <Spinner/>
 
-    useEffect(() => {
-        if(isLoaded) {
-            setIsFollowedByUser(followers?.filter(userId => 
-                userId === userLoggedIn?.id).length);
-            setNumFollowers(followers?.length || 0)
-        } 
-    }, [isLoaded])
-    
-    const {     
-        createFollowMutation, 
-        deleteFollowMutation 
-    } = useFollowMutations({ 
-        userId: user?.id, userLoggedIn: userLoggedIn?.id 
-    })
+	return(
+		<div>
+			<Profile user={user}/>
+			{posts.map(post => 
+				<div 
+					className='border-b border-stone-700' 
+					key={post.id}
+					>
+					<Post post={post}/>
+				</div>
+			)}
+		</div>
+	);
+};
 
-    const handleFollow = () => {
-        if(!isFollowedByUser) {
-            createFollowMutation.mutate();
-            setIsFollowedByUser(true);
-            setNumFollowers(n => ++n);
-        }
-        else {
-            deleteFollowMutation.mutate();
-            setIsFollowedByUser(false);
-            setNumFollowers(n => --n);
-        }
-    }
+export const getServerSideProps = async(ctx) => {
+	const username = ctx.params.username;
 
-    if(!isLoaded || isFallback) return <Spinner/>
+	const users = await clerkClient.users.getUserList();
+	const user = users.find(user => user.username === username)
 
-    return(
-        <div>
-            <Profile 
-                user={user} 
-                isFollowedByUser={isFollowedByUser}
-                followers={numFollowers}
-                following={following ? following.length : 0}
-                userLoggedIn={userLoggedIn}
-                handleFollow={handleFollow}
-                onOpenModal={() => {}}
-                />
-            {posts.map(post => 
-                <div 
-                    className='border-b border-stone-700' 
-                    key={post.id}
-                    >
-                    <Post post={post}/>
-                </div>
-            )}
-        </div>
-    )
+	return {
+		props: {
+			userJson: JSON.stringify(user)
+		}
+	}
 }
 
-export const getStaticProps = async (context) => {
-    const username = context.params.username;
-
-    const user = await getUserByUsername(username);
-    const followers = await getFollowersByUserId(user.id);
-    const following = await getFollowingByUserId(user.id);
-    const posts = await getPostsByUserId(user.id);
-    
-    return {
-        props: {
-            user,
-            followers,
-            following,
-            posts,
-        }
-    }
-}
-
-export const getStaticPaths = () => {
-    return { paths: [], fallback: true };
-  };
-
-  
 ProfilePage.getLayout = (page) => {
-    return(
-      <Layout>
-        {page}
-      </Layout>
-    )
-  }
+	return(
+		<Layout>
+			{page}
+		</Layout>
+	);
+};
 
 
 export default ProfilePage;

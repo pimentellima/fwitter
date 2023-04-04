@@ -1,16 +1,43 @@
+import { useUser } from '@clerk/nextjs';
 import moment from "moment";
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
 
-const Profile = (props) => {
-    const { 
-        user, 
-        isFollowedByUser,
-        userLoggedIn, 
-        followers, 
-        following,
-        handleFollow, 
-        onOpenModal,
-    } = props;
+const postReq = async (url, { arg }) => {
+    return axios.post(url, {...arg})
+    .then(res => res.data)
+  }
+
+const deleteReq = async (url, { arg }) => {
+    return axios.delete(url, {...arg})
+    .then(res => res.data)
+  }
+  
+const Profile = ({ user }) => {
+    const { user: userLoggedIn } = useUser();
+	const [followers, setFollowers] = useState(0);
+	const [following, setFollowing] = useState(0);
+	const [isFollowedByUser, setIsFollowedByUser] = useState(false);
+	const { data: follows } = useSWR(`/api/follow`);
+
+	useEffect(() => {
+		if(userLoggedIn && follows) {
+			setFollowers(follows
+				.filter(follow => follow.followed_id === user.id));
+
+			setFollowing(follows
+				.filter(follow => follow.follower_id === user.id));
+
+			setIsFollowedByUser(follows
+				.filter(follow => follow.follower_id === userLoggedIn.id)
+				.length > 0)
+		} 
+	}, [userLoggedIn, follows]);
     
+	const { trigger: follow } = useSWRMutation('/api/follow', postReq);
+    const { trigger: unfollow } = useSWRMutation('/api/follow', deleteReq);
+
     return ( 
         <div className="pb-10 flex flex-col 
                 border-b border-stone-700">
@@ -24,9 +51,9 @@ const Profile = (props) => {
                         src={user.profileImageUrl} 
                         alt='profileImage'
                         />
-                    {user.id === userLoggedIn.id ? 
+                    {user.id === userLoggedIn?.id ? 
                         <button 
-                            onClick={() => onOpenModal()}
+                            onClick={() => {}}
                             className='default-btn 
                             rounded-full h-10 font-bold mr-2'
                             >
@@ -35,7 +62,11 @@ const Profile = (props) => {
                         :
                         isFollowedByUser ? 
                             <button 
-                                onClick={() => handleFollow()}
+                                onClick={() => {
+                                    unfollow();
+                                    setIsFollowedByUser(false);
+                                    setFollowers(n => --n);
+                                }}
                                 className='default-btn 
                                 rounded-full h-10 font-bold mr-2'
                                 >
@@ -43,7 +74,11 @@ const Profile = (props) => {
                             </button>
                             :
                             <button 
-                                onClick={() => handleFollow()}
+                                onClick={() => {
+                                    follow();
+                                    setIsFollowedByUser(true);
+                                    setFollowers(n => ++n);
+                                }}
                                 className='default-btn 
                                 rounded-full h-10 font-bold mr-2'
                                 >

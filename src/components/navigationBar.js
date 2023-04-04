@@ -25,42 +25,42 @@ const NavigationBar = () => {
             <ul className="flex flex-col gap-6 mb-10">
                 <li>
                     <Link href='/' className='group'>
-                        <p className='nav-item'>
+                        <div className='nav-item'>
                             <HomeIcon className='w-10 h-10'/>
                             Início
-                        </p>
+                        </div>
                     </Link>
                 </li>
                 <li>
                     <Link href='/' className='group'>
-                        <p className='nav-item'>
+                        <div className='nav-item'>
                             <HashtagIcon className='w-10 h-10'/>
                             Explorar
-                        </p>
+                        </div>
                     </Link>
                 </li>
                 <li>
                     <Link href={`/${user?.username}`} className='group'>
-                        <p className='nav-item'>
+                        <div className='nav-item'>
                             <UserIcon className='w-10 h-10'/>
                             Perfil
-                        </p>
+                        </div>
                     </Link>
                 </li>
                 <li>
                     <Link href='/' className='group'>
-                        <p className='nav-item'>
+                        <div className='nav-item'>
                             <BookmarkIcon className='w-10 h-10'/>
                             Salvos
-                        </p>
+                        </div>
                     </Link>
                 </li>
                 <li>
                     <Link href='/' className='group'>
-                        <p className='nav-item'>
+                        <div className='nav-item'>
                             <CogIcon className='w-10 h-10'/>
                             Configurações
-                        </p>
+                        </div>
                     </Link>
                 </li>
             </ul> 

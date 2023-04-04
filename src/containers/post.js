@@ -1,19 +1,31 @@
-import { useQuery } from '@tanstack/react-query';
+import { useUser } from '@clerk/nextjs';
+import {
+    BookmarkIcon,
+    ChatBubbleOvalLeftIcon,
+    HandThumbUpIcon,
+    ShareIcon
+} from '@heroicons/react/20/solid';
+import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/pt-br';
-import { request } from '../utils/axios';
-import { 
-    HandThumbUpIcon, 
-    ChatBubbleOvalLeftIcon, 
-    ShareIcon,
-    BookmarkIcon
-} from '@heroicons/react/20/solid';
-import { usePostMutations } from '../server/api/post/use-post-mutations';
-import { useUser } from '@clerk/nextjs';
 import { useState } from 'react';
+import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
+
+const fetcher = url => axios.get(url).then(res => res.data);
+
+const postReq = async (url, { arg }) => {
+    return axios.post(url, {...arg})
+    .then(res => res.data)
+  }
+
+const deleteReq = async (url, { arg }) => {
+    return axios.delete(url, {...arg})
+    .then(res => res.data)
+  }
 
 const Post = ({ post }) => {
-    const { user } = useUser();
+    const { user: userLoggedIn } = useUser();
 
     const { 
         id: post_id,
@@ -26,71 +38,58 @@ const Post = ({ post }) => {
         shares
     } = post;
 
+    const { 
+        data: author, 
+        isLoading 
+    } = useSWR(`/api/user/${author_id}`, fetcher);
+    
     const [reactions, setReactions] = useState({
-        liked: likes.filter(item => item.author_id === user.id).length,
-        bookmarked: bookmarks.filter(item => item.author_id === user.id).length,
-        shared: shares.filter(item => item.author_id === user.id).length,
+        liked: likes
+            .filter(item => item.author_id === userLoggedIn?.id).length,
+        bookmarked: bookmarks
+            .filter(item => item.author_id === userLoggedIn?.id).length,
+        shared: shares
+            .filter(item => item.author_id === userLoggedIn?.id).length,
     });
 
-    const { 
-        createLikeMutation, 
-        deleteLikeMutation,
-        createBookmarkMutation,
-        deleteBookmarkMutation,
-        createShareMutation,
-        deleteShareMutation
-    } = usePostMutations(post_id)
+    const { trigger: like } = useSWRMutation('/api/like', postReq);
+    const { trigger: deleteLike } = useSWRMutation('/api/like', deleteReq);
 
     const handleClickBookmark = (e) => {
         e.stopPropagation();
-        reactions.bookmarked ? 
-            deleteBookmarkMutation.mutate() 
-            : 
-            createBookmarkMutation.mutate();
-        setReactions(reactions => ({
-            ...reactions, 
-            bookmarked: !reactions.bookmarked
-        }))
     }
 
     const handleClickShare = (e) => {
         e.stopPropagation();
-        reactions.shared ? 
-            deleteShareMutation.mutate() 
-            : 
-            createShareMutation.mutate();
-        setReactions(reactions => ({
-            ...reactions, 
-            shared: !reactions.shared
-        }))
     }
 
     const handleClickLike = (e) => {
-        e.stopPropagation();
-        reactions.liked ? 
-            deleteLikeMutation.mutate() 
-            : 
-            createLikeMutation.mutate();
+        reactions.liked ?
+        deleteLike({
+            data: {
+                post_id,
+                author_id
+            }
+        })
+        :
+        like({
+            post_id,
+            author_id
+        })
         setReactions(reactions => ({
             ...reactions, 
             liked: !reactions.liked
         }))
+        e.stopPropagation();
     }
 
-    const { 
-        data: author, 
-        isFetching 
-    } = useQuery(['user', { id: author_id }], () => 
-            request.get(`/api/user/${author_id}`)
-                .then(res => res.data));
-
-    if(isFetching) return <></>
+    if(isLoading) return <></>
 
     return (
         <div className="flex flex-row py-3">
             <img 
                 className='user-img hover:cursor-pointer'
-                src={author.profileImageUrl} 
+                src={author?.profileImageUrl} 
                 alt='profileImage'
                 />
             <div className='flex flex-col w-full mr-6'>
@@ -115,7 +114,7 @@ const Post = ({ post }) => {
                         <p className="font-medium mt-1">
                             {'Ingredientes: '}
                         </p>
-                        {ingredients.map((ingredient, index) => (
+                        {ingredients?.map((ingredient, index) => (
                             <p key={index} className="inline">  {
                                     ingredient.qt + " " + 
                                     ingredient.unity + " " + 

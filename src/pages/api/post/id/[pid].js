@@ -4,7 +4,7 @@ const handler = async (req, res) => {
     try {
         if(req.method === 'GET') {
             const id = req.params.id;
-            const posts = await prisma.post.findMany({
+            const post = await prisma.post.findMany({
                 where: {
                     id
                 },
@@ -16,8 +16,8 @@ const handler = async (req, res) => {
                     likes: true,
                 }
             })
-            if(!posts) return res.status(404).json("Not found");
-            return res.status(200).json(posts);
+            if(!post) return res.status(404).json("Not found");
+            return res.status(200).json(post);
         }
         /* if(req.method === 'DELETE') {
 

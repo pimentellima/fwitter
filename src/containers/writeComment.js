@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/nextjs";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
 import { useCreatePost } from "./useCreatePost";
 

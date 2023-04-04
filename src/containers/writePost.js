@@ -1,15 +1,11 @@
-import { useUser } from "@clerk/nextjs";
+import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { XMarkIcon } from '@heroicons/react/24/outline';
-import { useCreatePostMutation } from '../server/api/post/create-post';
-import Spinner from "../components/spinner";
-import { PhotoIcon } from '@heroicons/react/24/outline';
+import { useSWRConfig } from "swr"
 
-const WritePost = () => {
+const WritePost = ({ user }) => {
     const [imgPreview, setImgPreview] = useState(null);
-    const createPostMutation = useCreatePostMutation();
-    const { user, isLoaded } = useUser();
+    const { mutate } = useSWRConfig();
 
     const { 
         register, 
@@ -47,17 +43,8 @@ const WritePost = () => {
 
     const onSubmit = (data) => {
         const { ingredients, ...other } = data;
-        createPostMutation.mutate({
-            ...other,
-            ingredients: JSON.stringify(ingredients)
-        });
+        mutate('api/post/', data);
     }
-
-    if(!isLoaded) return (
-        <div className='h-44 py-3 border-b border-stone-700'>
-            <Spinner center={true}/>
-        </div> 
-    ) 
 
     return(
         <div className='flex flex-row py-3 border-b border-stone-700'>
