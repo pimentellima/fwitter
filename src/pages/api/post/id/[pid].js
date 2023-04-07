@@ -1,4 +1,5 @@
 import prisma from "../../../../server/prismaClient";
+import { clerkClient } from "@clerk/nextjs/server";
 
 const handler = async (req, res) => {
   try {
@@ -9,15 +10,15 @@ const handler = async (req, res) => {
           id,
         },
         include: {
-          author: true,
           comments: true,
           bookmarks: true,
           shares: true,
           likes: true,
         },
       });
-      if (!post) return res.status(404).json("Not found");
-      return res.status(200).json(post);
+      const author = await clerkClient.users.getUser(post.author_id);
+      if (!post || !author) return res.status(404).json("Not found");
+      return res.status(200).json({...post, author});
     }
     /* if(req.method === 'DELETE') {
 

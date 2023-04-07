@@ -11,9 +11,10 @@ import { useRouter } from "next/router";
 
 const PageName = () => {
   const { pathname, query } = useRouter();
+  console.log(query)
   if (pathname === "/") return <p>Início</p>;
   if (pathname === "/explore") return <p>Explorar</p>;
-  if (query) return <p>Perfil</p>;
+  if (query.username) return <p>{query.username}</p>;
   if (pathname === "/bookmarks") return <p>Salvos</p>;
   if (pathname === "/settings") return <p>Configurações</p>;
 };
@@ -68,7 +69,7 @@ const Layout = ({ children }) => {
             </Link>
           </li>
           <li>
-            <Link href="/" className="group flex">
+            <Link href="/bookmarks" className="group flex">
               <div
                 className="mr-3 flex items-center gap-3 
               rounded-full px-5 py-4 text-2xl font-normal

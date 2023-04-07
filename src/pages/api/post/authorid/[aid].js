@@ -1,11 +1,13 @@
 import prisma from "../../../../server/prismaClient";
+import { clerkClient } from "@clerk/nextjs/server";
 
 const handler = async (req, res) => {
   try {
     const author_id = req.query.aid;
+    const author = await clerkClient.users.getUser(author_id);
     const posts = await prisma.post.findMany({
       where: {
-        author_id: author_id,
+        author_id
       },
       include: {
         comments: true,
@@ -13,7 +15,7 @@ const handler = async (req, res) => {
         shares: true,
         bookmarks: true,
       },
-    });
+    }).then(posts => posts.map(post => ({...post, author})));
     if (!posts) return res.status(404).json("Not found");
     return res.status(200).json(posts);
   } catch (error) {
