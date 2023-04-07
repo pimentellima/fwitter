@@ -3,21 +3,23 @@ import { useQuery } from "react-query";
 import Layout from "../components/layout";
 import Spinner from "../components/spinner";
 import WritePost from "../components/writePost";
-import { getPostsByUserId } from "../server/api/post/get-posts";
+import { getHomePagePostsByUserId, getPostsByUserId } from "../server/api/post/get-posts";
 import Reactions from "../components/reactions";
 import PostView from "../components/postView";
+import { useRouter } from "next/router";
 
 const HomePage = () => {
+  const { isFallback } = useRouter();
   const { user: userLoggedIn, isLoaded } = useUser();
   const { data: posts, isFetched } = useQuery(
     ["homePosts"],
-    () => getPostsByUserId(userLoggedIn?.id),
+    () => getHomePagePostsByUserId(userLoggedIn?.id),
     {
-      enabled: isLoaded,
+      enabled: !!userLoggedIn,
     }
   );
 
-  if (!isLoaded || !isFetched) return <Spinner />;
+  if (isFallback || !isLoaded || !isFetched) return <Spinner />;
 
   return (
     <>

@@ -4,11 +4,11 @@
 
 @layer base {
   body {
-    @apply box-border overflow-y-scroll bg-stone-800 font-sans text-white antialiased;
+    @apply box-border overflow-y-scroll bg-stone-800 font-sans first-line:antialiased text-stone-100;
   }
 
   input {
-    @apply bg-inherit pl-2 outline-none placeholder:text-stone-400;
+    @apply bg-inherit outline-none ;
   }
 
   .default-btn {

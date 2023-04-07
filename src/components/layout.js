@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 
 const PageName = () => {
   const { pathname, query } = useRouter();
-  console.log(query)
   if (pathname === "/") return <p>Início</p>;
   if (pathname === "/explore") return <p>Explorar</p>;
   if (query.username) return <p>{query.username}</p>;
@@ -21,6 +20,10 @@ const PageName = () => {
 
 const Layout = ({ children }) => {
   const { user: userLoggedIn } = useUser();
+
+  const handleClickHeader = () => {
+    window.scrollTo(0,0);
+  }
 
   return (
     <div className="flex flex-row justify-center bg-stone-800">
@@ -104,7 +107,9 @@ const Layout = ({ children }) => {
           className="sticky top-0 z-20 border-b
           border-stone-700 bg-stone-800 pb-4 pl-3 pt-2 text-xl font-medium"
         >
-          <PageName />
+          <div className='hover:cursor-pointer' onClick={handleClickHeader}>
+            <PageName />
+          </div>
         </header>
         {children}
       </div>

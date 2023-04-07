@@ -34,7 +34,6 @@ const PostView = ({ post, children }) => {
         </div>
         <div className="flex flex-col">
           <p className="my-1 text-xl">{title}</p>
-          <p className="mt-1 font-medium">{"Ingredientes: "}</p>
           {ingredients?.map((ingredient, index) => (
             <p key={index} className="inline">
               {" "}

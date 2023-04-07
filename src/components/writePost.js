@@ -2,10 +2,12 @@ import { PhotoIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useCreatePostMutation } from "../server/api/post/post-mutations";
+import { useQueryClient } from "react-query";
 
 const WritePost = ({ userLoggedIn }) => {
   const [imgPreview, setImgPreview] = useState(null);
   const mutation = useCreatePostMutation();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -42,7 +44,13 @@ const WritePost = ({ userLoggedIn }) => {
   }, [imgWatch]);
 
   const onSubmit = (data) => {
-    mutation.mutate({ ...data, ingredients: JSON.stringify(data.ingredients) });
+    mutation.mutate({ ...data, ingredients: JSON.stringify(data.ingredients) }, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['homePosts']);        
+        queryClient.invalidateQueries(['profilePosts']);     
+        reset();   
+      }
+    });
   };
 
   return (
@@ -55,32 +63,32 @@ const WritePost = ({ userLoggedIn }) => {
       <form
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
-        className="mr-4 flex flex-col gap-2"
+        className="mr-4 flex flex-col"
       >
         <input
           {...register("title", { required: true })}
           placeholder="Que receita você está fazendo agora?"
-          className="mb-4 text-lg text-white"
+          className="bg-inherit pl-2 outline-none placeholder:text-stone-500 mb-4 text-lg text-stone-100"
         />
         {ingredients.map((ingredient, index) => (
           <div
             key={ingredient.id}
-            className="grid h-14 grid-flow-col grid-cols-6 rounded-md border border-stone-700 transition ease-out focus-within:border-stone-600 hover:border-stone-600"
+            className="grid mb-2 h-14 grid-flow-col grid-cols-6 rounded-md border border-stone-700 transition ease-out focus-within:border-stone-600 hover:border-stone-600"
           >
             <input
-              {...register(`ingredients.${index}.name`)}
+              {...register(`ingredients.${index}.name`, { required: true })}
               placeholder="Ingrediente"
-              className=" col-span-3"
+              className="pl-2 placeholder:text-stone-500 col-span-3"
             />
             <input
-              {...register(`ingredients.${index}.qt`)}
-              placeholder="Qtd"
-              className="border-l border-stone-700"
+              {...register(`ingredients.${index}.qt`, { required: true })}
+              placeholder="Qtd" 
+              className="pl-2 placeholder:text-stone-500 border-l border-stone-700"
             />
             <input
-              {...register(`ingredients.${index}.unity`)}
+              {...register(`ingredients.${index}.unity`, { required: true })}
               placeholder="Uni"
-              className="border-l border-stone-700"
+              className="pl-2 placeholder:text-stone-500 border-l border-stone-700"
             />
             {index === 0 ? (
               <button
@@ -124,7 +132,7 @@ const WritePost = ({ userLoggedIn }) => {
           />
           <button
             className={`fweet-btn col-start-2 w-28 justify-self-end
-                        ${isValid ? "btn-valid" : "btn-invalid"}`}
+                        ${isValid ? "hover:cursor-pointer hover:bg-stone-600;" : "cursor-default opacity-50"}`}
           >
             Fweet
           </button>

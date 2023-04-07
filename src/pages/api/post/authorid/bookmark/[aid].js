@@ -17,6 +17,11 @@ const handler = async (req, res) => {
                 bookmarks: true
             }
           }
+        }, 
+        orderBy: {
+          post: {
+            createdAt: 'desc'
+          }
         }
       }).then(data => data.map(item => item.post));
     const authorIds = posts.map(post => post.author_id);

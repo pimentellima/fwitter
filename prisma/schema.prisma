@@ -15,7 +15,7 @@ model Post {
   author_id   String  @db.VarChar(255)
   createdAt   DateTime @default(now())
   title       String
-  ingredients String
+  ingredients String @db.MediumText
   image       String?
 
   comments    Comment[] @relation("CommentPost")

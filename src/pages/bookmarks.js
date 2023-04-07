@@ -4,6 +4,7 @@ import { getBookmarkedPostsByUserId } from "../server/api/post/get-posts";
 import { useUser } from "@clerk/nextjs";
 import PostView from "../components/postView";
 import Reactions from "../components/reactions";
+import Spinner from "../components/spinner";
 
 const BookmarksPage = () => {
     const { user } = useUser();
