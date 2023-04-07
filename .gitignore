@@ -15,3 +15,4 @@ src/server/upload
 .env.test.local
 .env.production.local
 .next
+.prettierignore

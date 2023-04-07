@@ -1,18 +1,16 @@
 import { Head, Html, Main, NextScript } from "next/document";
 
 const Document = () => {
-  
-  return(
+  return (
     <Html>
-      <Head>
-      </Head>
+      <Head></Head>
       <body>
         <title>Fwitter</title>
-        <Main/>
-        <NextScript/>
+        <Main />
+        <NextScript />
       </body>
     </Html>
-    )
-}
+  );
+};
 
 export default Document;

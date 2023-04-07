@@ -1,38 +1,35 @@
-import { useUser } from '@clerk/nextjs';
-import Layout from '../components/layout';
-import Spinner from '../components/spinner';
-import Post from '../containers/post';
-import WritePost from '../containers/writePost';
-import { useHomePagePosts } from '../server/api/post/use-home-page-posts';
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "react-query";
+import Layout from "../components/layout";
+import Post from "../components/post";
+import Spinner from "../components/spinner";
+import WritePost from "../components/writePost";
+import { getPostsByUserId } from "../server/api/post/get-posts";
 
 const HomePage = () => {
-  const { user, isLoaded } = useUser();
-  const { data: posts, isLoading } = useHomePagePosts();
-  if(!isLoaded || isLoading) return <Spinner/>
+  const { user: userLoggedIn, isLoaded } = useUser();
+  const { data: posts, isFetched } = useQuery(['homePosts'], () => getPostsByUserId(userLoggedIn?.id), {
+    enabled: isLoaded
+  });
+
+  if (!isLoaded || !isFetched) return <Spinner />;
 
   return (
-      <>
-        <header className='main-header'>
-          Inicio
-        </header> 
-        <WritePost user={user}/>
-          {posts?.map(post => 
-            <div 
-              className='border-b border-stone-700' 
-              key={post.id}
-              >
-              <Post post={post}/>
-            </div>)}
-      </>
-  )
-}
+    <>
+      <WritePost userLoggedIn={userLoggedIn} />
+      {posts?.map((post) => (
+        <div className="border-b border-stone-700" key={post.id}>
+          <Post {...{post, userLoggedIn}}/>
+        </div>
+      ))}
+    </>
+  );
+};
 
 HomePage.getLayout = (page) => {
-  return(
-    <Layout>
-      {page}
-    </Layout>
-  )
-}
+  return (
+    <Layout>{page}</Layout>
+  );
+};
 
 export default HomePage;
