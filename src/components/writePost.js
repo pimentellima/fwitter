@@ -42,7 +42,7 @@ const WritePost = ({ userLoggedIn }) => {
   }, [imgWatch]);
 
   const onSubmit = (data) => {
-    mutation.mutate({...data, ingredients: JSON.stringify(data.ingredients)});
+    mutation.mutate({ ...data, ingredients: JSON.stringify(data.ingredients) });
   };
 
   return (
@@ -65,7 +65,7 @@ const WritePost = ({ userLoggedIn }) => {
         {ingredients.map((ingredient, index) => (
           <div
             key={ingredient.id}
-            className="grid h-14 grid-flow-col grid-cols-6 border border-stone-700 hover:border-stone-600 focus-within:border-stone-600 rounded-md transition ease-out"
+            className="grid h-14 grid-flow-col grid-cols-6 rounded-md border border-stone-700 transition ease-out focus-within:border-stone-600 hover:border-stone-600"
           >
             <input
               {...register(`ingredients.${index}.name`)}
@@ -84,14 +84,14 @@ const WritePost = ({ userLoggedIn }) => {
             />
             {index === 0 ? (
               <button
-                className="rounded-r-md border-stone-700 hover:border-stone-600 px-4 transition-colors ease-out hover:cursor-pointer bg-stone-700 hover:bg-stone-600 "
+                className="rounded-r-md border-stone-700 bg-stone-700 px-4 transition-colors ease-out hover:cursor-pointer hover:border-stone-600 hover:bg-stone-600 "
                 onClick={() => append({ name: "", qt: "", unity: "" })}
               >
                 +
               </button>
             ) : (
               <button
-                className="rounded-r-md border-stone-700 hover:border-stone-600 px-4 transition-colors ease-out hover:cursor-pointer bg-stone-700 hover:bg-stone-600 "
+                className="rounded-r-md border-stone-700 bg-stone-700 px-4 transition-colors ease-out hover:cursor-pointer hover:border-stone-600 hover:bg-stone-600 "
                 onClick={() => remove(index)}
               >
                 -

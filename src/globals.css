@@ -46,5 +46,4 @@
   .nav-icon {
     @apply h-10 w-10 items-center transition duration-100 ease-out;
   }
-
 }

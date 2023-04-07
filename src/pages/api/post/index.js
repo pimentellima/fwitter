@@ -4,7 +4,7 @@ const handler = async (req, res) => {
   try {
     const data = req.body;
     const newPost = await prisma.post.create({
-      data
+      data,
     });
     return res.status(200).json(newPost);
   } catch (error) {

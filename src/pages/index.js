@@ -1,16 +1,21 @@
 import { useUser } from "@clerk/nextjs";
 import { useQuery } from "react-query";
 import Layout from "../components/layout";
-import Post from "../components/post";
 import Spinner from "../components/spinner";
 import WritePost from "../components/writePost";
 import { getPostsByUserId } from "../server/api/post/get-posts";
+import Reactions from "../components/reactions";
+import PostView from "../components/postView";
 
 const HomePage = () => {
   const { user: userLoggedIn, isLoaded } = useUser();
-  const { data: posts, isFetched } = useQuery(['homePosts'], () => getPostsByUserId(userLoggedIn?.id), {
-    enabled: isLoaded
-  });
+  const { data: posts, isFetched } = useQuery(
+    ["homePosts"],
+    () => getPostsByUserId(userLoggedIn?.id),
+    {
+      enabled: isLoaded,
+    }
+  );
 
   if (!isLoaded || !isFetched) return <Spinner />;
 
@@ -19,7 +24,9 @@ const HomePage = () => {
       <WritePost userLoggedIn={userLoggedIn} />
       {posts?.map((post) => (
         <div className="border-b border-stone-700" key={post.id}>
-          <Post {...{post, userLoggedIn}}/>
+          <PostView post={post}>
+            <Reactions post={post} />
+          </PostView>
         </div>
       ))}
     </>
@@ -27,9 +34,7 @@ const HomePage = () => {
 };
 
 HomePage.getLayout = (page) => {
-  return (
-    <Layout>{page}</Layout>
-  );
+  return <Layout>{page}</Layout>;
 };
 
 export default HomePage;

@@ -8,7 +8,8 @@ export const uploadPostImg = async (file) => {
   return res.data;
 };
 
-export const useCreatePostMutation = () => useMutation((body) => {
+export const useCreatePostMutation = () =>
+  useMutation((body) => {
     /* const fileUrl = post_img && post_img[0] ? 
         await uploadPostImg(post_img[0]) : ''; */
 
@@ -17,11 +18,12 @@ export const useCreatePostMutation = () => useMutation((body) => {
       ...other,
     }; */
 
-    return axios.post('api/post', {...body});
-})
+    return axios.post("api/post", { ...body });
+  });
 
-export const usePostMutation = () => useMutation(({ options }) => {
+export const usePostMutation = () =>
+  useMutation(({ options }) => {
     const { url, body, method } = options;
-    if(method === 'POST') return axios.post(url, {...body})
-    if(method === 'DELETE') return axios.delete(url, { data: {...body} })
-  }) 
+    if (method === "POST") return axios.post(url, { ...body });
+    if (method === "DELETE") return axios.delete(url, { data: { ...body } });
+  });

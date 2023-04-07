@@ -11,8 +11,8 @@ const handler = async (req, res) => {
             post_id,
           },
         });
-        if(newBookmark) return res.status(200).json(newBookmark);
-        return res.status(500).json('Error')
+        if (newBookmark) return res.status(200).json(newBookmark);
+        return res.status(500).json("Error");
       case "DELETE":
         const deletedBookmark = await prisma.bookmark.deleteMany({
           where: {
@@ -20,8 +20,8 @@ const handler = async (req, res) => {
             post_id,
           },
         });
-        if(deletedBookmark) return res.status(200).json(deletedBookmark);
-        return res.status(500).json('Error')
+        if (deletedBookmark) return res.status(200).json(deletedBookmark);
+        return res.status(500).json("Error");
     }
   } catch (error) {
     console.log(error);

@@ -4,15 +4,16 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import Layout from "../components/layout";
-import Post from "../components/post";
+import PostView from "../components/postView";
 import ProfileView from "../components/profileView";
+import Reactions from "../components/reactions";
 import Spinner from "../components/spinner";
 import { getPostsByUserId } from "../server/api/post/get-posts";
 import { getFollowsById } from "../server/api/user/get-follows-by-id";
 import { getUserByUsername } from "../server/api/user/get-user";
 
-export const followReq = data => axios.post('/api/follow', {...data})
-export const unfollowReq = data => axios.delete('/api/follow', {...data})
+export const followReq = (data) => axios.post("/api/follow", { ...data });
+export const unfollowReq = (data) => axios.delete("/api/follow", { ...data });
 
 const ProfilePage = () => {
   const { query } = useRouter();
@@ -83,7 +84,8 @@ const ProfilePage = () => {
     setFollowers((n) => --n);
   };
 
-  if(!user || !userLoggedIn || !fetchedPosts || !fetchedFollows) return <Spinner />;
+  if (!user || !userLoggedIn || !fetchedPosts || !fetchedFollows)
+    return <Spinner />;
 
   return (
     <div>
@@ -100,7 +102,9 @@ const ProfilePage = () => {
       />
       {posts.map((post) => (
         <div className="border-b border-stone-700" key={post.id}>
-          <Post {...{ post, userLoggedIn }} />
+          <PostView post={post}>
+            <Reactions post={post} />
+          </PostView>
         </div>
       ))}
     </div>

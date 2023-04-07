@@ -11,12 +11,12 @@ import { useRouter } from "next/router";
 
 const PageName = () => {
   const { pathname, query } = useRouter();
-  if(pathname === '/') return <p>Início</p>;
-  if(pathname === '/explore') return <p>Explorar</p>
-  if(query) return <p>Perfil</p>
-  if(pathname === '/bookmarks') return <p>Salvos</p>
-  if(pathname === '/settings') return <p>Configurações</p>
-}
+  if (pathname === "/") return <p>Início</p>;
+  if (pathname === "/explore") return <p>Explorar</p>;
+  if (query) return <p>Perfil</p>;
+  if (pathname === "/bookmarks") return <p>Salvos</p>;
+  if (pathname === "/settings") return <p>Configurações</p>;
+};
 
 const Layout = ({ children }) => {
   const { user: userLoggedIn } = useUser();
@@ -24,75 +24,86 @@ const Layout = ({ children }) => {
   return (
     <div className="flex flex-row justify-center bg-stone-800">
       <nav
-      className="sticky top-0 flex h-screen 
+        className="sticky top-0 flex h-screen 
                 w-60 flex-col border-r border-stone-700 py-10"
-    >
-      <ul className="mb-10 flex flex-col">
-        <li>
-          <Link href="/" className="group flex">
-            <div className="mr-3 flex items-center gap-3 
+      >
+        <ul className="mb-10 flex flex-col">
+          <li>
+            <Link href="/" className="group flex">
+              <div
+                className="mr-3 flex items-center gap-3 
               rounded-full px-5 py-4 text-2xl font-normal
               tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700">
-              <HomeIcon className="h-8 w-8" />
-              Início
-            </div>
-          </Link>
-        </li>
-        <li>
-          <Link href="/" className="group flex">
-            <div className="mr-3 flex items-center gap-3 
+              group-hover:bg-stone-700"
+              >
+                <HomeIcon className="h-8 w-8" />
+                Início
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link href="/" className="group flex">
+              <div
+                className="mr-3 flex items-center gap-3 
               rounded-full px-5 py-4 text-2xl font-normal
               tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700">
-              <HashtagIcon className="h-8 w-8" />
-              Explorar
-            </div>
-          </Link>
-        </li>
-        <li>
-          <Link href={`/${userLoggedIn?.username}`} className="group flex">
-            <div className="mr-3 flex items-center gap-3 
+              group-hover:bg-stone-700"
+              >
+                <HashtagIcon className="h-8 w-8" />
+                Explorar
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link href={`/${userLoggedIn?.username}`} className="group flex">
+              <div
+                className="mr-3 flex items-center gap-3 
               rounded-full px-5 py-4 text-2xl font-normal
               tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700">
-              <UserIcon className="h-8 w-8" />
-              Perfil
-            </div>
-          </Link>
-        </li>
-        <li>
-          <Link href="/" className="group flex">
-            <div className="mr-3 flex items-center gap-3 
+              group-hover:bg-stone-700"
+              >
+                <UserIcon className="h-8 w-8" />
+                Perfil
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link href="/" className="group flex">
+              <div
+                className="mr-3 flex items-center gap-3 
               rounded-full px-5 py-4 text-2xl font-normal
               tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700">
-              <BookmarkIcon className="h-8 w-8" />
-              Salvos
-            </div>
-          </Link>
-        </li>
-        <li>
-          <Link href="/" className="group flex">
-            <div className="mr-3 flex items-center gap-3 
+              group-hover:bg-stone-700"
+              >
+                <BookmarkIcon className="h-8 w-8" />
+                Salvos
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link href="/" className="group flex">
+              <div
+                className="mr-3 flex items-center gap-3 
               rounded-full px-5 py-4 text-2xl font-normal
               tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700">
-              <CogIcon className="h-8 w-8" />
-              Configurações
-            </div>
-          </Link>
-        </li>
-      </ul>
-    </nav>
+              group-hover:bg-stone-700"
+              >
+                <CogIcon className="h-8 w-8" />
+                Configurações
+              </div>
+            </Link>
+          </li>
+        </ul>
+      </nav>
       <div
         className="flex min-h-[130vh] w-[600px] flex-col 
                     border-r border-stone-700"
       >
-        <header className="sticky top-0 z-20 border-b
+        <header
+          className="sticky top-0 z-20 border-b
           border-stone-700 bg-stone-800 pb-4 pl-3 pt-2 text-xl font-medium"
         >
-          <PageName/>
+          <PageName />
         </header>
         {children}
       </div>

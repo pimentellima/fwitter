@@ -3,7 +3,7 @@ import prisma from "../../../server/prismaClient";
 const handler = async (req, res) => {
   try {
     const { author_id, post_id } = req.body;
-    switch(req.method) {
+    switch (req.method) {
       case "POST":
         const newShare = await prisma.share.create({
           data: {
@@ -13,15 +13,15 @@ const handler = async (req, res) => {
         });
         if (newShare) return res.status(200).json(newShare);
         return res.status(500).json("Error creating share");
-      case 'DELETE': 
+      case "DELETE":
         const deletedShare = await prisma.share.deleteMany({
           where: {
             author_id,
             post_id,
           },
         });
-        if(deletedShare) return res.status(200).json(deletedShare)
-        return res.status(500).json('Error');
+        if (deletedShare) return res.status(200).json(deletedShare);
+        return res.status(500).json("Error");
     }
   } catch (error) {
     console.log(error);

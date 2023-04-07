@@ -1,7 +1,7 @@
 import moment from "moment";
 
 const ProfileView = (props) => {
-  const { 
+  const {
     userLoggedIn,
     user,
     handleFollow,

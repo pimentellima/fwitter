@@ -4,7 +4,7 @@ const handler = async (req, res) => {
   const { uid } = req.query;
   const follows = await prisma.follow.findMany({
     where: {
-      OR: [{ followed_id: uid }, { follower_id: uid }]
+      OR: [{ followed_id: uid }, { follower_id: uid }],
     },
   });
   if (follows) return res.status(200).json(follows);
