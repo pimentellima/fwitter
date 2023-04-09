@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/nextjs";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 import {
   HomeIcon,
   HashtagIcon,
@@ -22,8 +22,8 @@ const Layout = ({ children }) => {
   const { user: userLoggedIn } = useUser();
 
   const handleClickHeader = () => {
-    window.scrollTo(0,0);
-  }
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div className="flex flex-row justify-center bg-stone-800">
@@ -98,6 +98,7 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         </ul>
+        <SignOutButton>Sair</SignOutButton>
       </nav>
       <div
         className="flex min-h-[130vh] w-[600px] flex-col 
@@ -107,17 +108,17 @@ const Layout = ({ children }) => {
           className="sticky top-0 z-20 border-b
           border-stone-700 bg-stone-800 pb-4 pl-3 pt-2 text-xl font-medium"
         >
-          <div className='hover:cursor-pointer' onClick={handleClickHeader}>
+          <div className="hover:cursor-pointer" onClick={handleClickHeader}>
             <PageName />
           </div>
         </header>
         {children}
       </div>
       <div
-        className="sticky top-10 ml-4  h-60 w-60 rounded-2xl 
-                            bg-stone-700 p-3"
+        className="sticky top-10 ml-4 h-60 w-60 rounded-2xl 
+                            bg-stone-700 px-4 py-2"
       >
-        <p className="text-lg font-bold">Receitas em alta</p>
+        <p className="text-lg font-bold">Em alta</p>
       </div>
     </div>
   );

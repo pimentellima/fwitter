@@ -16,7 +16,7 @@ model Post {
   createdAt   DateTime @default(now())
   title       String
   ingredients String @db.MediumText
-  image       String?
+  imageUrl       String?
 
   comments    Comment[] @relation("CommentPost")
   comment     Comment?   @relation("Comment")

@@ -4,19 +4,21 @@ import { useMutation } from "react-query";
 export const uploadPostImg = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
-  const res = await request.post("/upload/post/", formData);
-  return res.data;
+  return axios
+    .post("https://ik.imagekit.io/fwitter", formData)
+    .then((res) => res.url);
 };
 
 export const useCreatePostMutation = () =>
-  useMutation((body) => {
-    /* const fileUrl = post_img && post_img[0] ? 
-        await uploadPostImg(post_img[0]) : ''; */
+  useMutation(async (body) => {
+    const fileUrl = post_img ? await uploadPostImg(post_img[0]) : "";
 
-    /* const { image, ...other } = data;
+    const { image, ...other } = data;
+
     const postData = {
+      /* imageUrl: fileUrl, */
       ...other,
-    }; */
+    };
 
     return axios.post("api/post", { ...body });
   });

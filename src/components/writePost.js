@@ -44,13 +44,16 @@ const WritePost = ({ userLoggedIn }) => {
   }, [imgWatch]);
 
   const onSubmit = (data) => {
-    mutation.mutate({ ...data, ingredients: JSON.stringify(data.ingredients) }, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['homePosts']);        
-        queryClient.invalidateQueries(['profilePosts']);     
-        reset();   
+    mutation.mutate(
+      { ...data, ingredients: JSON.stringify(data.ingredients) },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["homePosts"]);
+          queryClient.invalidateQueries(["profilePosts"]);
+          reset();
+        },
       }
-    });
+    );
   };
 
   return (
@@ -68,27 +71,27 @@ const WritePost = ({ userLoggedIn }) => {
         <input
           {...register("title", { required: true })}
           placeholder="Que receita você está fazendo agora?"
-          className="bg-inherit pl-2 outline-none placeholder:text-stone-500 mb-4 text-lg text-stone-100"
+          className="mb-4 bg-inherit pl-2 text-lg text-stone-100 outline-none placeholder:text-stone-500"
         />
         {ingredients.map((ingredient, index) => (
           <div
             key={ingredient.id}
-            className="grid mb-2 h-14 grid-flow-col grid-cols-6 rounded-md border border-stone-700 transition ease-out focus-within:border-stone-600 hover:border-stone-600"
+            className="mb-2 grid h-14 grid-flow-col grid-cols-6 rounded-md border border-stone-700 transition ease-out focus-within:border-stone-600 hover:border-stone-600"
           >
             <input
               {...register(`ingredients.${index}.name`, { required: true })}
               placeholder="Ingrediente"
-              className="pl-2 placeholder:text-stone-500 col-span-3"
+              className="col-span-3 pl-2 placeholder:text-stone-500"
             />
             <input
               {...register(`ingredients.${index}.qt`, { required: true })}
-              placeholder="Qtd" 
-              className="pl-2 placeholder:text-stone-500 border-l border-stone-700"
+              placeholder="Qtd"
+              className="border-l border-stone-700 pl-2 placeholder:text-stone-500"
             />
             <input
               {...register(`ingredients.${index}.unity`, { required: true })}
               placeholder="Uni"
-              className="pl-2 placeholder:text-stone-500 border-l border-stone-700"
+              className="border-l border-stone-700 pl-2 placeholder:text-stone-500"
             />
             {index === 0 ? (
               <button
@@ -132,7 +135,11 @@ const WritePost = ({ userLoggedIn }) => {
           />
           <button
             className={`fweet-btn col-start-2 w-28 justify-self-end
-                        ${isValid ? "hover:cursor-pointer hover:bg-stone-600;" : "cursor-default opacity-50"}`}
+                        ${
+                          isValid
+                            ? "hover:bg-stone-600; hover:cursor-pointer"
+                            : "cursor-default opacity-50"
+                        }`}
           >
             Fweet
           </button>

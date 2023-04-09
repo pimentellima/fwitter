@@ -7,28 +7,32 @@ import Reactions from "../components/reactions";
 import Spinner from "../components/spinner";
 
 const BookmarksPage = () => {
-    const { user } = useUser();
-    const { data: posts, isFetched } = useQuery(['bookmarkedPosts'], () => getBookmarkedPostsByUserId(user?.id), {
-        enabled: !!user
-    })    
+  const { user } = useUser();
+  const { data: posts, isFetched } = useQuery(
+    ["bookmarkedPosts"],
+    () => getBookmarkedPostsByUserId(user?.id),
+    {
+      enabled: !!user,
+    }
+  );
 
-    if(!isFetched) return <Spinner />;
+  if (!isFetched) return <Spinner />;
 
-    return(
-        <>
-            {posts?.map((post) => (
-                <div className="border-b border-stone-700" key={post.id}>
-                    <PostView post={post}>
-                        <Reactions post={post} />
-                    </PostView>
-                </div>
-            ))}
+  return (
+    <>
+      {posts?.map((post) => (
+        <div className="border-b border-stone-700" key={post.id}>
+          <PostView post={post}>
+            <Reactions post={post} />
+          </PostView>
+        </div>
+      ))}
     </>
-    )
-}
+  );
+};
 
 BookmarksPage.getLayout = (page) => {
-    return <Layout>{page}</Layout>;
-  };
+  return <Layout>{page}</Layout>;
+};
 
 export default BookmarksPage;

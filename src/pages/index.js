@@ -3,7 +3,10 @@ import { useQuery } from "react-query";
 import Layout from "../components/layout";
 import Spinner from "../components/spinner";
 import WritePost from "../components/writePost";
-import { getHomePagePostsByUserId, getPostsByUserId } from "../server/api/post/get-posts";
+import {
+  getHomePagePostsByUserId,
+  getPostsByUserId,
+} from "../server/api/post/get-posts";
 import Reactions from "../components/reactions";
 import PostView from "../components/postView";
 import { useRouter } from "next/router";

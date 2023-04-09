@@ -1,6 +1,7 @@
 import { QueryClientProvider, QueryClient } from "react-query";
 import "../globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { IKContext } from "imagekitio-react";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,9 +16,11 @@ const App = ({ Component, pageProps }) => {
 
   return (
     <ClerkProvider {...pageProps}>
-      <QueryClientProvider client={queryClient}>
-        {getLayout(<Component {...pageProps} />)}
-      </QueryClientProvider>
+      <IKContext urlEndpoint={"https://ik.imagekit.io/fwitter"}>
+        <QueryClientProvider client={queryClient}>
+          {getLayout(<Component {...pageProps} />)}
+        </QueryClientProvider>
+      </IKContext>
     </ClerkProvider>
   );
 };

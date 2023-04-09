@@ -16,10 +16,13 @@ const Reactions = ({ post }) => {
 
   const [reactions, setReactions] = useState({
     liked: !!likes.find((like) => like.author_id === userLoggedIn?.id),
+    numLikes: likes.length,
     bookmarked: !!bookmarks.find(
       (bookmarks) => bookmarks.author_id === userLoggedIn?.id
     ),
+    numBookmarks: bookmarks.length,
     shared: !!shares.find((share) => share.author_id === userLoggedIn?.id),
+    numShares: shares.length,
   });
 
   const mutation = usePostMutation();
@@ -50,6 +53,9 @@ const Reactions = ({ post }) => {
     setReactions((reactions) => ({
       ...reactions,
       bookmarked: !reactions.bookmarked,
+      numBookmarks: reactions.bookmarked
+        ? reactions.numBookmarks - 1
+        : reactions.numBookmarks + 1,
     }));
   };
 
@@ -79,6 +85,9 @@ const Reactions = ({ post }) => {
     setReactions((reactions) => ({
       ...reactions,
       shared: !reactions.shared,
+      numShares: reactions.shared
+        ? reactions.numShares - 1
+        : reactions.numShares + 1,
     }));
   };
 
@@ -108,6 +117,9 @@ const Reactions = ({ post }) => {
     setReactions((reactions) => ({
       ...reactions,
       liked: !reactions.liked,
+      numLikes: reactions.liked
+        ? reactions.numLikes - 1
+        : reactions.numLikes + 1,
     }));
   };
 
@@ -116,22 +128,70 @@ const Reactions = ({ post }) => {
       className="flex flex-row 
                         items-center justify-between pt-4"
     >
-      <ChatBubbleOvalLeftIcon className={`post-icon`} />
-      <ShareIcon
+      <button>
+        <ChatBubbleOvalLeftIcon
+          className={`h-10 w-10 rounded-full p-2 transition
+            ease-out
+            text-stone-400
+            hover:bg-stone-700
+            hover:text-blue-400`}
+        />
+      </button>
+      <button
         onClick={handleShare}
-        className={`post-icon 
-                                ${reactions.shared && "text-green-400"}`}
-      />
-      <HandThumbUpIcon
+        className="group flex h-12 w-12 items-center text-xs text-stone-400"
+      >
+        <ShareIcon
+          className={`h-10 w-10 rounded-full p-2 transition
+          ease-out
+          hover:bg-stone-700
+          hover:text-green-400
+          group-hover:text-green-400 ${reactions.shared && "text-green-400"}`}
+        />
+        <p
+          className={`${
+            reactions.shared && "text-green-400"
+          } transition ease-out group-hover:text-green-400`}
+        >
+          {reactions.numShares > 0 && reactions.numShares}
+        </p>
+      </button>
+      <button
         onClick={handleLike}
-        className={`post-icon 
-                                ${reactions.liked && "text-red-400"}`}
-      />
-      <BookmarkIcon
+        className="group flex h-12 w-12 items-center text-sm text-stone-400"
+      >
+        <HandThumbUpIcon
+          className={`h-10 w-10 rounded-full p-2 transition
+           ease-out
+           hover:bg-stone-700
+           hover:text-red-400 ${reactions.liked && "text-red-400"}`}
+        />
+        <p
+          className={`${
+            reactions.liked && "text-red-400"
+          } transition ease-out group-hover:text-red-400`}
+        >
+          {reactions.numLikes > 0 && reactions.numLikes}
+        </p>
+      </button>
+      <button
         onClick={handleBookmark}
-        className={`post-icon 
-                                ${reactions.bookmarked && "text-orange-400"}`}
-      />
+        className="group flex h-12 w-12 items-center text-sm text-stone-400"
+      >
+        <BookmarkIcon
+          className={`h-10 w-10 rounded-full p-2 transition
+           ease-out
+           hover:bg-stone-700
+           hover:text-orange-400 ${reactions.bookmarked && "text-orange-400"}`}
+        />
+        <p
+          className={`${
+            reactions.bookmarked && "text-orange-400"
+          } transition ease-out group-hover:text-orange-400`}
+        >
+          {reactions.numBookmarks > 0 && reactions.numBookmarks}
+        </p>
+      </button>
     </div>
   );
 };

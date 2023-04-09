@@ -18,7 +18,7 @@ const handler = async (req, res) => {
       });
       const author = await clerkClient.users.getUser(post.author_id);
       if (!post || !author) return res.status(404).json("Not found");
-      return res.status(200).json({...post, author});
+      return res.status(200).json({ ...post, author });
     }
     /* if(req.method === 'DELETE') {
 
