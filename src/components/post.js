@@ -1,15 +1,13 @@
-import {
-  BookmarkIcon,
-  ChatBubbleOvalLeftIcon,
-  HandThumbUpIcon,
-  ShareIcon,
-} from "@heroicons/react/20/solid";
+import moment from "moment";
 import "moment/locale/pt-br";
 import { useState } from "react";
 import { usePostMutation } from "../server/api/post/post-mutations";
+import { BookmarkIcon, ChatBubbleOvalLeftIcon, HandThumbUpIcon, ShareIcon } from "@heroicons/react/24/outline";
 import { useUser } from "@clerk/nextjs";
 
-const Reactions = ({ post }) => {
+const Post = ({ post }) => {
+  const { author, createdAt, title, ingredients } = post;
+
   const { user: userLoggedIn } = useUser();
 
   const { id: post_id, likes, bookmarks, shares } = post;
@@ -124,76 +122,114 @@ const Reactions = ({ post }) => {
   };
 
   return (
-    <div
-      className="flex flex-row 
+    <div className="flex flex-row py-3">
+      <img
+        className="user-img hover:cursor-pointer"
+        src={author?.profileImageUrl}
+        alt="profileImage"
+      />
+      <div className="mr-6 flex w-full flex-col">
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2">
+            <p
+              className="font-bold 
+                            hover:cursor-pointer hover:underline"
+            >
+              {author?.firstName}
+            </p>
+            <div
+              className="flex flex-row gap-1 
+                                  text-sm text-stone-400 hover:cursor-pointer"
+            >
+              <p>{"@" + author?.username}</p>
+              <p>
+                {" "}
+                {". " + moment(createdAt, "YYYY-MM-DD HH:mm:ss").fromNow(true)}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col">
+          <p className="my-1 text-xl">{title}</p>
+          {ingredients?.map((ingredient, index) => (
+            <p key={index} className="inline">
+              {" "}
+              {ingredient.qt + " " + ingredient.unity + " " + ingredient.name}
+            </p>
+          ))}
+          <div
+            className="flex flex-row 
                         items-center justify-between pt-4"
-    >
-      <button>
-        <ChatBubbleOvalLeftIcon
-          className={`h-10 w-10 rounded-full p-2 transition
+          >
+            <button>
+              <ChatBubbleOvalLeftIcon
+                className={`h-10 w-10 rounded-full p-2 text-stone-400
+            transition
             ease-out
-            text-stone-400
             hover:bg-stone-700
             hover:text-blue-400`}
-        />
-      </button>
-      <button
-        onClick={handleShare}
-        className="group flex h-12 w-12 items-center text-xs text-stone-400"
-      >
-        <ShareIcon
-          className={`h-10 w-10 rounded-full p-2 transition
+              />
+            </button>
+            <button
+              onClick={handleShare}
+              className="group flex h-12 w-12 items-center text-xs text-stone-400"
+            >
+              <ShareIcon
+                className={`h-10 w-10 rounded-full p-2 transition
           ease-out
           hover:bg-stone-700
           hover:text-green-400
           group-hover:text-green-400 ${reactions.shared && "text-green-400"}`}
-        />
-        <p
-          className={`${
-            reactions.shared && "text-green-400"
-          } transition ease-out group-hover:text-green-400`}
-        >
-          {reactions.numShares > 0 && reactions.numShares}
-        </p>
-      </button>
-      <button
-        onClick={handleLike}
-        className="group flex h-12 w-12 items-center text-sm text-stone-400"
-      >
-        <HandThumbUpIcon
-          className={`h-10 w-10 rounded-full p-2 transition
+              />
+              <p
+                className={`text-xs ${
+                  reactions.shared && "text-green-400"
+                } transition ease-out group-hover:text-green-400`}
+              >
+                {reactions.numShares > 0 && reactions.numShares}
+              </p>
+            </button>
+            <button
+              onClick={handleLike}
+              className="group flex h-12 w-12 items-center text-sm text-stone-400"
+            >
+              <HandThumbUpIcon
+                className={`h-10 w-10 rounded-full p-2 transition
            ease-out
            hover:bg-stone-700
            hover:text-red-400 ${reactions.liked && "text-red-400"}`}
-        />
-        <p
-          className={`${
-            reactions.liked && "text-red-400"
-          } transition ease-out group-hover:text-red-400`}
-        >
-          {reactions.numLikes > 0 && reactions.numLikes}
-        </p>
-      </button>
-      <button
-        onClick={handleBookmark}
-        className="group flex h-12 w-12 items-center text-sm text-stone-400"
-      >
-        <BookmarkIcon
-          className={`h-10 w-10 rounded-full p-2 transition
+              />
+              <p
+                className={`${
+                  reactions.liked && "text-red-400"
+                } transition ease-out group-hover:text-red-400`}
+              >
+                {reactions.numLikes > 0 && reactions.numLikes}
+              </p>
+            </button>
+            <button
+              onClick={handleBookmark}
+              className="group flex h-12 w-12 items-center text-sm text-stone-400"
+            >
+              <BookmarkIcon
+                className={`h-10 w-10 rounded-full p-2 transition
            ease-out
            hover:bg-stone-700
            hover:text-orange-400 ${reactions.bookmarked && "text-orange-400"}`}
-        />
-        <p
-          className={`${
-            reactions.bookmarked && "text-orange-400"
-          } transition ease-out group-hover:text-orange-400`}
-        >
-          {reactions.numBookmarks > 0 && reactions.numBookmarks}
-        </p>
-      </button>
+              />
+              <p
+                className={`${
+                  reactions.bookmarked && "text-orange-400"
+                } transition ease-out group-hover:text-orange-400`}
+              >
+                {reactions.numBookmarks > 0 && reactions.numBookmarks}
+              </p>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Reactions;
+export default Post;

@@ -15,7 +15,7 @@ const EditProfile = ({ onSubmit, onCloseModal }) => {
   const imgWatch = watch("profile_img");
 
   useEffect(() => {
-    if (imgWatch && imgWatch.length) {
+    if (imgWatch?.length) {
       const url = URL.createObjectURL(imgWatch[0]);
       setImgPreview(url);
     }

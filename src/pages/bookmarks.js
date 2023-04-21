@@ -2,8 +2,7 @@ import { useQuery } from "react-query";
 import Layout from "../components/layout";
 import { getBookmarkedPostsByUserId } from "../server/api/post/get-posts";
 import { useUser } from "@clerk/nextjs";
-import PostView from "../components/postView";
-import Reactions from "../components/reactions";
+import PostView from "../components/post";
 import Spinner from "../components/spinner";
 
 const BookmarksPage = () => {
@@ -22,9 +21,7 @@ const BookmarksPage = () => {
     <>
       {posts?.map((post) => (
         <div className="border-b border-stone-700" key={post.id}>
-          <PostView post={post}>
-            <Reactions post={post} />
-          </PostView>
+          <PostView post={post}/>
         </div>
       ))}
     </>
