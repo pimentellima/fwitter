@@ -1,131 +1,78 @@
 import moment from "moment";
 import "moment/locale/pt-br";
 import { useState } from "react";
-import { usePostMutation } from "../server/api/post/post-mutations";
-import { BookmarkIcon, ChatBubbleOvalLeftIcon, HandThumbUpIcon, ShareIcon } from "@heroicons/react/24/outline";
-import { useUser } from "@clerk/nextjs";
+import {
+  BookmarkIcon,
+  ChatBubbleOvalLeftIcon,
+  HandThumbUpIcon,
+  ShareIcon,
+} from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
+import { useMutation } from "react-query";
+import axios from "axios";
 
 const Post = ({ post }) => {
-  const { author, createdAt, title, ingredients } = post;
+  const { id: post_id, author, ingredients, createdAt, title } = post;
+  const session = useSession();
+  const loggedUser = session?.data?.user;
 
-  const { user: userLoggedIn } = useUser();
+  const [likes, setLikes] = useState(post.likes);
+  const [bookmarks, setBookmarks] = useState(post.bookmarks);
+  const [shares, setShares] = useState(post.shares);
+  const bookmarked = !!bookmarks.find((b) => b.author_id === loggedUser.id);
+  const liked = !!likes.find((b) => b.author_id === loggedUser.id);
+  const shared = !!shares.find((b) => b.author_id === loggedUser.id);
 
-  const { id: post_id, likes, bookmarks, shares } = post;
-
-  const [reactions, setReactions] = useState({
-    liked: !!likes.find((like) => like.author_id === userLoggedIn?.id),
-    numLikes: likes.length,
-    bookmarked: !!bookmarks.find(
-      (bookmarks) => bookmarks.author_id === userLoggedIn?.id
-    ),
-    numBookmarks: bookmarks.length,
-    shared: !!shares.find((share) => share.author_id === userLoggedIn?.id),
-    numShares: shares.length,
+  const mutation = useMutation(({ url, method }) => {
+    if (method === "POST")
+      return axios.post(url, { post_id, author_id: loggedUser.id });
+    if (method === "DELETE")
+      return axios.delete(url, {
+        data: { post_id, author_id: loggedUser.id },
+      });
   });
-
-  const mutation = usePostMutation();
 
   const handleBookmark = (e) => {
     e.stopPropagation();
-    reactions.bookmarked
-      ? mutation.mutate({
-          options: {
-            body: {
-              post_id,
-              author_id: userLoggedIn.id,
-            },
-            url: "api/bookmark",
-            method: "DELETE",
-          },
-        })
-      : mutation.mutate({
-          options: {
-            body: {
-              post_id,
-              author_id: userLoggedIn.id,
-            },
-            url: "api/bookmark",
-            method: "POST",
-          },
-        });
-    setReactions((reactions) => ({
-      ...reactions,
-      bookmarked: !reactions.bookmarked,
-      numBookmarks: reactions.bookmarked
-        ? reactions.numBookmarks - 1
-        : reactions.numBookmarks + 1,
-    }));
+    mutation.mutate({
+      url: "api/bookmark",
+      method: bookmarked ? "DELETE" : "POST",
+    });
+    const arr = bookmarked
+      ? shares.filter((i) => i.author_id !== loggedUser.id)
+      : [...shares, { author_id: loggedUser.id, post_id }];
+    setBookmarks(arr);
   };
 
   const handleShare = (e) => {
     e.stopPropagation();
-    reactions.shared
-      ? mutation.mutate({
-          options: {
-            body: {
-              post_id,
-              author_id: userLoggedIn.id,
-            },
-            url: "api/share",
-            method: "DELETE",
-          },
-        })
-      : mutation.mutate({
-          options: {
-            body: {
-              post_id,
-              author_id: userLoggedIn.id,
-            },
-            url: "api/share",
-            method: "POST",
-          },
-        });
-    setReactions((reactions) => ({
-      ...reactions,
-      shared: !reactions.shared,
-      numShares: reactions.shared
-        ? reactions.numShares - 1
-        : reactions.numShares + 1,
-    }));
+    mutation.mutate({
+      url: "api/share",
+      method: shared ? "DELETE" : "POST",
+    });
+    const arr = shared
+      ? shares.filter((i) => i.author_id !== loggedUser.id)
+      : [...shares, { author_id: loggedUser.id, post_id }];
+    setShares(arr);
   };
 
   const handleLike = (e) => {
     e.stopPropagation();
-    reactions.liked
-      ? mutation.mutate({
-          options: {
-            body: {
-              post_id,
-              author_id: userLoggedIn.id,
-            },
-            url: "api/like",
-            method: "DELETE",
-          },
-        })
-      : mutation.mutate({
-          options: {
-            body: {
-              post_id,
-              author_id: userLoggedIn.id,
-            },
-            url: "api/like",
-            method: "POST",
-          },
-        });
-    setReactions((reactions) => ({
-      ...reactions,
-      liked: !reactions.liked,
-      numLikes: reactions.liked
-        ? reactions.numLikes - 1
-        : reactions.numLikes + 1,
-    }));
+    mutation.mutate({
+      url: "api/like",
+      method: liked ? "DELETE" : "POST",
+    });
+    const arr = liked
+      ? likes.filter((i) => i.author_id !== loggedUser.id)
+      : [...likes, { author_id: loggedUser.id, post_id }];
+    setLikes(arr);
   };
 
   return (
     <div className="flex flex-row py-3">
       <img
         className="user-img hover:cursor-pointer"
-        src={author?.profileImageUrl}
+        src={author.profileImageUrl}
         alt="profileImage"
       />
       <div className="mr-6 flex w-full flex-col">
@@ -135,13 +82,13 @@ const Post = ({ post }) => {
               className="font-bold 
                             hover:cursor-pointer hover:underline"
             >
-              {author?.firstName}
+              {author.name}
             </p>
             <div
               className="flex flex-row gap-1 
                                   text-sm text-stone-400 hover:cursor-pointer"
             >
-              <p>{"@" + author?.username}</p>
+              <p>{"@" + author.username}</p>
               <p>
                 {" "}
                 {". " + moment(createdAt, "YYYY-MM-DD HH:mm:ss").fromNow(true)}
@@ -179,14 +126,14 @@ const Post = ({ post }) => {
           ease-out
           hover:bg-stone-700
           hover:text-green-400
-          group-hover:text-green-400 ${reactions.shared && "text-green-400"}`}
+          group-hover:text-green-400 ${shared && "text-green-400"}`}
               />
               <p
                 className={`text-xs ${
-                  reactions.shared && "text-green-400"
+                  shared && "text-green-400"
                 } transition ease-out group-hover:text-green-400`}
               >
-                {reactions.numShares > 0 && reactions.numShares}
+                {shares.length > 0 && shares.length}
               </p>
             </button>
             <button
@@ -197,14 +144,14 @@ const Post = ({ post }) => {
                 className={`h-10 w-10 rounded-full p-2 transition
            ease-out
            hover:bg-stone-700
-           hover:text-red-400 ${reactions.liked && "text-red-400"}`}
+           hover:text-red-400 ${liked && "text-red-400"}`}
               />
               <p
                 className={`${
-                  reactions.liked && "text-red-400"
+                  liked && "text-red-400"
                 } transition ease-out group-hover:text-red-400`}
               >
-                {reactions.numLikes > 0 && reactions.numLikes}
+                {likes.length > 0 && likes.length}
               </p>
             </button>
             <button
@@ -215,14 +162,14 @@ const Post = ({ post }) => {
                 className={`h-10 w-10 rounded-full p-2 transition
            ease-out
            hover:bg-stone-700
-           hover:text-orange-400 ${reactions.bookmarked && "text-orange-400"}`}
+           hover:text-orange-400 ${bookmarked && "text-orange-400"}`}
               />
               <p
                 className={`${
-                  reactions.bookmarked && "text-orange-400"
+                  bookmarked && "text-orange-400"
                 } transition ease-out group-hover:text-orange-400`}
               >
-                {reactions.numBookmarks > 0 && reactions.numBookmarks}
+                {bookmarks.length > 0 && bookmarks.length}
               </p>
             </button>
           </div>

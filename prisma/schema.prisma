@@ -10,60 +10,77 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  username        String
+  name            String
+  password        String
+  profileImageUrl String?
+
+  posts Post[]
+}
+
 model Post {
-  id          Int     @id @default(autoincrement())
-  author_id   String  @db.VarChar(255)
+  id          Int      @id @default(autoincrement())
+  author_id   Int    
   createdAt   DateTime @default(now())
   title       String
-  ingredients String @db.MediumText
-  imageUrl       String?
+  ingredients String   @db.MediumText
+  imageUrl    String?
 
-  comments    Comment[] @relation("CommentPost")
-  comment     Comment?   @relation("Comment")
-  bookmarks   Bookmark[]
-  shares      Share[]
-  likes       Like[]
+  author User @relation(fields: [author_id], references: [id])
+  @@unique([id, author_id])
+
+  comments  Comment[]  @relation("CommentPost")
+  comment   Comment?   @relation("Comment")
+  bookmarks Bookmark[]
+  shares    Share[]
+  likes     Like[]
 }
 
 model Comment {
-  id            Int @id @default(autoincrement())
-  parent_post   Post @relation("CommentPost", fields: [parent_post_id], references: [id])
+  id             Int @id @default(autoincrement())
   parent_post_id Int @unique
-  post          Post @relation("Comment", fields: [post_id], references: [id])
-  post_id       Int @unique
+  post_id        Int @unique
 
+  parent_post Post @relation("CommentPost", fields: [parent_post_id], references: [id])
+  post        Post @relation("Comment", fields: [post_id], references: [id])
 }
 
 model Bookmark {
-  id        Int     @id @default(autoincrement())
-  post      Post    @relation(fields: [post_id], references: [id])
-  post_id   Int 
-  author_id String @db.VarChar(255)
+  id        Int    @id @default(autoincrement())
+  post_id   Int
+  author_id Int 
+
+  post Post @relation(fields: [post_id], references: [id])
 
   @@unique([post_id, author_id])
 }
 
 model Share {
   id        Int      @id @default(autoincrement())
-  post      Post     @relation(fields: [post_id], references: [id])
-  post_id   Int 
-  author_id  String @db.VarChar(255)
+  post_id   Int
+  author_id Int   
   createdAt DateTime @default(now())
+
+  post Post @relation(fields: [post_id], references: [id])
 }
 
 model Follow {
-  id            Int @id @default(autoincrement())
-  followed_id    String 
-  follower_id    String 
+  id          Int    @id @default(autoincrement())
+  followed_id Int
+  follower_id Int
 
   @@unique([followed_id, follower_id])
 }
 
 model Like {
   id        Int    @id @default(autoincrement())
-  post      Post   @relation(fields: [post_id], references: [id])
-  post_id    Int 
-  author_id  String  @db.VarChar(255) 
+  post_id   Int
+  author_id Int 
+
+  post Post @relation(fields: [post_id], references: [id])
 
   @@unique([post_id, author_id])
 }

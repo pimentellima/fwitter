@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -10,16 +9,18 @@ import { getPostsByUserId } from "../server/api/post/get-posts";
 import { getFollowsById } from "../server/api/user/get-follows-by-id";
 import { getUserByUsername } from "../server/api/user/get-user";
 import moment from "moment";
+import { useSession } from "next-auth/react";
 
 export const followReq = (data) => axios.post("/api/follow", { ...data });
 export const unfollowReq = (data) => axios.delete("/api/follow", { ...data });
 
 const ProfilePage = () => {
   const { query } = useRouter();
-  const username = query.username;
-  const { user: userLoggedIn } = useUser();
+  const {
+    data: { user: loggedUser },
+  } = useSession();
 
-  const { data: user } = useQuery(["user"], () => getUserByUsername(username), {
+  const { data: user } = useQuery(["user"], () => getUserByUsername(query.username), {
     enabled: !!query.username,
   });
 
@@ -44,7 +45,7 @@ const ProfilePage = () => {
   const [isFollowedByUser, setIsFollowedByUser] = useState(false);
 
   useEffect(() => {
-    if (userLoggedIn && follows) {
+    if (loggedUser && follows) {
       setFollowers(
         follows.filter((follow) => follow.followed_id === user.id).length
       );
@@ -54,18 +55,18 @@ const ProfilePage = () => {
       );
 
       setIsFollowedByUser(
-        follows.filter((follow) => follow.follower_id === userLoggedIn.id)
+        follows.filter((follow) => follow.follower_id === loggedUser.id)
           .length > 0
       );
     }
-  }, [userLoggedIn, follows]);
+  }, [loggedUser, follows]);
 
   const follow = useMutation(followReq);
   const unfollow = useMutation(unfollowReq);
 
   const handleFollow = () => {
     follow.mutate({
-      follower_id: userLoggedIn.id,
+      follower_id: loggedUser.id,
       followed_id: user.id,
     });
     setIsFollowedByUser(true);
@@ -75,7 +76,7 @@ const ProfilePage = () => {
   const handleUnfollow = () => {
     unfollow.mutate({
       data: {
-        follower_id: userLoggedIn.id,
+        follower_id: loggedUser.id,
         followed_id: user.id,
       },
     });
@@ -83,8 +84,7 @@ const ProfilePage = () => {
     setFollowers((n) => --n);
   };
 
-  if (!user || !userLoggedIn || !fetchedPosts || !fetchedFollows)
-    return <Spinner />;
+  if (!user || !loggedUser || !fetchedPosts || !fetchedFollows) return <Spinner />;
 
   return (
     <div>
@@ -104,7 +104,7 @@ const ProfilePage = () => {
             src={user.profileImageUrl}
             alt="profileImage"
           />
-          {user.id === userLoggedIn?.id ? (
+          {user.id === loggedUser?.id ? (
             <button
               onClick={() => {}}
               className="default-btn 
@@ -132,7 +132,7 @@ const ProfilePage = () => {
         </div>
       </div>
       <div className="mt-3 flex flex-col pl-5">
-        <p className="text-2xl">{user.firstName + "  "}</p>
+        <p className="text-2xl">{user.name + "  "}</p>
         <p className="text-stone-400">{"@" + user.username}</p>
         <p className="mt-3 text-stone-400">
           {`Juntou-se em ${moment(user.createdAt).format("ll")}`}

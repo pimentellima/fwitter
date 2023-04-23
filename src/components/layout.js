@@ -1,4 +1,3 @@
-import { SignOutButton, useUser } from "@clerk/nextjs";
 import {
   HomeIcon,
   HashtagIcon,
@@ -6,20 +5,33 @@ import {
   CogIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
-const PageName = () => {
-  const { pathname, query } = useRouter();
-  if (pathname === "/") return <p>Início</p>;
-  if (pathname === "/explore") return <p>Explorar</p>;
-  if (query.username) return <p>{query.username}</p>;
-  if (pathname === "/bookmarks") return <p>Salvos</p>;
-  if (pathname === "/settings") return <p>Configurações</p>;
-};
+import { useEffect, useState } from "react";
 
 const Layout = ({ children }) => {
-  const { user: userLoggedIn } = useUser();
+  const { data } = useSession();
+  const router = useRouter();
+  const { pathname, query } = useRouter();
+  const [headerTitle, setHeaderTitle] = useState('');
+
+  useEffect(() => {
+    setHeaderTitle(() => {
+      if (query.username) return query.username;
+      switch(pathname) {
+        case '/': return 'Inicio'
+        case '/explore': return 'Explorar'
+        case '/bookmarks': return 'Salvos'
+        case '/settings': return 'Configurações'
+      }
+    })
+  }, [pathname])
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/signin');
+  }
 
   const handleClickHeader = () => {
     window.scrollTo(0, 0);
@@ -59,7 +71,7 @@ const Layout = ({ children }) => {
             </Link>
           </li>
           <li>
-            <Link href={`/${userLoggedIn?.username}`} className="group flex">
+            <Link href={`/${data?.user.username}`} className="group flex">
               <div
                 className="mr-3 flex items-center gap-3 
               rounded-full px-5 py-4 text-2xl font-normal
@@ -98,7 +110,10 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         </ul>
-        <SignOutButton>Sair</SignOutButton>
+        <div className='flex gap-3 hover:bg-stone-500'>
+          <p>{data?.user.name}</p>
+          <button onClick={handleSignOut}>Sair</button>
+        </div>
       </nav>
       <div
         className="flex min-h-[130vh] w-[600px] flex-col 
@@ -109,7 +124,7 @@ const Layout = ({ children }) => {
           border-stone-700 bg-stone-800 pb-4 pl-3 pt-2 text-xl font-medium"
         >
           <div className="hover:cursor-pointer" onClick={handleClickHeader}>
-            <PageName />
+            <p>{headerTitle}</p>
           </div>
         </header>
         {children}

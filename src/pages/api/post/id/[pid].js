@@ -1,24 +1,22 @@
 import prisma from "../../../../server/prismaClient";
-import { clerkClient } from "@clerk/nextjs/server";
 
 const handler = async (req, res) => {
   try {
     if (req.method === "GET") {
-      const id = req.params.id;
-      const post = await prisma.post.findMany({
+      const post = await prisma.post.findUnique({
         where: {
-          id,
+          id: parseInt(req.params.id)
         },
         include: {
           comments: true,
           bookmarks: true,
           shares: true,
           likes: true,
+          author: true,
         },
       });
-      const author = await clerkClient.users.getUser(post.author_id);
-      if (!post || !author) return res.status(404).json("Not found");
-      return res.status(200).json({ ...post, author });
+      if(!post) return res.status(404).json('Not found');
+      return res.status(200).json(post);
     }
     /* if(req.method === 'DELETE') {
 

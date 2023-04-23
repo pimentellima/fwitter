@@ -1,27 +1,37 @@
 import { useQuery } from "react-query";
 import Layout from "../components/layout";
 import { getBookmarkedPostsByUserId } from "../server/api/post/get-posts";
-import { useUser } from "@clerk/nextjs";
-import PostView from "../components/post";
 import Spinner from "../components/spinner";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import Post from "../components/post";
 
 const BookmarksPage = () => {
-  const { user } = useUser();
-  const { data: posts, isFetched } = useQuery(
+  const router = useRouter();
+  const { data, status } = useSession()
+
+  const { data: posts, isFetching } = useQuery(
     ["bookmarkedPosts"],
-    () => getBookmarkedPostsByUserId(user?.id),
+    () => getBookmarkedPostsByUserId(data?.user.id),
     {
-      enabled: !!user,
+      enabled: status === 'authenticated',
     }
   );
 
-  if (!isFetched) return <Spinner />;
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/signin')
+    }
+  }, [status])
+
+  if (isFetching || status === 'loading') return <Spinner />;
 
   return (
     <>
       {posts?.map((post) => (
         <div className="border-b border-stone-700" key={post.id}>
-          <PostView post={post}/>
+          <Post post={post}/>
         </div>
       ))}
     </>

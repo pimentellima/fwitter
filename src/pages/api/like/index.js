@@ -7,8 +7,8 @@ const handler = async (req, res) => {
       case "POST":
         const newLike = await prisma.like.create({
           data: {
-            author_id,
-            post_id,
+            author_id: parseInt(author_id),
+            post_id: parseInt(post_id),
           },
         });
         if (newLike) return res.status(200).json(newLike);
@@ -16,8 +16,8 @@ const handler = async (req, res) => {
       case "DELETE":
         const deletedLike = await prisma.like.deleteMany({
           where: {
-            author_id,
-            post_id,
+            author_id: parseInt(author_id),
+            post_id: parseInt(post_id),
           },
         });
         return res.status(200).json(deletedLike);

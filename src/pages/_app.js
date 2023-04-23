@@ -1,7 +1,7 @@
 import { QueryClientProvider, QueryClient } from "react-query";
 import "../globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
-import { IKContext } from "imagekitio-react";
+
+import { SessionProvider } from "next-auth/react"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -11,18 +11,17 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = ({ Component, pageProps }) => {
+const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
-    <ClerkProvider {...pageProps}>
-      <IKContext urlEndpoint={"https://ik.imagekit.io/fwitter"}>
-        <QueryClientProvider client={queryClient}>
-          {getLayout(<Component {...pageProps} />)}
-        </QueryClientProvider>
-      </IKContext>
-    </ClerkProvider>
+    <SessionProvider session={session}>
+      <QueryClientProvider client={queryClient}>
+        {getLayout(<Component {...pageProps} />)}
+      </QueryClientProvider>
+    </SessionProvider>
   );
 };
+
 
 export default App;
