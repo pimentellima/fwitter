@@ -10,9 +10,10 @@ import {
 import { useSession } from "next-auth/react";
 import { useMutation } from "react-query";
 import axios from "axios";
+import defaultPicUrl from '../utils/defaultPicUrl'
 
 const Post = ({ post }) => {
-  const { id: post_id, author, ingredients, createdAt, title } = post;
+  const { id: post_id, author, ingredients, createdAt, title, imageUrl } = post;
   const session = useSession();
   const loggedUser = session?.data?.user;
 
@@ -71,8 +72,8 @@ const Post = ({ post }) => {
   return (
     <div className="flex flex-row py-3">
       <img
-        className="user-img hover:cursor-pointer"
-        src={author.profileImageUrl}
+        className="mx-4 h-12 w-12 rounded-full hover:cursor-pointer"
+        src={author.imageUrl ? author.imageUrl : defaultPicUrl}
         alt="profileImage"
       />
       <div className="mr-6 flex w-full flex-col">
@@ -104,6 +105,9 @@ const Post = ({ post }) => {
               {ingredient.qt + " " + ingredient.unity + " " + ingredient.name}
             </p>
           ))}
+          {imageUrl && (
+            <img className='mt-4 rounded-md' src={imageUrl} alt=''/>
+          )}
           <div
             className="flex flex-row 
                         items-center justify-between pt-4"

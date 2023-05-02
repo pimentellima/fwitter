@@ -7,14 +7,17 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import Layout from "../components/layout";
 import Post from "../components/post";
 import Spinner from "../components/spinner";
-import { getHomePagePostsByUserId } from "../server/api/post/get-posts";
+import { getHomePagePostsByUserId } from "../server/helpers/get-posts";
 import axios from "axios";
+import defaultPicUrl from '../utils/defaultPicUrl'
 
 const WritePost = ({ loggedUser }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const queryClient = useQueryClient();
-  const mutation = useMutation(async (body) => {
-    return axios.post("api/post", { ...body });
+  const mutation = useMutation(async data => {
+    return await axios.post("api/post", data, {
+      headers: { 'content-type': 'multipart/form-data' },
+    })
   });
 
   const {
@@ -26,10 +29,9 @@ const WritePost = ({ loggedUser }) => {
     formState: { isValid },
   } = useForm({
     defaultValues: {
-      author_id: loggedUser.id,
       title: "",
       ingredients: [{ name: "", qt: "", unity: "" }],
-      imageUrl: "",
+      file: []
     },
   });
 
@@ -42,24 +44,30 @@ const WritePost = ({ loggedUser }) => {
     name: "ingredients",
   });
 
-  const imageWatch = watch("imageUrl");
+  const fileWatch = watch("file");
 
   useEffect(() => {
-    if (imageWatch?.length) {
-      const url = URL.createObjectURL(imageWatch[0]);
+    if (fileWatch?.length) {
+      const url = URL.createObjectURL(fileWatch[0]);
       setImagePreview(url);
     } else setImagePreview("");
-  }, [imageWatch]);
+  }, [fileWatch]);
 
-  const onSubmit = (data) => {
-    mutation.mutate(
-      { ...data, ingredients: JSON.stringify(data.ingredients) },
-      {
+  const onSubmit = data => {
+    const { ingredients, file, title } = data;
+    const ingredientsJSON = JSON.stringify(ingredients);
+
+    mutation.mutate({
+      title,
+      ingredients: ingredientsJSON,
+      author_id: loggedUser.id,
+      file: file[0]
+    }, {
         onSuccess: () => {
           queryClient.invalidateQueries(["homePosts"]);
           queryClient.invalidateQueries(["profilePosts"]);
           reset();
-        },
+        }
       }
     );
   };
@@ -67,8 +75,8 @@ const WritePost = ({ loggedUser }) => {
   return (
     <div className="flex flex-row border-b border-stone-700 py-3">
       <img
-        className="user-img hover:cursor-pointer"
-        src={loggedUser.profileImageUrl}
+        className="mx-4 h-12 w-12 rounded-full hover:cursor-pointer"
+        src={loggedUser.imageUrl ? loggedUser.imageUrl : defaultPicUrl}
         alt="profileImage"
       />
       <form
@@ -79,7 +87,7 @@ const WritePost = ({ loggedUser }) => {
         <input
           {...register("title", { required: true })}
           placeholder="Que receita você está fazendo agora?"
-          className="mb-4 bg-inherit pl-2 text-lg text-stone-100 outline-none placeholder:text-stone-500"
+          className="mb-4 bg-inherit pl-2 text-lg text-stone-100 outline-none placeholder:text-stone-500 "
         />
         {ingredients.map((ingredient, index) => (
           <div
@@ -122,7 +130,7 @@ const WritePost = ({ loggedUser }) => {
           <div className="relative mr-5 mt-3">
             <img className="w-full rounded-xl" src={imagePreview} alt="" />
             <div
-              onClick={() => reset({ imageUrl: "" })}
+              onClick={() => reset({ file: [] })}
               className="remove-icon absolute top-0 z-10 ml-1 mt-1"
             >
               <XMarkIcon />
@@ -131,15 +139,15 @@ const WritePost = ({ loggedUser }) => {
         )}
         <div className="mt-4 grid grid-cols-2">
           {!imagePreview && (
-            <label htmlFor="image" className="post-icon">
+            <label htmlFor="file" className="post-icon">
               <PhotoIcon />
             </label>
           )}
           <input
-            id="image"
+            id='file'
             type="file"
             className="hidden"
-            {...register("imageUrl")}
+            {...register("file")}
           />
           <button
             className={`col-start-2 h-10 w-28 justify-self-end rounded-3xl bg-stone-500 px-5 py-1 text-lg font-bold transition duration-100 ease-out
@@ -179,7 +187,7 @@ const HomePage = () => {
 
   return (
     <>
-      <WritePost loggedUser={data.user}/>
+      <WritePost loggedUser={data.user} />
       {posts?.map((post) => (
         <div className="border-b border-stone-700" key={post.id}>
           <Post post={post} />

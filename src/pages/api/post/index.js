@@ -1,18 +1,50 @@
 import prisma from "../../../server/prismaClient";
+import nextConnect from 'next-connect';
+import multer from 'multer';
+import MulterGoogleCloudStorage from 'multer-google-storage';
 
-const handler = async (req, res) => {
-  try {
-    if (req.method === "POST") {
-      const data = req.body;
-      const newPost = await prisma.post.create({
-        data,
-      });
-      return res.status(200).json(newPost);
-    }
-  } catch (error) {
+const upload = multer({
+  storage: new MulterGoogleCloudStorage({
+    bucket: process.env.GCS_BUCKET,
+    projectId: process.env.GCS_PROJECT_ID,
+    keyFilename: process.env.GCS_KEYFILE,
+    
+  }),
+});
+
+const handler = nextConnect({
+  onError(error, req, res) {
     console.log(error);
-    return res.status(500).json("Error");
+    res.status(501).json({ error: `Sorry something Happened! ${error.message}` });
   }
-};
+});
+
+handler.use(upload.single('file'));
+
+handler.post(async (req, res) => {
+  try {
+    const { title, ingredients, author_id } = req.body;
+
+    const newPost = await prisma.post.create({
+      data: {
+        title,
+        ingredients,
+        author_id: parseInt(author_id),
+        imageUrl: req.file?.path
+      }
+    });
+    return res.status(200).json(newPost);
+  } 
+  catch (err) {
+    console.log(err);
+    return res.status(500);
+  }
+})
 
 export default handler;
+
+export const config = {
+  api: {
+    bodyParser: false
+  },
+};

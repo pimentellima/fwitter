@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import Layout from "../components/layout";
-import { getBookmarkedPostsByUserId } from "../server/api/post/get-posts";
+import { getBookmarkedPostsByUserId } from "../server/helpers/get-posts";
 import Spinner from "../components/spinner";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";

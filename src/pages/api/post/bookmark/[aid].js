@@ -7,7 +7,7 @@ const handler = async (req, res) => {
     });
     const posts = await prisma.post.findMany({
       where: {
-        author_id: { in: bookmarks.map(b => b.author_id) },
+        id: { in: bookmarks.map(b => b.post_id) },
       },
       include: {
           comments: true,
@@ -20,7 +20,6 @@ const handler = async (req, res) => {
         createdAt: "desc",
       },
     });
-    console.log(posts);
     return res.status(200).json(posts);
   } catch (error) {
     console.log(error);

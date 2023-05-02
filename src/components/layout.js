@@ -14,24 +14,28 @@ const Layout = ({ children }) => {
   const { data } = useSession();
   const router = useRouter();
   const { pathname, query } = useRouter();
-  const [headerTitle, setHeaderTitle] = useState('');
+  const [selectedPage, setSelectedPage] = useState("");
 
   useEffect(() => {
-    setHeaderTitle(() => {
+    setSelectedPage(() => {
       if (query.username) return query.username;
-      switch(pathname) {
-        case '/': return 'Inicio'
-        case '/explore': return 'Explorar'
-        case '/bookmarks': return 'Salvos'
-        case '/settings': return 'Configurações'
+      switch (pathname) {
+        case "/":
+          return "Início";
+        case "/explore":
+          return "Explorar";
+        case "/bookmarks":
+          return "Salvos";
+        case "/settings":
+          return "Configurações";
       }
-    })
-  }, [pathname])
+    });
+  }, [pathname]);
 
   const handleSignOut = async () => {
     await signOut();
-    router.push('/signin');
-  }
+    router.push("/signin");
+  };
 
   const handleClickHeader = () => {
     window.scrollTo(0, 0);
@@ -47,10 +51,12 @@ const Layout = ({ children }) => {
           <li>
             <Link href="/" className="group flex">
               <div
-                className="mr-3 flex items-center gap-3 
-              rounded-full px-5 py-4 text-2xl font-normal
+                className={`mr-3 flex items-center gap-3 
+              rounded-full px-5 py-4 text-2xl
               tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700"
+              group-hover:bg-stone-700 ${
+                selectedPage === "Início" && "font-medium"
+              }`}
               >
                 <HomeIcon className="h-8 w-8" />
                 Início
@@ -60,10 +66,12 @@ const Layout = ({ children }) => {
           <li>
             <Link href="/" className="group flex">
               <div
-                className="mr-3 flex items-center gap-3 
-              rounded-full px-5 py-4 text-2xl font-normal
+                className={`mr-3 flex items-center gap-3 
+              rounded-full px-5 py-4 text-2xl 
               tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700"
+              group-hover:bg-stone-700 ${
+                selectedPage === "Explorar" && 'font-medium'
+              }`}
               >
                 <HashtagIcon className="h-8 w-8" />
                 Explorar
@@ -73,10 +81,12 @@ const Layout = ({ children }) => {
           <li>
             <Link href={`/${data?.user.username}`} className="group flex">
               <div
-                className="mr-3 flex items-center gap-3 
-              rounded-full px-5 py-4 text-2xl font-normal
+                className={`mr-3 flex items-center gap-3 
+              rounded-full px-5 py-4 text-2xl
               tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700"
+              group-hover:bg-stone-700 ${
+                selectedPage === data?.user.username && 'font-medium'
+              }`}
               >
                 <UserIcon className="h-8 w-8" />
                 Perfil
@@ -86,10 +96,12 @@ const Layout = ({ children }) => {
           <li>
             <Link href="/bookmarks" className="group flex">
               <div
-                className="mr-3 flex items-center gap-3 
-              rounded-full px-5 py-4 text-2xl font-normal
+                className={`mr-3 flex items-center gap-3 
+              rounded-full px-5 py-4 text-2xl
               tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700"
+              group-hover:bg-stone-700 ${
+                selectedPage === "Salvos" && 'font-medium'
+              }`}
               >
                 <BookmarkIcon className="h-8 w-8" />
                 Salvos
@@ -99,10 +111,12 @@ const Layout = ({ children }) => {
           <li>
             <Link href="/" className="group flex">
               <div
-                className="mr-3 flex items-center gap-3 
-              rounded-full px-5 py-4 text-2xl font-normal
+                className={`mr-3 flex items-center gap-3 
+              rounded-full px-5 py-4 text-2xl
               tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700"
+              group-hover:bg-stone-700 ${
+                selectedPage === "Configurações" && 'font-medium'
+              }`}
               >
                 <CogIcon className="h-8 w-8" />
                 Configurações
@@ -110,7 +124,7 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         </ul>
-        <div className='flex gap-3 hover:bg-stone-500'>
+        <div className="flex gap-3 hover:bg-stone-500">
           <p>{data?.user.name}</p>
           <button onClick={handleSignOut}>Sair</button>
         </div>
@@ -124,7 +138,7 @@ const Layout = ({ children }) => {
           border-stone-700 bg-stone-800 pb-4 pl-3 pt-2 text-xl font-medium"
         >
           <div className="hover:cursor-pointer" onClick={handleClickHeader}>
-            <p>{headerTitle}</p>
+            <p>{selectedPage}</p>
           </div>
         </header>
         {children}

@@ -5,20 +5,20 @@ import { useMutation, useQuery } from "react-query";
 import Layout from "../components/layout";
 import Post from "../components/post";
 import Spinner from "../components/spinner";
-import { getPostsByUserId } from "../server/api/post/get-posts";
-import { getFollowsById } from "../server/api/user/get-follows-by-id";
-import { getUserByUsername } from "../server/api/user/get-user";
+import { getPostsByUserId } from "../server/helpers/get-posts";
+import { getFollowsById } from "../server/helpers/get-follows-by-id";
+import { getUserByUsername } from "../server/helpers/get-user";
 import moment from "moment";
 import { useSession } from "next-auth/react";
+import defaultPicUrl from '../utils/defaultPicUrl'
 
 export const followReq = (data) => axios.post("/api/follow", { ...data });
 export const unfollowReq = (data) => axios.delete("/api/follow", { ...data });
 
 const ProfilePage = () => {
   const { query } = useRouter();
-  const {
-    data: { user: loggedUser },
-  } = useSession();
+  const { data } = useSession()
+  const loggedUser = data?.user;
 
   const { data: user } = useQuery(["user"], () => getUserByUsername(query.username), {
     enabled: !!query.username,
@@ -99,9 +99,8 @@ const ProfilePage = () => {
                         w-full items-end justify-between"
         >
           <img
-            className="ml-2 h-28 w-28 
-                            rounded-full hover:cursor-pointer"
-            src={user.profileImageUrl}
+            className="ml-2 h-28 w-28 rounded-full hover:cursor-pointer"
+            src={user.imageUrl ? user.imageUrl : defaultPicUrl}
             alt="profileImage"
           />
           {user.id === loggedUser?.id ? (

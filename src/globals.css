@@ -36,10 +36,6 @@
     @apply h-10 w-10 rounded-full p-2 text-stone-300 transition-colors ease-out hover:cursor-pointer hover:bg-stone-700;
   }
 
-  .user-img {
-    @apply mx-4 h-12 w-12 rounded-full;
-  }
-
   .nav-icon {
     @apply h-10 w-10 items-center transition duration-100 ease-out;
   }
