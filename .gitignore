@@ -7,10 +7,7 @@ node_modules
 build
 
 # misc
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env
 .next
 .gcs.json
 .prettierignore
