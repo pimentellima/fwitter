@@ -20,7 +20,10 @@ const handler = async (req, res) => {
         createdAt: "desc",
       },
     });
-    return res.status(200).json(posts);
+    return res.status(200).json(posts.map(post => ({
+      ...post,
+      ingredients: JSON.parse(post.ingredients)
+    })));
   } catch (error) {
     console.log(error);
     return res.status(500).json("Error");

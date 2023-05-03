@@ -6,8 +6,6 @@ node_modules
 # production
 build
 
-src/server/upload
-
 # misc
 .env
 .next

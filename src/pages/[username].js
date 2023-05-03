@@ -19,6 +19,7 @@ const ProfilePage = () => {
   const { query } = useRouter();
   const { data } = useSession()
   const loggedUser = data?.user;
+  const router = useRouter();
 
   const { data: user } = useQuery(["user"], () => getUserByUsername(query.username), {
     enabled: !!query.username,
@@ -106,24 +107,31 @@ const ProfilePage = () => {
           {user.id === loggedUser?.id ? (
             <button
               onClick={() => {}}
-              className="default-btn 
-                            mr-2 h-10 rounded-full font-bold"
+              className="border border-stone-700 
+                bg-stone-700 px-4 transition-colors 
+                hover:cursor-pointer hover:bg-stone-600 
+                active:border-stone-500 mr-2 h-10 rounded-full font-bold"
             >
               Editar perfil
             </button>
           ) : isFollowedByUser ? (
             <button
               onClick={handleUnfollow}
-              className="default-btn 
-                                mr-2 h-10 rounded-full font-bold"
+              className="border border-stone-700 bg-sto
+                ne-700 px-4 transition-colors hover:
+                cursor-pointer hover:bg-stone-600 
+                active:border-stone-500 
+                mr-2 h-10 rounded-full font-bold"
             >
               Deixar de seguir
             </button>
           ) : (
             <button
               onClick={handleFollow}
-              className="default-btn 
-                                mr-2 h-10 rounded-full font-bold"
+              className="border border-stone-700 bg-sto
+                ne-700 px-4 transition-colors hover:
+                cursor-pointer hover:bg-stone-600 
+                active:border-stone-500 mr-2 h-10 rounded-full font-bold"
             >
               Seguir
             </button>
@@ -145,7 +153,14 @@ const ProfilePage = () => {
       </div>
     </div>
       {posts.map((post) => (
-        <div className="border-b border-stone-700" key={post.id}>
+        <div 
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push('/posts/' + post.id);
+          }}
+          className="border-b border-stone-700 hover:backdrop-brightness-105 hover:cursor-pointer"
+          key={post.id}
+          >
           <Post post={post}/>
         </div>
       ))}

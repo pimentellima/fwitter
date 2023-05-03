@@ -29,8 +29,15 @@ const BookmarksPage = () => {
 
   return (
     <>
-      {posts?.map((post) => (
-        <div className="border-b border-stone-700" key={post.id}>
+      {posts.map((post) => (
+        <div 
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push('/posts/' + post.id);
+          }}
+          className="border-b border-stone-700 hover:backdrop-brightness-105 hover:cursor-pointer"
+          key={post.id}
+          >
           <Post post={post}/>
         </div>
       ))}

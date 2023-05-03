@@ -10,19 +10,21 @@ import {
 import { useSession } from "next-auth/react";
 import { useMutation } from "react-query";
 import axios from "axios";
-import defaultPicUrl from '../utils/defaultPicUrl'
+import defaultPicUrl from "../utils/defaultPicUrl";
+import { useRouter } from "next/router";
 
 const Post = ({ post }) => {
   const { id: post_id, author, ingredients, createdAt, title, imageUrl } = post;
   const session = useSession();
   const loggedUser = session?.data?.user;
+  const router = useRouter();
 
   const [likes, setLikes] = useState(post.likes);
   const [bookmarks, setBookmarks] = useState(post.bookmarks);
   const [shares, setShares] = useState(post.shares);
-  const bookmarked = !!bookmarks.find((b) => b.author_id === loggedUser.id);
-  const liked = !!likes.find((b) => b.author_id === loggedUser.id);
-  const shared = !!shares.find((b) => b.author_id === loggedUser.id);
+  const bookmarked = !!bookmarks.find((b) => b.author_id === loggedUser?.id);
+  const liked = !!likes.find((b) => b.author_id === loggedUser?.id);
+  const shared = !!shares.find((b) => b.author_id === loggedUser?.id);
 
   const mutation = useMutation(({ url, method }) => {
     if (method === "POST")
@@ -32,6 +34,13 @@ const Post = ({ post }) => {
         data: { post_id, author_id: loggedUser.id },
       });
   });
+
+  const redirectToAuthor = (e) => {
+    e.stopPropagation();
+    router.push("/" + author.username);
+  };
+
+
 
   const handleBookmark = (e) => {
     e.stopPropagation();
@@ -73,12 +82,16 @@ const Post = ({ post }) => {
     <div className="flex flex-row py-3">
       <img
         className="mx-4 h-12 w-12 rounded-full hover:cursor-pointer"
+        onClick={redirectToAuthor}
         src={author.imageUrl ? author.imageUrl : defaultPicUrl}
         alt="profileImage"
       />
       <div className="mr-6 flex w-full flex-col">
         <div className="flex justify-between">
-          <div className="flex items-center gap-2">
+          <div
+            onClick={redirectToAuthor}
+            className="flex items-center gap-2 hover:cursor-pointer"
+          >
             <p
               className="font-bold 
                             hover:cursor-pointer hover:underline"
@@ -92,7 +105,7 @@ const Post = ({ post }) => {
               <p>{"@" + author.username}</p>
               <p>
                 {" "}
-                {". " + moment(createdAt, "YYYY-MM-DD HH:mm:ss").fromNow(true)}
+                {" · " + moment(createdAt).fromNow(true)}
               </p>
             </div>
           </div>
@@ -106,7 +119,7 @@ const Post = ({ post }) => {
             </p>
           ))}
           {imageUrl && (
-            <img className='mt-4 rounded-md' src={imageUrl} alt=''/>
+            <img className="mt-4 rounded-md" src={imageUrl} alt="" />
           )}
           <div
             className="flex flex-row 

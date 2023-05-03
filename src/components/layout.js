@@ -19,6 +19,7 @@ const Layout = ({ children }) => {
   useEffect(() => {
     setSelectedPage(() => {
       if (query.username) return query.username;
+      if(query.pid) return 'Fweet'
       switch (pathname) {
         case "/":
           return "Início";
@@ -52,7 +53,7 @@ const Layout = ({ children }) => {
             <Link href="/" className="group flex">
               <div
                 className={`mr-3 flex items-center gap-3 
-              rounded-full px-5 py-4 text-2xl
+              rounded-full px-5 py-3 text-2xl
               tracking-tight transition-colors ease-out 
               group-hover:bg-stone-700 ${
                 selectedPage === "Início" && "font-medium"
@@ -67,7 +68,7 @@ const Layout = ({ children }) => {
             <Link href="/" className="group flex">
               <div
                 className={`mr-3 flex items-center gap-3 
-              rounded-full px-5 py-4 text-2xl 
+              rounded-full px-5 py-3 text-2xl 
               tracking-tight transition-colors ease-out 
               group-hover:bg-stone-700 ${
                 selectedPage === "Explorar" && 'font-medium'
@@ -82,7 +83,7 @@ const Layout = ({ children }) => {
             <Link href={`/${data?.user.username}`} className="group flex">
               <div
                 className={`mr-3 flex items-center gap-3 
-              rounded-full px-5 py-4 text-2xl
+              rounded-full px-5 py-3 text-2xl
               tracking-tight transition-colors ease-out 
               group-hover:bg-stone-700 ${
                 selectedPage === data?.user.username && 'font-medium'
@@ -97,7 +98,7 @@ const Layout = ({ children }) => {
             <Link href="/bookmarks" className="group flex">
               <div
                 className={`mr-3 flex items-center gap-3 
-              rounded-full px-5 py-4 text-2xl
+              rounded-full px-5 py-3 text-2xl
               tracking-tight transition-colors ease-out 
               group-hover:bg-stone-700 ${
                 selectedPage === "Salvos" && 'font-medium'
@@ -112,7 +113,7 @@ const Layout = ({ children }) => {
             <Link href="/" className="group flex">
               <div
                 className={`mr-3 flex items-center gap-3 
-              rounded-full px-5 py-4 text-2xl
+              rounded-full px-5 py-3 text-2xl
               tracking-tight transition-colors ease-out 
               group-hover:bg-stone-700 ${
                 selectedPage === "Configurações" && 'font-medium'

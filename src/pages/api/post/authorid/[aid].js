@@ -20,7 +20,10 @@ const handler = async (req, res) => {
         },
       })
     if (!posts) return res.status(404).json("Not found");
-    return res.status(200).json(posts);
+    return res.status(200).json(posts.map(post => ({
+      ...post,
+      ingredients: JSON.parse(post.ingredients)
+    })));
   } catch (error) {
     console.log(error);
     return res.status(500).json("Error");
