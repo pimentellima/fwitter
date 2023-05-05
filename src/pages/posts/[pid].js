@@ -7,12 +7,13 @@ import Post from '../../components/post'
 import CommentForm from "../../components/commentForm";
 import { useSession } from "next-auth/react";
 import defaultPicUrl from "../../utils/defaultPicUrl";
+import Comment from "../../components/comment";
 
 const PostPage = () => {
   const { data } = useSession();
   const loggedUser = data?.user;
-
   const { query } = useRouter();
+
   const { data: post, isLoading } = useQuery(
     ["post", { post_id: query.pid }],
     () => getPostById(query.pid), {
@@ -21,6 +22,7 @@ const PostPage = () => {
   );
 
   if (isLoading || !post) return <Spinner />;
+
 
   return (
     <>
@@ -33,8 +35,15 @@ const PostPage = () => {
           src={loggedUser?.imageUrl ? loggedUser.imageUrl : defaultPicUrl}
           alt="profileImage"
         />
-        <CommentForm post_id={post.id}/>
+        <CommentForm post_id={query.pid}/>
       </div>
+      {post.comments?.map(comment => 
+        <div
+          className="border-b border-stone-700"
+        >
+          <Comment comment={comment}/>
+        </div>
+      )}
     </>
   );
 };

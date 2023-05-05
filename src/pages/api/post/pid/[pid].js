@@ -8,7 +8,21 @@ const handler = async (req, res) => {
           id: parseInt(req.query.pid)
         },
         include: {
-          comments: true,
+          comments: {
+            include: {
+              author: {
+                select: {
+                  name: true,
+                  username: true,
+                  imageUrl: true,
+                  password: false
+                }
+              }
+            },
+            orderBy: {
+              createdAt: 'desc'
+            }
+          },
           bookmarks: true,
           shares: true,
           likes: true,
@@ -34,6 +48,7 @@ const handler = async (req, res) => {
 
         } */
   } catch (error) {
+    console.log(error)
     return res.status(500).json(error);
   }
 };

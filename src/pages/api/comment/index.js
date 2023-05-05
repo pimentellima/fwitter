@@ -1,25 +1,24 @@
 import prisma from "../../../server/prismaClient";
+import { getToken } from "next-auth/jwt";
 
 const handler = async (req, res) => {
   try {
-    const { data, parentId } = req.body;
-    const newPost = await prisma.post.create({
-      data,
+    const token = await getToken({ req });
+    if(!token) return res.status(401).json('Unauthorized');
+
+    const { title, post_id } = req.body;
+    const comment = await prisma.comment.create({
+      data: {
+        title,
+        author_id: parseInt(token.user.id),
+        post_id: parseInt(post_id)
+      }
     });
-    if (newPost) {
-      const comment = await prisma.comment.create({
-        data: {
-          post_id: newPost.id,
-          parent_post_id: parentId,
-        },
-      });
-      if (comment) return res.status(200).json(comment);
-      return res.status(200).json("Error creating comment relation");
-    }
-    return res.status(200).json("Error creating post");
+    if(!comment) return res.status(400).json("Error creating post");
+    return res.status(200).json(comment);
   } catch (error) {
-    console.log(error);
-    return res.status(500).json("Error");
+    console.log(error)
+    return res.status(500).json(error);
   }
 };
 

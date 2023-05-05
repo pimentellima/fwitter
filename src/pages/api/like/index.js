@@ -1,30 +1,35 @@
+import { getToken } from "next-auth/jwt";
 import prisma from "../../../server/prismaClient";
 
 const handler = async (req, res) => {
   try {
-    const { post_id, author_id } = req.body;
-    switch (req.method) {
-      case "POST":
-        const newLike = await prisma.like.create({
-          data: {
-            author_id: parseInt(author_id),
-            post_id: parseInt(post_id),
-          },
-        });
-        if (newLike) return res.status(200).json(newLike);
-        return res.status(500).json("Error");
-      case "DELETE":
-        const deletedLike = await prisma.like.deleteMany({
-          where: {
-            author_id: parseInt(author_id),
-            post_id: parseInt(post_id),
-          },
-        });
-        return res.status(200).json(deletedLike);
+    const { post_id } = req.body;
+    const token = await getToken({ req });
+    if(!token) return res.status(401).json('Unauthorized');
+
+    if(req.method === 'POST') {
+      const like = await prisma.like.create({
+        data: {
+          author_id: parseInt(token.user.id),
+          post_id: parseInt(post_id),
+        },
+      });
+      if (like) return res.status(200).json(like);
+      return res.status(400);
+    }
+    if(req.method === 'DELETE') {
+      const like = await prisma.like.deleteMany({
+        where: {
+          author_id: parseInt(token.user.id),
+          post_id: parseInt(post_id),
+        },
+      });
+      if(like) return res.status(200).json(like);
+      return res.status(404);
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json("Error");
+    return res.status(500).json(error);
   }
 };
 

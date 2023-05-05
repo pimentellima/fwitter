@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,77 +7,77 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id              Int      @id @default(autoincrement())
-  createdAt       DateTime @default(now())
-  username        String
-  name            String
-  password        String
-  imageUrl        String?
-
-  posts Post[]
-}
-
-model Post {
-  id          Int      @id @default(autoincrement())
-  author_id   Int    
-  createdAt   DateTime @default(now())
-  title       String
-  ingredients String   @db.MediumText
-  imageUrl    String?
-
-  author User @relation(fields: [author_id], references: [id])
-  @@unique([id, author_id])
-
-  comments  Comment[]  @relation("CommentPost")
-  comment   Comment?   @relation("Comment")
-  bookmarks Bookmark[]
-  shares    Share[]
-  likes     Like[]
-}
-
-model Comment {
-  id             Int @id @default(autoincrement())
-  parent_post_id Int @unique
-  post_id        Int @unique
-
-  parent_post Post @relation("CommentPost", fields: [parent_post_id], references: [id])
-  post        Post @relation("Comment", fields: [post_id], references: [id])
-}
-
-model Bookmark {
-  id        Int    @id @default(autoincrement())
+model bookmark {
+  id        Int  @id @default(autoincrement())
   post_id   Int
-  author_id Int 
+  author_id Int
+  post      post @relation(fields: [post_id], references: [id], map: "Bookmark_post_id_fkey")
 
-  post Post @relation(fields: [post_id], references: [id])
-
-  @@unique([post_id, author_id])
+  @@unique([post_id, author_id], map: "Bookmark_post_id_author_id_key")
 }
 
-model Share {
+model comment {
   id        Int      @id @default(autoincrement())
+  title     String
+  author_id Int
   post_id   Int
-  author_id Int   
   createdAt DateTime @default(now())
+  post      post     @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comment_post_id_fkey")
+  author    user  @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comment_author_id_fkey")
 
-  post Post @relation(fields: [post_id], references: [id])
+  @@index([post_id], map: "Comment_post_id_fkey_idx")
 }
 
-model Follow {
-  id          Int    @id @default(autoincrement())
+model follow {
+  id          Int @id @default(autoincrement())
   followed_id Int
   follower_id Int
 
-  @@unique([followed_id, follower_id])
+  @@unique([followed_id, follower_id], map: "Follow_followed_id_follower_id_key")
 }
 
-model Like {
-  id        Int    @id @default(autoincrement())
+model like {
+  id        Int  @id @default(autoincrement())
   post_id   Int
-  author_id Int 
+  author_id Int
+  post      post @relation(fields: [post_id], references: [id], map: "Like_post_id_fkey")
 
-  post Post @relation(fields: [post_id], references: [id])
+  @@unique([post_id, author_id], map: "Like_post_id_author_id_key")
+}
 
-  @@unique([post_id, author_id])
+model post {
+  id          Int        @id @default(autoincrement())
+  author_id   Int
+  createdAt   DateTime   @default(now())
+  title       String
+  ingredients String     @db.MediumText
+  imageUrl    String?
+  bookmarks    bookmark[]
+  comments    comment[]
+  likes        like[]
+  shares       share[]
+  author        user       @relation(fields: [author_id], references: [id], map: "Post_author_id_fkey")
+
+  @@index([author_id], map: "Post_author_id_fkey")
+}
+
+model share {
+  id        Int      @id @default(autoincrement())
+  post_id   Int
+  author_id Int
+  createdAt DateTime @default(now())
+  post      post     @relation(fields: [post_id], references: [id], map: "Share_post_id_fkey")
+
+  @@index([post_id], map: "Share_post_id_fkey")
+}
+
+model user {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  username  String
+  name      String
+  password  String
+  imageUrl  String?
+  posts      post[]
+  comments  comment[]
 }

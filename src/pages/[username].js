@@ -21,7 +21,7 @@ const ProfilePage = () => {
   const loggedUser = data?.user;
   const router = useRouter();
 
-  const { data: user } = useQuery(["user"], () => getUserByUsername(query.username), {
+  const { data: user } = useQuery(["user", { username: query?.username }], () => getUserByUsername(query.username), {
     enabled: !!query.username,
   });
 
@@ -152,7 +152,7 @@ const ProfilePage = () => {
         </div>
       </div>
     </div>
-      {posts.map((post) => (
+      {posts?.map((post) => (
         <div 
           onClick={(e) => {
             e.stopPropagation();

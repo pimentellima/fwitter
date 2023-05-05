@@ -14,7 +14,16 @@ import defaultPicUrl from "../utils/defaultPicUrl";
 import { useRouter } from "next/router";
 
 const Post = ({ post }) => {
-  const { id: post_id, author, ingredients, createdAt, title, imageUrl } = post;
+  const {
+    id: post_id,
+    author,
+    ingredients,
+    createdAt,
+    title,
+    imageUrl,
+    comments,
+  } = post;
+
   const session = useSession();
   const loggedUser = session?.data?.user;
   const router = useRouter();
@@ -27,11 +36,10 @@ const Post = ({ post }) => {
   const shared = !!shares.find((b) => b.author_id === loggedUser?.id);
 
   const mutation = useMutation(({ url, method }) => {
-    if (method === "POST")
-      return axios.post(url, { post_id, author_id: loggedUser.id });
+    if (method === "POST") return axios.post(url, { post_id });
     if (method === "DELETE")
       return axios.delete(url, {
-        data: { post_id, author_id: loggedUser.id },
+        data: { post_id },
       });
   });
 
@@ -40,24 +48,22 @@ const Post = ({ post }) => {
     router.push("/" + author.username);
   };
 
-
-
   const handleBookmark = (e) => {
     e.stopPropagation();
     mutation.mutate({
-      url: "api/bookmark",
+      url: "../api/bookmark",
       method: bookmarked ? "DELETE" : "POST",
     });
     const arr = bookmarked
-      ? shares.filter((i) => i.author_id !== loggedUser.id)
-      : [...shares, { author_id: loggedUser.id, post_id }];
+      ? bookmarks.filter((i) => i.author_id !== loggedUser.id)
+      : [...bookmarks, { author_id: loggedUser.id, post_id }];
     setBookmarks(arr);
   };
 
   const handleShare = (e) => {
     e.stopPropagation();
     mutation.mutate({
-      url: "api/share",
+      url: "../api/share",
       method: shared ? "DELETE" : "POST",
     });
     const arr = shared
@@ -69,7 +75,7 @@ const Post = ({ post }) => {
   const handleLike = (e) => {
     e.stopPropagation();
     mutation.mutate({
-      url: "api/like",
+      url: "../api/like",
       method: liked ? "DELETE" : "POST",
     });
     const arr = liked
@@ -103,10 +109,7 @@ const Post = ({ post }) => {
                                   text-sm text-stone-400 hover:cursor-pointer"
             >
               <p>{"@" + author.username}</p>
-              <p>
-                {" "}
-                {" · " + moment(createdAt).fromNow(true)}
-              </p>
+              <p> {" · " + moment(createdAt).fromNow(true)}</p>
             </div>
           </div>
         </div>
@@ -121,18 +124,21 @@ const Post = ({ post }) => {
           {imageUrl && (
             <img className="mt-4 rounded-md" src={imageUrl} alt="" />
           )}
-          <div
-            className="flex flex-row 
-                        items-center justify-between pt-4"
-          >
-            <button>
+          <div className="flex items-center justify-between pt-4">
+            <button className="group flex h-12 w-12 items-center text-xs text-stone-400">
               <ChatBubbleOvalLeftIcon
                 className={`h-10 w-10 rounded-full p-2 text-stone-400
-            transition
-            ease-out
-            hover:bg-stone-700
-            hover:text-blue-400`}
+                  transition
+                  ease-out
+                  hover:bg-stone-700
+                  hover:text-blue-400`}
               />
+              <p
+                className="text-xs transition ease-out 
+                group-hover:text-blue-400"
+              >
+                {comments.length > 0 && comments.length}
+              </p>
             </button>
             <button
               onClick={handleShare}
@@ -140,10 +146,10 @@ const Post = ({ post }) => {
             >
               <ShareIcon
                 className={`h-10 w-10 rounded-full p-2 transition
-          ease-out
-          hover:bg-stone-700
-          hover:text-green-400
-          group-hover:text-green-400 ${shared && "text-green-400"}`}
+                  ease-out
+                  hover:bg-stone-700
+                  hover:text-green-400
+                  group-hover:text-green-400 ${shared && "text-green-400"}`}
               />
               <p
                 className={`text-xs ${

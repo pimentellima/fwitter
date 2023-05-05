@@ -1,13 +1,17 @@
+import { getToken } from "next-auth/jwt";
 import prisma from "../../../server/prismaClient";
 
 const handler = async (req, res) => {
   try {
-    const { author_id, post_id } = req.body;
+    const { post_id } = req.body;
+    const token = await getToken({ req });
+    if(!token) return res.status(401).json('Unauthorized');
+
     switch (req.method) {
       case "POST":
         const newShare = await prisma.share.create({
           data: {
-            author_id: parseInt(author_id),
+            author_id: parseInt(token.user.id),
             post_id: parseInt(post_id),
           },
         });
@@ -16,7 +20,7 @@ const handler = async (req, res) => {
       case "DELETE":
         const deletedShare = await prisma.share.deleteMany({
           where: {
-            author_id: parseInt(author_id),
+            author_id: parseInt(token.user.id),
             post_id: parseInt(post_id),
           },
         });

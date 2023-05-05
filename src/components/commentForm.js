@@ -4,8 +4,8 @@ import { useMutation, useQueryClient } from "react-query";
 
 const CommentForm = ({ post_id }) => {
   const queryClient = useQueryClient();
-  const mutation = useMutation(
-    async (data) => await axios.post("api/comment", data)
+  const mutation = useMutation( async (data) => 
+    await axios.post("../api/comment", data)
   );
 
   const {
@@ -21,11 +21,10 @@ const CommentForm = ({ post_id }) => {
 
   const onSubmit = (data) => {
     mutation.mutate(
-      { title: data.title },
+      { title: data.title, post_id },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries(["postComments", { post_id }]);
-          queryClient.invalidateQueries(["profilePosts"]);
+          queryClient.invalidateQueries(["post", { post_id }]);
           reset();
         },
       }

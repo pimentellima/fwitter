@@ -38,7 +38,7 @@ const HomePage = () => {
           src={loggedUser.imageUrl ? loggedUser.imageUrl : defaultPicUrl}
           alt=''
         />
-        <PostForm loggedUser={data.user} />
+        <PostForm/>
       </div>
       {posts.map((post) => (
         <div 

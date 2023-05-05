@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 
-const PostForm = ({ loggedUser }) => {
+const PostForm = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const queryClient = useQueryClient();
     const mutation = useMutation(async data => {
@@ -53,7 +53,6 @@ const PostForm = ({ loggedUser }) => {
       mutation.mutate({
         title,
         ingredients: ingredientsJSON,
-        author_id: loggedUser.id,
         file: file[0]
       }, {
           onSuccess: () => {

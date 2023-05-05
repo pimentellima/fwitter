@@ -18,7 +18,7 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     setSelectedPage(() => {
-      if (query.username) return query.username;
+      if(query.username) return query.username;
       if(query.pid) return 'Fweet'
       switch (pathname) {
         case "/":
@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
           return "Configurações";
       }
     });
-  }, [pathname]);
+  }, [pathname, query]);
 
   const handleSignOut = async () => {
     await signOut();
