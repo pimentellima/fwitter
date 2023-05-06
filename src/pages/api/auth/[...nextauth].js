@@ -13,7 +13,7 @@ export const authOptions = {
     },
     session: async ({ session, token }) => {
       if (token) {
-        session.user = token.user;
+        session.user.id = token.user.id;
       }
       return session;
     },

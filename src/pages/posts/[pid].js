@@ -8,21 +8,21 @@ import CommentForm from "../../components/commentForm";
 import { useSession } from "next-auth/react";
 import defaultPicUrl from "../../utils/defaultPicUrl";
 import Comment from "../../components/comment";
+import { useLoggedUser } from "../../server/helpers/get-user";
 
 const PostPage = () => {
-  const { data } = useSession();
-  const loggedUser = data?.user;
+  const { data: loggedUser } = useLoggedUser();
+
   const { query } = useRouter();
 
-  const { data: post, isLoading } = useQuery(
+  const { data: post } = useQuery(
     ["post", { post_id: query.pid }],
     () => getPostById(query.pid), {
       enabled: !!query.pid
     }
   );
 
-  if (isLoading || !post) return <Spinner />;
-
+  if (!post) return <Spinner />;
 
   return (
     <>
@@ -39,6 +39,7 @@ const PostPage = () => {
       </div>
       {post.comments?.map(comment => 
         <div
+          key={comment.id}
           className="border-b border-stone-700"
         >
           <Comment comment={comment}/>

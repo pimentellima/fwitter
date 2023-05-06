@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "react-query";
 
 const CommentForm = ({ post_id }) => {
   const queryClient = useQueryClient();
-  const mutation = useMutation( async (data) => 
+  const mutation = useMutation(async (data) => 
     await axios.post("../api/comment", data)
   );
 

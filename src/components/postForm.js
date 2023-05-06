@@ -57,7 +57,7 @@ const PostForm = () => {
       }, {
           onSuccess: () => {
             queryClient.invalidateQueries(["homePosts"]);
-            queryClient.invalidateQueries(["profilePosts"]);
+            queryClient.invalidateQueries(["userPosts"]);
             reset();
           }
         }
@@ -154,7 +154,7 @@ const PostForm = () => {
             />
             <div className="flex justify-end">
               <button
-                className={`h-10 w-28 mr-3
+                className={`h-10 w-28 
                   flex justify-center items-center rounded-3xl 
                   bg-stone-500 px-5 py-1 text-base
                   font-bold transition duration-100 ease-out

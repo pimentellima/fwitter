@@ -1,17 +1,7 @@
-import prisma from "../../../server/prismaClient";
-import nextConnect from 'next-connect';
-import multer from 'multer';
-import MulterGoogleCloudStorage from 'multer-google-storage';
 import { getToken } from "next-auth/jwt";
-
-const upload = multer({
-  storage: new MulterGoogleCloudStorage({
-    bucket: process.env.GCS_BUCKET,
-    projectId: process.env.GCS_PROJECT_ID,
-    keyFilename: process.env.GCS_KEYFILE,
-    
-  }),
-});
+import nextConnect from 'next-connect';
+import prisma from "../../../server/prismaClient";
+import upload from '../../../utils/upload';
 
 const handler = nextConnect({
   onError(error, req, res) {
@@ -39,6 +29,7 @@ handler.post(async (req, res) => {
     return res.status(200).json(newPost);
   } 
   catch (err) {
+    console.log(err);
     return res.status(500).json(err);
   }
 })

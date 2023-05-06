@@ -1,25 +1,27 @@
 import {
-  HomeIcon,
-  HashtagIcon,
   BookmarkIcon,
   CogIcon,
+  HashtagIcon,
+  HomeIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useLoggedUser } from "../server/helpers/get-user";
 
 const Layout = ({ children }) => {
-  const { data } = useSession();
+  const { data: loggedUser } = useLoggedUser();
+
   const router = useRouter();
   const { pathname, query } = useRouter();
   const [selectedPage, setSelectedPage] = useState("");
 
   useEffect(() => {
     setSelectedPage(() => {
-      if(query.username) return query.username;
-      if(query.pid) return 'Fweet'
+      if (query.username) return query.username;
+      if (query.pid) return "Fweet";
       switch (pathname) {
         case "/":
           return "Início";
@@ -71,7 +73,7 @@ const Layout = ({ children }) => {
               rounded-full px-5 py-3 text-2xl 
               tracking-tight transition-colors ease-out 
               group-hover:bg-stone-700 ${
-                selectedPage === "Explorar" && 'font-medium'
+                selectedPage === "Explorar" && "font-medium"
               }`}
               >
                 <HashtagIcon className="h-8 w-8" />
@@ -80,13 +82,13 @@ const Layout = ({ children }) => {
             </Link>
           </li>
           <li>
-            <Link href={`/${data?.user.username}`} className="group flex">
+            <Link href={`/${loggedUser?.username}`} className="group flex">
               <div
                 className={`mr-3 flex items-center gap-3 
               rounded-full px-5 py-3 text-2xl
               tracking-tight transition-colors ease-out 
               group-hover:bg-stone-700 ${
-                selectedPage === data?.user.username && 'font-medium'
+                selectedPage === loggedUser?.username && "font-medium"
               }`}
               >
                 <UserIcon className="h-8 w-8" />
@@ -101,7 +103,7 @@ const Layout = ({ children }) => {
               rounded-full px-5 py-3 text-2xl
               tracking-tight transition-colors ease-out 
               group-hover:bg-stone-700 ${
-                selectedPage === "Salvos" && 'font-medium'
+                selectedPage === "Salvos" && "font-medium"
               }`}
               >
                 <BookmarkIcon className="h-8 w-8" />
@@ -116,7 +118,7 @@ const Layout = ({ children }) => {
               rounded-full px-5 py-3 text-2xl
               tracking-tight transition-colors ease-out 
               group-hover:bg-stone-700 ${
-                selectedPage === "Configurações" && 'font-medium'
+                selectedPage === "Configurações" && "font-medium"
               }`}
               >
                 <CogIcon className="h-8 w-8" />
@@ -126,7 +128,7 @@ const Layout = ({ children }) => {
           </li>
         </ul>
         <div className="flex gap-3 hover:bg-stone-500">
-          <p>{data?.user.name}</p>
+          <p>{loggedUser?.name}</p>
           <button onClick={handleSignOut}>Sair</button>
         </div>
       </nav>

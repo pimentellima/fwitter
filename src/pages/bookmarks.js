@@ -6,10 +6,12 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Post from "../components/post";
+import { useLoggedUser } from "../server/helpers/get-user";
 
 const BookmarksPage = () => {
   const router = useRouter();
   const { data, status } = useSession()
+  const { data: loggedUser } = useLoggedUser();
 
   const { data: posts, isFetching } = useQuery(
     ["bookmarkedPosts"],
@@ -38,7 +40,7 @@ const BookmarksPage = () => {
           className="border-b border-stone-700 hover:backdrop-brightness-105 hover:cursor-pointer"
           key={post.id}
           >
-          <Post post={post}/>
+          <Post loggedUser={loggedUser} post={post}/>
         </div>
       ))}
     </>

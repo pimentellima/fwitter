@@ -8,17 +8,18 @@ import PostForm from "../components/postForm";
 import Spinner from "../components/spinner";
 import { getHomePagePostsByUserId } from "../server/helpers/get-posts";
 import defaultPicUrl from '../utils/defaultPicUrl';
+import { useLoggedUser } from "../server/helpers/get-user";
 
 const HomePage = () => {
-  const { data, status } = useSession();
-  const loggedUser = data?.user;
+  const { status } = useSession();
+  const { data: loggedUser, isFetching: isFetchingUser } = useLoggedUser();
   const router = useRouter();
 
   const { data: posts, isFetching: isFetchingPosts } = useQuery(
     ["homePosts"],
-    () => getHomePagePostsByUserId(data?.user?.id),
+    () => getHomePagePostsByUserId(loggedUser?.id),
     {
-      enabled: status === "authenticated",
+      enabled: !!loggedUser,
     }
   );
 
@@ -28,14 +29,14 @@ const HomePage = () => {
     }
   }, [status]);
 
-  if (status !== "authenticated" || isFetchingPosts) return <Spinner />;
+  if (!loggedUser || !posts) return <Spinner />;
 
   return (
     <>
       <div className="flex flex-row border-b border-stone-700 py-3">
         <img
           className="mx-4 h-12 w-12 rounded-full hover:cursor-pointer"
-          src={loggedUser.imageUrl ? loggedUser.imageUrl : defaultPicUrl}
+          src={loggedUser?.imageUrl ? loggedUser.imageUrl : defaultPicUrl}
           alt=''
         />
         <PostForm/>
@@ -49,7 +50,7 @@ const HomePage = () => {
           className="border-b border-stone-700 hover:backdrop-brightness-105 hover:cursor-pointer"
           key={post.id}
           >
-          <Post post={post}/>
+          <Post loggedUser={loggedUser} post={post}/>
         </div>
       ))}
     </>

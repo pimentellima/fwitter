@@ -1,19 +1,18 @@
-import moment from "moment";
-import "moment/locale/pt-br";
-import { useState } from "react";
 import {
   BookmarkIcon,
   ChatBubbleOvalLeftIcon,
   HandThumbUpIcon,
   ShareIcon,
 } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
-import { useMutation } from "react-query";
 import axios from "axios";
-import defaultPicUrl from "../utils/defaultPicUrl";
+import moment from "moment";
+import "moment/locale/pt-br";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import { useMutation } from "react-query";
+import defaultPicUrl from "../utils/defaultPicUrl";
 
-const Post = ({ post }) => {
+const Post = ({ post, loggedUser }) => {
   const {
     id: post_id,
     author,
@@ -24,8 +23,6 @@ const Post = ({ post }) => {
     comments,
   } = post;
 
-  const session = useSession();
-  const loggedUser = session?.data?.user;
   const router = useRouter();
 
   const [likes, setLikes] = useState(post.likes);
