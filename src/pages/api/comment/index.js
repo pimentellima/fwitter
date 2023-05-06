@@ -1,4 +1,4 @@
-import prisma from "../../../server/prismaClient";
+import prisma from "../../../prismaClient";
 import { getToken } from "next-auth/jwt";
 
 const handler = async (req, res) => {
@@ -14,7 +14,7 @@ const handler = async (req, res) => {
         post_id: parseInt(post_id)
       }
     });
-    if(!comment) return res.status(400).json("Error creating post");
+    if(!comment) return res.status(400).json("Error creating comment");
     return res.status(200).json(comment);
   } catch (error) {
     console.log(error)

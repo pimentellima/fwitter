@@ -1,5 +1,5 @@
 import { getToken } from "next-auth/jwt";
-import prisma from "../../../server/prismaClient";
+import prisma from "../../../prismaClient";
 
 const handler = async (req, res) => {
   try {

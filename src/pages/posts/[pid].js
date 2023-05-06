@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import defaultPicUrl from "../../utils/defaultPicUrl";
 import Comment from "../../components/comment";
 import { useLoggedUser } from "../../server/helpers/get-user";
+import axios from "axios";
 
 const PostPage = () => {
   const { data: loggedUser } = useLoggedUser();
@@ -17,7 +18,7 @@ const PostPage = () => {
 
   const { data: post } = useQuery(
     ["post", { post_id: query.pid }],
-    () => getPostById(query.pid), {
+    async () => axios.get(`../api/post/${query.pid}`).then((res) => res.data), {
       enabled: !!query.pid
     }
   );

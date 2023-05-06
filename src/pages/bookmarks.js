@@ -1,23 +1,23 @@
 import { useQuery } from "react-query";
 import Layout from "../components/layout";
-import { getBookmarkedPostsByUserId } from "../server/helpers/get-posts";
 import Spinner from "../components/spinner";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Post from "../components/post";
 import { useLoggedUser } from "../server/helpers/get-user";
+import axios from "axios";
 
 const BookmarksPage = () => {
   const router = useRouter();
-  const { data, status } = useSession()
+  const { status } = useSession()
   const { data: loggedUser } = useLoggedUser();
 
   const { data: posts, isFetching } = useQuery(
     ["bookmarkedPosts"],
-    () => getBookmarkedPostsByUserId(data?.user.id),
+    async () => axios.get(`api/post/bookmark/${loggedUser?.id}`).then((res) => res.data),
     {
-      enabled: status === 'authenticated',
+      enabled: !!loggedUser,
     }
   );
 

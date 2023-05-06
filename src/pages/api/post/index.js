@@ -1,6 +1,6 @@
 import { getToken } from "next-auth/jwt";
 import nextConnect from 'next-connect';
-import prisma from "../../../server/prismaClient";
+import prisma from "../../../prismaClient";
 import upload from '../../../utils/upload';
 
 const handler = nextConnect({

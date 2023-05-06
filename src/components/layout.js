@@ -9,7 +9,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useLoggedUser } from "../server/helpers/get-user";
+import { useLoggedUser } from "../hooks/useLoggedUser";
 
 const Layout = ({ children }) => {
   const { data: loggedUser } = useLoggedUser();

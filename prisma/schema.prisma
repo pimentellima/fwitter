@@ -32,6 +32,8 @@ model follow {
   id          Int @id @default(autoincrement())
   followed_id Int
   follower_id Int
+  followed    user @relation("Followers", fields: [followed_id], references: [id])
+  follower    user @relation("Following", fields: [follower_id], references: [id])
 
   @@unique([followed_id, follower_id], map: "Follow_followed_id_follower_id_key")
 }
@@ -81,4 +83,7 @@ model user {
   imageUrl  String?
   posts      post[]
   comments  comment[]
+
+  followers follow[] @relation("Followers")
+  following follow[] @relation("Following")
 }

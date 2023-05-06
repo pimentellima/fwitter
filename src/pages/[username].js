@@ -1,21 +1,15 @@
 import axios from "axios";
+import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
+import Popup from "reactjs-popup";
 import Layout from "../components/layout";
 import Post from "../components/post";
-import Spinner from "../components/spinner";
-import { getPostsByUserId } from "../server/helpers/get-posts";
-import { getFollowsById } from "../server/helpers/get-follows-by-id";
-import { useLoggedUser, getUserByUsername } from "../server/helpers/get-user";
-import moment from "moment";
-import { useSession } from "next-auth/react";
-import defaultPicUrl from "../utils/defaultPicUrl";
-import Popup from "reactjs-popup";
 import ProfileForm from "../components/profileForm";
-
-export const followReq = (data) => axios.post("/api/follow", { ...data });
-export const unfollowReq = (data) => axios.delete("/api/follow", { ...data });
+import Spinner from "../components/spinner";
+import { useLoggedUser } from "../hooks/useLoggedUser";
+import defaultPicUrl from "../utils/defaultPicUrl";
 
 const ProfilePage = () => {
   const { query } = useRouter();
@@ -23,76 +17,55 @@ const ProfilePage = () => {
   const { data: loggedUser } = useLoggedUser();
   const router = useRouter();
 
-  const { data: user } = useQuery(
+  const { data } = useQuery(
     ["user", { username: query?.username }],
-    () => getUserByUsername(query.username),
+    async () =>
+      axios.get(`api/profile/${query?.username}`).then((res) => res.data),
     {
       enabled: !!query.username,
     }
   );
 
-  const { data: posts, isFetched: fetchedPosts } = useQuery(
-    ["userPosts", { user_id: user?.id }],
-    () => getPostsByUserId(user?.id),
-    {
-      enabled: !!user,
-    }
-  );
-
-  const { data: follows, isFetched: fetchedFollows } = useQuery(
-    ["follows", { userId: user?.id }],
-    () => getFollowsById(user?.id),
-    {
-      enabled: !!user,
-    }
-  );
-
   const [followers, setFollowers] = useState(0);
-  const [following, setFollowing] = useState(0);
+  const following = data?.following.length;
   const [isFollowedByUser, setIsFollowedByUser] = useState(false);
 
   useEffect(() => {
-    if (loggedUser && follows) {
-      setFollowers(
-        follows.filter((follow) => follow.followed_id === user.id).length
-      );
-
-      setFollowing(
-        follows.filter((follow) => follow.follower_id === user.id).length
-      );
-
-      setIsFollowedByUser(
-        follows.filter((follow) => follow.follower_id === loggedUser.id)
-          .length > 0
-      );
+    if(data) {
+      setFollowers(data.followers.length);
+      setIsFollowedByUser( data?.followers.filter((follow) => follow.follower_id === loggedUser.id)
+      .length > 0)
     }
-  }, [loggedUser, follows]);
+  }, [data])
 
-  const follow = useMutation(followReq);
-  const unfollow = useMutation(unfollowReq);
+  const followMutation = useMutation(
+    async (data) => await axios.post("/api/follow", { ...data })
+  );
+  const unfollowMutation = useMutation(
+    async (data) => await axios.delete("/api/follow", { ...data })
+  );
 
   const handleFollow = () => {
-    follow.mutate({
+    followMutation.mutate({
       follower_id: loggedUser.id,
-      followed_id: user.id,
+      followed_id: data.id,
     });
     setIsFollowedByUser(true);
     setFollowers((n) => ++n);
   };
 
   const handleUnfollow = () => {
-    unfollow.mutate({
+    unfollowMutation.mutate({
       data: {
         follower_id: loggedUser.id,
-        followed_id: user.id,
+        followed_id: data.id,
       },
     });
     setIsFollowedByUser(false);
     setFollowers((n) => --n);
   };
 
-  if (!user || !loggedUser || !fetchedPosts || !fetchedFollows)
-    return <Spinner />;
+  if (!data) return <Spinner />;
 
   return (
     <div>
@@ -118,10 +91,10 @@ const ProfilePage = () => {
           >
             <img
               className="ml-2 h-28 w-28 rounded-full hover:cursor-pointer"
-              src={user.imageUrl ? user.imageUrl : defaultPicUrl}
+              src={data.imageUrl ? data.imageUrl : defaultPicUrl}
               alt="profileImage"
             />
-            {user.id === loggedUser?.id ? (
+            {data.id === loggedUser?.id ? (
               <button
                 onClick={() => setModal(true)}
                 className="mr-2 h-10 
@@ -156,10 +129,10 @@ const ProfilePage = () => {
           </div>
         </div>
         <div className="mt-3 flex flex-col pl-5">
-          <p className="text-2xl">{user.name + "  "}</p>
-          <p className="text-stone-400">{"@" + user.username}</p>
+          <p className="text-2xl">{data.name + "  "}</p>
+          <p className="text-stone-400">{"@" + data.username}</p>
           <p className="mt-3 text-stone-400">
-            {`Juntou-se em ${moment(user.createdAt).format("ll")}`}
+            {`Juntou-se em ${moment(data.createdAt).format("ll")}`}
           </p>
           <div className="mt-2 flex gap-2 font-medium">
             <p className="first-letter:text-white">{`${following}  Seguindo`}</p>
@@ -169,7 +142,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-      {posts?.map((post) => (
+      {data.posts?.map((post) => (
         <div
           onClick={(e) => {
             e.stopPropagation();

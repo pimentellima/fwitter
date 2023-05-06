@@ -1,5 +1,5 @@
 import { getToken } from "next-auth/jwt";
-import prisma from "../../../server/prismaClient";
+import prisma from "../../../prismaClient";
 import upload from "../../../utils/upload";
 import nextConnect from "next-connect";
 

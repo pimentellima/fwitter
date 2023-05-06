@@ -6,23 +6,20 @@ import Layout from "../components/layout";
 import Post from "../components/post";
 import PostForm from "../components/postForm";
 import Spinner from "../components/spinner";
-import { getHomePagePostsByUserId } from "../server/helpers/get-posts";
 import defaultPicUrl from '../utils/defaultPicUrl';
-import { useLoggedUser } from "../server/helpers/get-user";
+import { useLoggedUser } from "../hooks/useLoggedUser";
+import axios from "axios";
 
 const HomePage = () => {
   const { status } = useSession();
-  const { data: loggedUser, isFetching: isFetchingUser } = useLoggedUser();
+  const { data: loggedUser } = useLoggedUser();
   const router = useRouter();
 
-  const { data: posts, isFetching: isFetchingPosts } = useQuery(
+  const { data: posts } = useQuery(
     ["homePosts"],
-    () => getHomePagePostsByUserId(loggedUser?.id),
-    {
-      enabled: !!loggedUser,
-    }
+    async () => axios.get('api/post/home').then((res) => res.data)
   );
-
+  
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
