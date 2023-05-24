@@ -8,7 +8,7 @@ const handler = nextConnect({
     console.log(error);
     res
       .status(501)
-      .json({ error: `Sorry something Happened! ${error.message}` });
+      .json({ error: `Error uploading file ${error.message}` });
   },
 });
 
@@ -19,7 +19,6 @@ handler.put(async (req, res) => {
     const { name, bio } = req.body;
     const token = await getToken({ req });
     if(!token) return res.status(401).json('Unauthorized');
-    console.log('file:' + req.file)
 
     const user = await prisma.user.update({
       where: { id: parseInt(token.user.id) },

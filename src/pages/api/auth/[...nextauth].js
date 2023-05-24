@@ -20,6 +20,8 @@ export const authOptions = {
   },
   pages: {
     signIn: "/signin",
+    signUp: "/signup",
+    error: '/error'
   },
   providers: [
     CredentialsProvider({

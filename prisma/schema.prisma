@@ -11,9 +11,9 @@ model bookmark {
   id        Int  @id @default(autoincrement())
   post_id   Int
   author_id Int
-  post      post @relation(fields: [post_id], references: [id], map: "Bookmark_post_id_fkey")
+  post      post @relation(fields: [post_id], references: [id])
 
-  @@unique([post_id, author_id], map: "Bookmark_post_id_author_id_key")
+  @@unique([post_id, author_id])
 }
 
 model comment {
@@ -22,10 +22,10 @@ model comment {
   author_id Int
   post_id   Int
   createdAt DateTime @default(now())
-  post      post     @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comment_post_id_fkey")
-  author    user  @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comment_author_id_fkey")
+  post      post     @relation(fields: [post_id], references: [id])
+  author    user  @relation(fields: [author_id], references: [id])
 
-  @@index([post_id], map: "Comment_post_id_fkey_idx")
+  @@index([post_id])
 }
 
 model follow {
@@ -35,16 +35,16 @@ model follow {
   followed    user @relation("Followers", fields: [followed_id], references: [id])
   follower    user @relation("Following", fields: [follower_id], references: [id])
 
-  @@unique([followed_id, follower_id], map: "Follow_followed_id_follower_id_key")
+  @@unique([followed_id, follower_id])
 }
 
 model like {
   id        Int  @id @default(autoincrement())
   post_id   Int
   author_id Int
-  post      post @relation(fields: [post_id], references: [id], map: "Like_post_id_fkey")
+  post      post @relation(fields: [post_id], references: [id])
 
-  @@unique([post_id, author_id], map: "Like_post_id_author_id_key")
+  @@unique([author_id, post_id])
 }
 
 model post {
@@ -58,9 +58,9 @@ model post {
   comments    comment[]
   likes        like[]
   shares       share[]
-  author        user       @relation(fields: [author_id], references: [id], map: "Post_author_id_fkey")
+  author        user       @relation(fields: [author_id], references: [id])
 
-  @@index([author_id], map: "Post_author_id_fkey")
+  @@index([author_id])
 }
 
 model share {
@@ -68,9 +68,10 @@ model share {
   post_id   Int
   author_id Int
   createdAt DateTime @default(now())
-  post      post     @relation(fields: [post_id], references: [id], map: "Share_post_id_fkey")
+  post      post     @relation(fields: [post_id], references: [id])
 
-  @@index([post_id], map: "Share_post_id_fkey")
+  @@index([post_id])
+  @@unique([author_id, post_id])
 }
 
 model user {

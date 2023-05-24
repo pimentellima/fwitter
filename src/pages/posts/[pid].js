@@ -2,13 +2,11 @@ import { useQuery } from "react-query";
 import Spinner from "../../components/spinner";
 import { useRouter } from "next/router";
 import Layout from "../../components/layout";
-import { getPostById } from "../../server/helpers/get-posts";
 import Post from '../../components/post'
 import CommentForm from "../../components/commentForm";
-import { useSession } from "next-auth/react";
 import defaultPicUrl from "../../utils/defaultPicUrl";
 import Comment from "../../components/comment";
-import { useLoggedUser } from "../../server/helpers/get-user";
+import { useLoggedUser } from "../../hooks/useLoggedUser";
 import axios from "axios";
 
 const PostPage = () => {
@@ -28,7 +26,7 @@ const PostPage = () => {
   return (
     <>
       <div className='border-b border-stone-700'>
-        <Post post={post}/>
+        <Post post={post} loggedUser={loggedUser}/>
       </div>
       <div className='flex flex-row py-3 border-b border-stone-700'>
         <img

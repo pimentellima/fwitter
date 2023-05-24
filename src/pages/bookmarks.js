@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Post from "../components/post";
-import { useLoggedUser } from "../server/helpers/get-user";
+import { useLoggedUser } from "../hooks/useLoggedUser";
 import axios from "axios";
 
 const BookmarksPage = () => {
@@ -27,7 +27,7 @@ const BookmarksPage = () => {
     }
   }, [status])
 
-  if (isFetching || status === 'loading') return <Spinner />;
+  if (!posts) return <Spinner />;
 
   return (
     <>

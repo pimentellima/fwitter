@@ -1,15 +1,20 @@
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 const Signup = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
+  const router = useRouter();
 
   const onSubmit = async (data) => {
     await axios.post('/api/auth/signup', {
       name: data.name,
       username: data.username,
       password: data.password
+    }).then(() => {
+      reset();
+      router.push("/");
     })
   }
 

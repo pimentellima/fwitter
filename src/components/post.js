@@ -8,7 +8,7 @@ import axios from "axios";
 import moment from "moment";
 import "moment/locale/pt-br";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import defaultPicUrl from "../utils/defaultPicUrl";
 

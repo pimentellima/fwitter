@@ -12,8 +12,7 @@ const Signin = () => {
 
   const onSubmit = async (data) => {
     const { username, password } = data;
-    await signIn("credentials", { username, password });
-    router.push('/');
+    await signIn("credentials", { username, password, callbackUrl:'/'});
   };
 
   useEffect(() => {
@@ -22,7 +21,7 @@ const Signin = () => {
     }
   }, [status]);
 
-  if(status !== 'unauthenticated') return <Spinner/>
+  if (status !== "unauthenticated") return <Spinner />;
 
   return (
     <div

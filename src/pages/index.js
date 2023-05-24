@@ -6,7 +6,7 @@ import Layout from "../components/layout";
 import Post from "../components/post";
 import PostForm from "../components/postForm";
 import Spinner from "../components/spinner";
-import defaultPicUrl from '../utils/defaultPicUrl';
+import defaultPicUrl from "../utils/defaultPicUrl";
 import { useLoggedUser } from "../hooks/useLoggedUser";
 import axios from "axios";
 
@@ -15,11 +15,10 @@ const HomePage = () => {
   const { data: loggedUser } = useLoggedUser();
   const router = useRouter();
 
-  const { data: posts } = useQuery(
-    ["homePosts"],
-    async () => axios.get('api/post/home').then((res) => res.data)
+  const { data: posts } = useQuery(["homePosts"], async () =>
+    axios.get("api/post/home").then((res) => res.data)
   );
-  
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
@@ -34,20 +33,20 @@ const HomePage = () => {
         <img
           className="mx-4 h-12 w-12 rounded-full hover:cursor-pointer"
           src={loggedUser?.imageUrl ? loggedUser.imageUrl : defaultPicUrl}
-          alt=''
+          alt=""
         />
-        <PostForm/>
+        <PostForm />
       </div>
       {posts.map((post) => (
-        <div 
+        <div
           onClick={(e) => {
             e.stopPropagation();
-            router.push('/posts/' + post.id);
+            router.push("/posts/" + post.id);
           }}
-          className="border-b border-stone-700 hover:backdrop-brightness-105 hover:cursor-pointer"
+          className="border-b border-stone-700 hover:cursor-pointer hover:backdrop-brightness-105"
           key={post.id}
-          >
-          <Post loggedUser={loggedUser} post={post}/>
+        >
+          <Post loggedUser={loggedUser} post={post} />
         </div>
       ))}
     </>

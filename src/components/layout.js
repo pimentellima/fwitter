@@ -10,11 +10,15 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useLoggedUser } from "../hooks/useLoggedUser";
+import { useQuery } from "react-query";
+import axios from "axios";
 
 const Layout = ({ children }) => {
   const { data: loggedUser } = useLoggedUser();
+  const { data: featuredPosts } = useQuery(["featuredPosts"], async () =>
+    await axios.get("api/post/featured").then(res => res.data)
+  );
 
-  const router = useRouter();
   const { pathname, query } = useRouter();
   const [selectedPage, setSelectedPage] = useState("");
 
@@ -36,8 +40,9 @@ const Layout = ({ children }) => {
   }, [pathname, query]);
 
   const handleSignOut = async () => {
-    await signOut();
-    router.push("/signin");
+    await signOut({
+      callbackUrl: "/signin",
+    });
   };
 
   const handleClickHeader = () => {
@@ -134,23 +139,36 @@ const Layout = ({ children }) => {
       </nav>
       <div
         className="flex min-h-[130vh] w-[600px] flex-col 
-                    border-r border-stone-700"
+        border-r border-stone-700"
       >
         <header
           className="sticky top-0 z-20 border-b
           border-stone-700 bg-stone-800 pb-4 pl-3 pt-2 text-xl font-medium"
         >
           <div className="hover:cursor-pointer" onClick={handleClickHeader}>
-            <p>{selectedPage}</p>
+            {selectedPage}
           </div>
         </header>
         {children}
       </div>
       <div
-        className="sticky top-10 ml-4 h-60 w-60 rounded-2xl 
-                            bg-stone-700 px-4 py-2"
+        className="sticky top-10 ml-4 h-min w-80 rounded-2xl 
+                            bg-stone-700 pt-2"
       >
-        <p className="text-lg font-bold">Em alta</p>
+        <span className="pl-4 text-lg font-bold">Receitas em alta</span>
+        <div className='mt-5 flex flex-col'>
+            {featuredPosts?.map(({ title, imageUrl, author, likes }) => (
+                <div className='flex py-2 px-4 justify-between h-20 hover:cursor-pointer hover:backdrop-brightness-105'>
+                    <div className='w-full flex flex-col '>
+                        <span className='flex text-sm text-stone-500 gap-3'>
+                            {author.name + " · " + likes.length + " curtidas"}
+                        </span>
+                        <span className=''>{title}</span>
+                    </div>
+                    {imageUrl && <img className='max-w-full max-h-full rounded-lg' src={imageUrl} alt=''/>}
+                </div>
+            ))}
+        </div>
       </div>
     </div>
   );
