@@ -8,11 +8,14 @@ import axios from "axios";
 import moment from "moment";
 import "moment/locale/pt-br";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "react-query";
 import defaultPicUrl from "../utils/defaultPicUrl";
+import { useSession } from "next-auth/react";
 
-const Post = ({ post, loggedUser }) => {
+const Post = ({ post }) => {
+  const { data: session } = useSession();
+
   const {
     id: post_id,
     author,
@@ -28,9 +31,9 @@ const Post = ({ post, loggedUser }) => {
   const [likes, setLikes] = useState(post.likes);
   const [bookmarks, setBookmarks] = useState(post.bookmarks);
   const [shares, setShares] = useState(post.shares);
-  const bookmarked = !!bookmarks.find((b) => b.author_id === loggedUser?.id);
-  const liked = !!likes.find((b) => b.author_id === loggedUser?.id);
-  const shared = !!shares.find((b) => b.author_id === loggedUser?.id);
+  const bookmarked = !!bookmarks.find((b) => b.author_id === session?.user.id);
+  const liked = !!likes.find((b) => b.author_id === session?.user.id);
+  const shared = !!shares.find((b) => b.author_id === session?.user.id);
 
   const mutation = useMutation(({ url, method }) => {
     if (method === "POST") return axios.post(url, { post_id });
@@ -52,8 +55,8 @@ const Post = ({ post, loggedUser }) => {
       method: bookmarked ? "DELETE" : "POST",
     });
     const arr = bookmarked
-      ? bookmarks.filter((i) => i.author_id !== loggedUser.id)
-      : [...bookmarks, { author_id: loggedUser.id, post_id }];
+      ? bookmarks.filter((i) => i.author_id !== session?.user?.id)
+      : [...bookmarks, { author_id: session?.user?.id, post_id }];
     setBookmarks(arr);
   };
 
@@ -64,8 +67,8 @@ const Post = ({ post, loggedUser }) => {
       method: shared ? "DELETE" : "POST",
     });
     const arr = shared
-      ? shares.filter((i) => i.author_id !== loggedUser.id)
-      : [...shares, { author_id: loggedUser.id, post_id }];
+      ? shares.filter((i) => i.author_id !== session?.user?.id)
+      : [...shares, { author_id: session?.user.id, post_id }];
     setShares(arr);
   };
 
@@ -76,15 +79,17 @@ const Post = ({ post, loggedUser }) => {
       method: liked ? "DELETE" : "POST",
     });
     const arr = liked
-      ? likes.filter((i) => i.author_id !== loggedUser.id)
-      : [...likes, { author_id: loggedUser.id, post_id }];
+      ? likes.filter((i) => i.author_id !== session?.user.id)
+      : [...likes, { author_id: session?.user.id, post_id }];
     setLikes(arr);
   };
 
   return (
-    <div className="flex flex-row py-3">
+    <div className="grid grid-cols-[80px_auto_80px] py-3">
       <img
-        className="mx-4 h-12 w-12 rounded-full hover:cursor-pointer"
+        className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
+        width={50}
+        height={50}
         onClick={redirectToAuthor}
         src={author.imageUrl ? author.imageUrl : defaultPicUrl}
         alt="profileImage"

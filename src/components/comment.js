@@ -12,9 +12,11 @@ const Comment = ({ comment: { author, title, createdAt }  }) => {
   };
 
   return (
-    <div className="flex flex-row py-3">
+    <div className="grid grid-cols-[80px_auto] py-3">
       <img
-        className="mx-4 h-12 w-12 rounded-full hover:cursor-pointer"
+        className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
+        width={50}
+        height={50}
         onClick={redirectToAuthor}
         src={author.imageUrl ? author.imageUrl : defaultPicUrl}
         alt="profileImage"

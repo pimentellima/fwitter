@@ -10,7 +10,7 @@ const handler = async (req, res) => {
     const comment = await prisma.comment.create({
       data: {
         title,
-        author_id: parseInt(token.user.id),
+        author_id: parseInt(token.id),
         post_id: parseInt(post_id)
       }
     });

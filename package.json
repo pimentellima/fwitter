@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@clerk/clerk-js": "^4.35.0",
-    "@clerk/nextjs": "^4.14.0",
     "@cloudinary/react": "^1.11.2",
     "@cloudinary/url-gen": "^1.10.0",
     "@google-cloud/storage": "^6.9.5",
@@ -33,6 +31,7 @@
     "react-hook-form": "^7.43.2",
     "react-query": "^3.39.3",
     "reactjs-popup": "^2.0.5",
+    "sharp": "^0.32.1",
     "url": "^0.11.0",
     "web-vitals": "^2.1.4",
     "yarn": "^1.22.19"

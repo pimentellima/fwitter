@@ -1,11 +1,14 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
+import defaultPicUrl from "../utils/defaultPicUrl";
+import { useSession } from "next-auth/react";
 
 const CommentForm = ({ post_id }) => {
   const queryClient = useQueryClient();
-  const mutation = useMutation(async (data) => 
-    await axios.post("../api/comment", data)
+  const { data: session } = useSession();
+  const mutation = useMutation(
+    async (data) => await axios.post("../api/comment", data)
   );
 
   const {
@@ -32,30 +35,39 @@ const CommentForm = ({ post_id }) => {
   };
 
   return (
-    <form
-      autoComplete="off"
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col w-full"
-    >
-      <input
-        {...register("title", { required: true })}
-        placeholder="O que você achou dessa receita?"
-        className="bg-inherit focus:outline-none h-12 pl-2 text-lg
-        text-stone-100 placeholder:text-stone-500 "
+    <div className="grid grid-cols-[80px_auto] border-b border-stone-700 py-3">
+      <img
+        className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
+        width={50}
+        height={50}
+        src={session?.user.imageUrl ? user.imageUrl : defaultPicUrl}
+        alt="profileImage"
       />
-      <div className="flex justify-end">
-        <button
-          disabled={!isValid}
-          className='h-10 w-28 mr-3
-            flex justify-center items-center rounded-3xl 
-            bg-stone-600 px-5 py-1 text-base hover:bg-stone-500
-            font-bold transition duration-100 ease-out
-            disabled:hover:cursor-default disabled:hover:bg-stone-600 disabled:opacity-70'
-        >
-          Comentar
-        </button>
-      </div>
-    </form>
+      <form
+        autoComplete="off"
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex w-full flex-col"
+      >
+        <input
+          {...register("title", { required: true })}
+          placeholder="O que você achou dessa receita?"
+          className="h-12 bg-inherit pl-2 text-lg text-stone-100
+          placeholder:text-stone-500 focus:outline-none "
+        />
+        <div className="flex justify-end">
+          <button
+            disabled={!isValid}
+            className="mr-3 flex h-10
+              w-28 items-center justify-center rounded-3xl 
+              bg-stone-600 px-5 py-1 text-base font-bold
+              transition duration-100 ease-out hover:bg-stone-500
+              disabled:opacity-70 disabled:hover:cursor-default disabled:hover:bg-stone-600"
+          >
+            Comentar
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

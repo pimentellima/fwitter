@@ -11,7 +11,7 @@ const handler = async (req, res) => {
       case "POST":
         const newShare = await prisma.share.create({
           data: {
-            author_id: parseInt(token.user.id),
+            author_id: parseInt(token.id),
             post_id: parseInt(post_id),
           },
         });
@@ -20,7 +20,7 @@ const handler = async (req, res) => {
       case "DELETE":
         const deletedShare = await prisma.share.deleteMany({
           where: {
-            author_id: parseInt(token.user.id),
+            author_id: parseInt(token.id),
             post_id: parseInt(post_id),
           },
         });

@@ -22,7 +22,7 @@ handler.post(async (req, res) => {
       data: {
         title,
         ingredients,
-        author_id: parseInt(token.user.id),
+        author_id: parseInt(token.id),
         imageUrl: req.file?.path
       }
     });

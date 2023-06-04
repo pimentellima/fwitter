@@ -5,17 +5,16 @@ const handler = async (req, res) => {
   try {
     const token = await getToken({ req });
     if (!token) return res.status(401).json("Unauthorized");
-    const userId = token.user.id;
 
     const following = await prisma.follow
       .findMany({
-        where: { follower_id: parseInt(userId) },
+        where: { follower_id: parseInt(token.id) },
       })
       .then((follows) => follows.map((follow) => follow.followed_id));
 
     const posts = await prisma.post.findMany({
       where: {
-        OR: [{ author_id: { in: following } }, { author_id: parseInt(userId) }],
+        OR: [{ author_id: { in: following } }, { author_id: parseInt(token.id) }],
       },
       include: {
         bookmarks: true,
@@ -43,7 +42,7 @@ const handler = async (req, res) => {
       }))
     );
   } catch (error) {
-    console.log(error);
+    console.log(error)
     return res.status(500).json(error);
   }
 };

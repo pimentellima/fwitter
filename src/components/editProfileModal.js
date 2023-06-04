@@ -1,16 +1,16 @@
-import { XMarkIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
+import { ArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
-import defaultPicUrl from "../utils/defaultPicUrl";
-import axios from "axios";
 import Popup from "reactjs-popup";
-import { useLoggedUser } from "../hooks/useLoggedUser";
+import defaultPicUrl from "../utils/defaultPicUrl";
+import { useSession } from "next-auth/react";
 
-const ProfileModal = () => {
-  const { data: loggedUser } = useLoggedUser();
+const EditProfileModal = () => {
+  const { data: session, update } = useSession();
   const [imgPreview, setImgPreview] = useState("");
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
@@ -20,46 +20,56 @@ const ProfileModal = () => {
       })
   );
 
-  const { register, handleSubmit, formState: { errors, isValid }, watch } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid },
+    watch,
+  } = useForm({
     defaultValues: {
-      name: loggedUser.name,
-      bio: loggedUser.bio,
+      name: session?.user?.name,
+      bio: session?.user?.bio,
       file: [],
     },
   });
 
   const imageWatch = watch("file");
-
   const onSubmit = (data) => {
     mutation.mutate(
       {
         ...data,
-        file: data.file[0],
+        file: data.file ? data.file[0] : null,
       },
       {
-        onSuccess: () => {
-          queryClient.invalidateQueries(["loggedUser"]);
+        onSuccess: ({ data }) => {
+          update({
+            name: data.name,
+            imageUrl: data.imageUrl
+          });
           queryClient.invalidateQueries([
-            "user",
-            { username: loggedUser.username },
+            "profileUser",
+            { username: session?.user?.username },
           ]);
           setOpen(false);
         },
       }
     );
   };
-
+  
   useEffect(() => {
     if (imageWatch?.length) {
       const url = URL.createObjectURL(imageWatch[0]);
       setImgPreview(url);
+    }
+    else {
+      // setImgPreview(session?.user.imageUrl)
     }
   }, [imageWatch]);
 
   return (
     <>
       <button
-        onClick={() => setOpen(open => !open)}
+        onClick={() => setOpen((open) => !open)}
         className="mr-2 h-10 
                 rounded-full border border-stone-700 
                 bg-stone-700 px-4 
@@ -87,7 +97,7 @@ const ProfileModal = () => {
               px-5 py-1 text-sm font-bold 
               text-stone-800 transition duration-100 ease-out
               hover:cursor-pointer hover:bg-stone-200 
-              disabled:hover:cursor-default disabled:hover:bg-stone-100 disabled:opacity-40`} 
+              disabled:opacity-40 disabled:hover:cursor-default disabled:hover:bg-stone-100`}
             >
               Salvar
             </button>
@@ -104,15 +114,17 @@ const ProfileModal = () => {
               <div className="absolute z-20 h-full w-full p-4">
                 {imgPreview ? (
                   <img
-                    className="z-20 h-full w-full rounded-full"
+                    className="z-20 h-full w-full rounded-full aspect-square"
                     src={imgPreview}
                     alt=""
                   />
                 ) : (
                   <img
-                    className="z-20 h-full w-full rounded-full"
+                    className="z-20 h-full w-full rounded-full aspect-square"
                     src={
-                      loggedUser.imageUrl ? loggedUser.imageUrl : defaultPicUrl
+                      session?.user?.imageUrl
+                        ? session?.user?.imageUrl
+                        : defaultPicUrl
                     }
                     alt=""
                   />
@@ -154,4 +166,4 @@ const ProfileModal = () => {
   );
 };
 
-export default ProfileModal;
+export default EditProfileModal;

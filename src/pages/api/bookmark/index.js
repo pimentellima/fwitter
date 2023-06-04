@@ -10,7 +10,7 @@ const handler = async (req, res) => {
     if (req.method === "POST") {
       const newBookmark = await prisma.bookmark.create({
         data: {
-          author_id: parseInt(token.user.id),
+          author_id: parseInt(token.id),
           post_id: parseInt(post_id),
         },
       });
@@ -20,7 +20,7 @@ const handler = async (req, res) => {
     if (req.method === "DELETE") {
       const deletedBookmark = await prisma.bookmark.deleteMany({
         where: {
-          author_id: parseInt(token.user.id),
+          author_id: parseInt(token.id),
           post_id: parseInt(post_id),
         },
       });
