@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import Popup from "reactjs-popup";
-import defaultPicUrl from "../utils/defaultPicUrl";
+import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import { useSession } from "next-auth/react";
 
 const EditProfileModal = () => {
@@ -62,7 +62,7 @@ const EditProfileModal = () => {
       setImgPreview(url);
     }
     else {
-      // setImgPreview(session?.user.imageUrl)
+      setImgPreview(session?.user.imageUrl || defaultUserImg)
     }
   }, [imageWatch]);
 
@@ -112,23 +112,11 @@ const EditProfileModal = () => {
             />
             <div className="absolute top-1/2 flex h-32 w-32 items-center justify-center">
               <div className="absolute z-20 h-full w-full p-4">
-                {imgPreview ? (
-                  <img
-                    className="z-20 h-full w-full rounded-full aspect-square"
-                    src={imgPreview}
-                    alt=""
-                  />
-                ) : (
-                  <img
-                    className="z-20 h-full w-full rounded-full aspect-square"
-                    src={
-                      session?.user?.imageUrl
-                        ? session?.user?.imageUrl
-                        : defaultPicUrl
-                    }
-                    alt=""
-                  />
-                )}
+                <img
+                  className="z-20 h-full w-full rounded-full aspect-square"
+                  src={imgPreview}
+                  alt=""
+                />
               </div>
               <label
                 htmlFor="file"

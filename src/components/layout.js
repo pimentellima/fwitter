@@ -7,19 +7,20 @@ import {
 } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
-import defaultPicUrl from "../utils/defaultPicUrl";
+import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
+import Image from "next/image";
 
 const Layout = ({ children }) => {
   const router = useRouter();
   const { data: session } = useSession();
-  const { data: featuredPosts, isFetching: isFetchingFeaturedPosts } = useQuery(
+  const { data: featuredPosts, isLoading: isLoadingFeaturedPosts } = useQuery(
     ["featuredPosts"],
-    async () => await axios.get("api/post/featured").then((res) => res.data)
+    async () => await axios.get("../api/post/featured").then((res) => res.data)
   );
   const { pathname, query } = useRouter();
   const [selectedPage, setSelectedPage] = useState("");
@@ -33,8 +34,6 @@ const Layout = ({ children }) => {
           return "Início";
         case "/bookmarks":
           return "Salvos";
-        case "/settings":
-          return "Configurações";
       }
     });
   }, [pathname, query]);
@@ -53,7 +52,7 @@ const Layout = ({ children }) => {
     <div className="flex flex-row justify-center bg-stone-800">
       <nav
         className="sticky top-0 flex h-screen 
-                w-60 flex-col border-r border-stone-700 pt-10"
+                w-60 flex-col border-r border-stone-700 py-10 justify-between"
       >
         <ul className="mb-10 flex flex-col">
           <li>
@@ -101,38 +100,24 @@ const Layout = ({ children }) => {
               </div>
             </Link>
           </li>
-          <li>
-            <Link href="/" className="group flex">
-              <div
-                className={`mr-3 flex items-center gap-3 
-              rounded-full px-5 py-3 text-2xl
-              tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700 ${
-                selectedPage === "Configurações" && "font-medium"
-              }`}
-              >
-                <CogIcon className="h-8 w-8" />
-                Configurações
-              </div>
-            </Link>
-          </li>
         </ul>
         <div
           onClick={handleSignOut}
-          className="grid grid-cols-[45px,auto] items-center rounded-full p-2 hover:cursor-pointer hover:bg-stone-700 transition-colors"
+          className="group hover:cursor-pointer"
         >
-          <img
-            className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
-            width={50}
-            height={50}
-            src={
-              session?.user.imageUrl ? session.user.imageUrl : defaultPicUrl
-            }
-            alt=""
-          />
-          <div className="justify-self-center flex items-center gap-1 text-lg">
-            <span className="font-normal">Sair de</span>
-            <span className="font-medium">{session?.user.name}</span>
+          <div className='grid grid-cols-[40px,auto] items-center 
+          rounded-full p-2 transition-colors 
+           group-hover:bg-stone-700 mr-4'>
+            <Image
+              className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
+              width={50}
+              height={50}
+              src={session?.user.imageUrl || defaultUserImg}
+              alt=""
+            />
+            <div className="flex items-center gap-1 justify-self-center text-lg">
+              <span className="font-normal">{'Sair de ' + session?.user.name}</span>
+            </div>
           </div>
         </div>
       </nav>
@@ -152,12 +137,10 @@ const Layout = ({ children }) => {
       </div>
       <div
         className="sticky top-10 ml-4 h-min w-80 rounded-2xl 
-                            bg-stone-700 pt-2"
+                            bg-stone-700 pt-2 min-h-[300px]"
       >
-        {isFetchingFeaturedPosts ? (
-          <div className="flex justify-center py-5">
+        {isLoadingFeaturedPosts ? (
             <Spinner />
-          </div>
         ) : (
           <>
             <span className="pl-4 text-lg font-bold">Receitas em alta</span>
@@ -176,7 +159,7 @@ const Layout = ({ children }) => {
                   </div>
                   {imageUrl && (
                     <img
-                      className="rounded-lg aspect-square"
+                      className="aspect-square rounded-lg"
                       height={80}
                       width={70}
                       src={imageUrl}

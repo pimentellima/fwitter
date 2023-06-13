@@ -1,12 +1,8 @@
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Spinner from "../components/spinner";
 
 const Signin = () => {
-  const router = useRouter();
   const { register, handleSubmit } = useForm();
   const { status } = useSession();
 
@@ -14,14 +10,6 @@ const Signin = () => {
     const { username, password } = data;
     await signIn("credentials", { username, password, callbackUrl:'/'});
   };
-
-  useEffect(() => {
-    if (status === "authenticated") {
-      router.push("/");
-    }
-  }, [status]);
-
-  if (status !== "unauthenticated") return <Spinner />;
 
   return (
     <div
@@ -42,7 +30,7 @@ const Signin = () => {
         </h1>
         <div className="mt-10 flex flex-col gap-3">
           <input
-            placeholder="Digite aqui ..."
+            placeholder="Nome de usuário"
             {...register("username")}
             className="h-14 w-full rounded-md border
                     border-stone-700 bg-inherit px-3 py-1 align-middle 
@@ -53,7 +41,7 @@ const Signin = () => {
           />
           <input
             type="password"
-            placeholder="Digite aqui ..."
+            placeholder="Senha"
             {...register("password")}
             className="h-14 w-full rounded-md border
                     border-stone-700 bg-inherit px-3 py-1 align-middle 

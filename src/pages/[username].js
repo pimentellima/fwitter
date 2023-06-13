@@ -6,9 +6,10 @@ import { useMutation, useQuery } from "react-query";
 import Layout from "../components/layout";
 import Post from "../components/post";
 import Spinner from "../components/spinner";
-import defaultPicUrl from "../utils/defaultPicUrl";
+import defaultUserImg from '../../public/static/defaultUserImg.jpg'
 import EditProfileModal from "../components/editProfileModal";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const ProfilePage = () => {
   const { status, data: session } = useSession();
@@ -91,10 +92,12 @@ const ProfilePage = () => {
                 className="absolute top-1/2 flex 
                         w-full items-end justify-between"
               >
-                <img
-                  className="ml-2 h-28 w-28 rounded-full hover:cursor-pointer aspect-square"
-                  src={profileUser?.imageUrl ? profileUser?.imageUrl : defaultPicUrl}
-                  alt="profileImage"
+                <Image
+                  className="ml-2 rounded-full hover:cursor-pointer aspect-square"
+                  height={112}
+                  width={112}
+                  src={profileUser?.imageUrl || defaultUserImg}
+                  alt=""
                 />
                 {profileUser?.id === session?.user.id ? (
                   <EditProfileModal />

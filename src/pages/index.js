@@ -1,7 +1,5 @@
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { useQuery } from "react-query";
 import Layout from "../components/layout";
 import Post from "../components/post";
@@ -9,19 +7,12 @@ import PostForm from "../components/postForm";
 import Spinner from "../components/spinner";
 
 const HomePage = () => {
-  const { status } = useSession();
   const router = useRouter();
 
   const { data: posts, isLoading: isLoadingPosts } = useQuery(
     ["homePosts"],
     async () => axios.get("api/post/home").then((res) => res.data)
   );
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/signin");
-    }
-  }, [status]);
 
   return (
     <>

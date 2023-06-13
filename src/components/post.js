@@ -10,8 +10,9 @@ import "moment/locale/pt-br";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import defaultPicUrl from "../utils/defaultPicUrl";
+import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const Post = ({ post }) => {
   const { data: session } = useSession();
@@ -86,12 +87,11 @@ const Post = ({ post }) => {
 
   return (
     <div className="grid grid-cols-[80px_auto_80px] py-3">
-      <img
+      <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         width={50}
         height={50}
-        onClick={redirectToAuthor}
-        src={author.imageUrl ? author.imageUrl : defaultPicUrl}
+        src={author.imageUrl || defaultUserImg}
         alt="profileImage"
       />
       <div className="mr-6 flex w-full flex-col">

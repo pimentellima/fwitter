@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
-import defaultPicUrl from "../utils/defaultPicUrl";
+import defaultUserImg from '../../public/static/defaultUserImg.jpg'
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const CommentForm = ({ post_id }) => {
+
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const mutation = useMutation(
@@ -36,11 +38,11 @@ const CommentForm = ({ post_id }) => {
 
   return (
     <div className="grid grid-cols-[80px_auto] border-b border-stone-700 py-3">
-      <img
+      <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         width={50}
         height={50}
-        src={session?.user.imageUrl ? user.imageUrl : defaultPicUrl}
+        src={session?.user.imageUrl || defaultUserImg}
         alt="profileImage"
       />
       <form

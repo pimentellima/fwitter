@@ -1,15 +1,14 @@
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import Layout from "../components/layout";
-import Spinner from "../components/spinner";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 import Post from "../components/post";
-import axios from "axios";
+import Spinner from "../components/spinner";
 
 const BookmarksPage = () => {
   const router = useRouter();
-  const { status, data: session } = useSession();
+  const { data: session } = useSession();
 
   const { data: posts, isLoading: isLoadingPosts } = useQuery(
     ["bookmarkedPosts"],
@@ -19,12 +18,6 @@ const BookmarksPage = () => {
       enabled: !!session?.user
     }
   );
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/signin");
-    }
-  }, [status]);
 
   if (isLoadingPosts) return <Spinner />;
 

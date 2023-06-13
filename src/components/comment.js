@@ -1,7 +1,8 @@
 import moment from "moment";
+import defaultUserImg from '../../public/static/defaultUserImg.jpg'
 import "moment/locale/pt-br";
 import { useRouter } from "next/router";
-import defaultPicUrl from "../utils/defaultPicUrl";
+import Image from "next/image";
 
 const Comment = ({ comment: { author, title, createdAt }  }) => {
   const router = useRouter();
@@ -13,13 +14,13 @@ const Comment = ({ comment: { author, title, createdAt }  }) => {
 
   return (
     <div className="grid grid-cols-[80px_auto] py-3">
-      <img
+      <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         width={50}
         height={50}
         onClick={redirectToAuthor}
-        src={author.imageUrl ? author.imageUrl : defaultPicUrl}
-        alt="profileImage"
+        src={author.imageUrl || defaultUserImg}
+        alt=""
       />
       <div className="mr-6 flex w-full flex-col">
         <div className="flex justify-between">

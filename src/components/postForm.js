@@ -3,8 +3,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
-import defaultPicUrl from "../utils/defaultPicUrl";
+import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const PostForm = () => {
   const { data: session } = useSession();
@@ -71,9 +72,9 @@ const PostForm = () => {
 
   return (
     <div className="grid grid-cols-[80px_auto] border-b border-stone-700 py-3">
-      <img
+      <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
-        src={session?.user.imageUrl || defaultPicUrl}
+        src={session?.user.imageUrl || defaultUserImg}
         alt=''
         width={50}
         height={50}

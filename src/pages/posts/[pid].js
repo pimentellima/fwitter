@@ -10,15 +10,15 @@ import axios from "axios";
 const PostPage = () => {
   const { query } = useRouter();
 
-  const { data: post, isLoading } = useQuery(
+  const { data: post } = useQuery(
     ["post", { post_id: query.pid }],
-    async () => axios.get(`../api/post/${query.pid}`).then((res) => res.data),
+    async () => axios.get(`../api/post/pid/${query.pid}`).then((res) => res.data),
     {
       enabled: !!query.pid,
     }
   );
 
-  if (isLoading) return <Spinner />;
+  if (!post) return <Spinner />;
 
   return (
     <>
