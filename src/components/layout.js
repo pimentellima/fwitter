@@ -53,7 +53,7 @@ const Layout = ({ children }) => {
   return (
     <div className="grid grid-flow-row sm:grid-flow-col sm:justify-center bg-stone-800 ">
       <nav
-        className="bg-inherit border-t flex flex-row sm:flex-col sticky bottom-0 sm:top-0 h-20 justify-center items-center sm:h-screen
+        className="bg-inherit border-t sm:border-t-0 flex flex-row sm:flex-col sticky bottom-0 sm:top-0 h-20 justify-center items-center sm:h-screen
                 w-full sm:row-auto row-start-2 sm:w-24 xl:w-60 sm:border-r border-stone-700 sm:py-10 sm:justify-between "
       >
         <ul

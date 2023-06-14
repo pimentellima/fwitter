@@ -14,7 +14,6 @@ const handler = async (req, res) => {
         req.body.password,
         user.password
       )
-
       if (isPasswordCorrect) {
         const { password, ...other } = user;
         return res.status(200).json(other);

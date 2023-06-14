@@ -1,30 +1,41 @@
+import { z } from "zod";
 import prisma from "../../../prismaClient";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 const handler = async (req, res) => {
   try {
-    const user = await prisma.user.findMany({
-        where: {
-          username: req.body.username
-        }
+    const { username, name, password } = req.body;
+    z.object({
+      username: z.string().min(6),
+      password: z.string().min(6),
+      name: z.string(),
+    }).parse({
+      username,
+      name,
+      password,
     });
 
-    if(user.length) return res.status(409).json("User already exists");
+    const user = await prisma.user.findMany({
+      where: {
+        username,
+      },
+    });
+
+    if (user.length) return res.status(409).json("User already exists");
 
     const salt = bcrypt.genSaltSync();
-    const hash = bcrypt.hashSync(req.body.password, salt);
+    const hash = bcrypt.hashSync(password, salt);
 
-    const createdUser = await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
-        username: req.body.username,
-        name: req.body.name,
-        password: hash
-      }
-    })
+        username,
+        name,
+        password: hash,
+      },
+    });
 
-    return res.status(200).json(createdUser);
-  } 
-  catch (error) {
+    return res.status(200).json(newUser);
+  } catch (error) {
     console.log(error);
     return res.status(500).json("Error creating user");
   }

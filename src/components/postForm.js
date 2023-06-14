@@ -75,7 +75,7 @@ const PostForm = () => {
       <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         src={session?.user.imageUrl || defaultUserImg}
-        alt=''
+        alt=""
         width={50}
         height={50}
       />
@@ -91,27 +91,27 @@ const PostForm = () => {
               text-stone-100 placeholder:text-stone-500 focus:outline-none"
         />
         {ingredients.map((ingredient, index) => (
-          <div className="mt-1 flex" key={ingredient.id}>
+          <div className="mt-1 grid grid-cols-[9fr,1fr] grid-flow-row" key={ingredient.id}>
             <div
-              className="flex rounded-md border border-stone-700 px-2 py-4
+              className="grid grid-cols-[1fr,1fr,1fr] rounded-md border border-stone-700 px-2 py-4
                   transition ease-out focus-within:ring-1
                   focus-within:ring-stone-500"
             >
               <input
                 {...register(`ingredients.${index}.name`, { required: true })}
                 placeholder="Ingrediente"
-                className="w-48 bg-transparent placeholder:text-stone-500 focus:outline-none"
+                className="w-full bg-transparent placeholder:text-stone-500 focus:outline-none"
               />
               <input
                 {...register(`ingredients.${index}.qt`, { required: true })}
                 placeholder="Quantidade"
                 type="number"
-                className="w-28 bg-transparent placeholder:text-stone-500 focus:outline-none"
+                className="w-full bg-transparent placeholder:text-stone-500 focus:outline-none"
               />
               <select
                 {...register(`ingredients.${index}.unity`, { required: true })}
                 required
-                className="w-28 bg-stone-800 
+                className="w-full bg-stone-800 
               invalid:text-stone-500 focus:outline-none [&_*]:bg-inherit [&_option]:text-stone-300"
               >
                 <option disabled hidden value="">
@@ -125,13 +125,11 @@ const PostForm = () => {
                 <option value="inteiro">inteiro</option>
               </select>
             </div>
-            <button
-              type="button"
-              className="ml-3 flex items-center justify-center"
-              onClick={() => remove(index)}
-            >
-              <MinusCircleIcon width={20} />
-            </button>
+            <div className="flex items-center justify-center">
+              <button type="button" onClick={() => remove(index)}>
+                <MinusCircleIcon width={20} />
+              </button>
+            </div>
           </div>
         ))}
         {imagePreview && (
@@ -152,7 +150,7 @@ const PostForm = () => {
             </div>
           </div>
         )}
-        <div className="mt-2 grid grid-cols-3 place-items-center justify-items-center">
+        <div className="mt-6 grid grid-cols-3 place-items-center justify-items-center">
           <button
             type="button"
             className="hover:cursor-pointer"

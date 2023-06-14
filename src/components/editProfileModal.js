@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -23,6 +24,7 @@ const EditProfileModal = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { isValid },
     watch,
   } = useForm({
@@ -44,7 +46,7 @@ const EditProfileModal = () => {
         onSuccess: ({ data }) => {
           update({
             name: data.name,
-            imageUrl: data.imageUrl
+            imageUrl: data.imageUrl,
           });
           queryClient.invalidateQueries([
             "profileUser",
@@ -55,14 +57,18 @@ const EditProfileModal = () => {
       }
     );
   };
-  
+
+  const handleClose = () => {
+    reset()
+    setOpen(false)
+  }
+
   useEffect(() => {
     if (imageWatch?.length) {
       const url = URL.createObjectURL(imageWatch[0]);
       setImgPreview(url);
-    }
-    else {
-      setImgPreview(session?.user.imageUrl || defaultUserImg)
+    } else {
+      setImgPreview(session?.user.imageUrl || defaultUserImg);
     }
   }, [imageWatch]);
 
@@ -77,10 +83,10 @@ const EditProfileModal = () => {
       >
         Editar perfil
       </button>
-      <Popup onClose={() => setOpen(false)} open={open} modal lockScroll>
+      <Popup onClose={handleClose} open={open} modal lockScroll>
         <form
           autoComplete="off"
-          className="flex w-[600px] flex-col rounded-xl bg-stone-900 pb-14"
+          className="flex w-screen h-screen sm:h-auto sm:w-[600px] flex-col rounded-xl  bg-stone-900 pb-14"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex items-center justify-between px-5 py-3">
@@ -112,8 +118,10 @@ const EditProfileModal = () => {
             />
             <div className="absolute top-1/2 flex h-32 w-32 items-center justify-center">
               <div className="absolute z-20 h-full w-full p-4">
-                <img
-                  className="z-20 h-full w-full rounded-full aspect-square"
+                <Image
+                  className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
+                  width={120}
+                  height={120}
                   src={imgPreview}
                   alt=""
                 />
