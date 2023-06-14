@@ -1,4 +1,6 @@
 import {
+  ArrowLeftIcon,
+  ArrowLeftOnRectangleIcon,
   BookmarkIcon,
   CogIcon,
   HashtagIcon,
@@ -49,81 +51,89 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="flex flex-row justify-center bg-stone-800">
+    <div className="grid grid-flow-row sm:grid-flow-col sm:justify-center bg-stone-800 ">
       <nav
-        className="sticky top-0 flex h-screen 
-                w-60 flex-col border-r border-stone-700 py-10 justify-between"
+        className="bg-inherit border-t flex flex-row sm:flex-col sticky bottom-0 sm:top-0 h-20 justify-center items-center sm:h-screen
+                w-full sm:row-auto row-start-2 sm:w-24 xl:w-60 sm:border-r border-stone-700 sm:py-10 sm:justify-between "
       >
-        <ul className="mb-10 flex flex-col">
+        <ul
+          className="flex flex-row sm:flex-col text-2xl tracking-tight 
+            transition-colors ease-out"
+        >
           <li>
-            <Link href="/" className="group flex">
+            <Link href="/" className="group flex justify-end xl:justify-normal">
               <div
-                className={`mr-3 flex items-center gap-3 
-              rounded-full px-5 py-3 text-2xl
-              tracking-tight transition-colors ease-out 
+                className={`flex items-center gap-3
+              rounded-full px-5 py-3
+               xl:after:content-['Inicio']
               group-hover:bg-stone-700 ${
                 selectedPage === "Início" && "font-medium"
               }`}
               >
-                <HomeIcon className="h-8 w-8" />
-                Início
+                <HomeIcon height={32} width={32} />
               </div>
             </Link>
           </li>
           <li>
-            <Link href={`/${session?.user.username}`} className="group flex">
+            <Link
+              href={`/${session?.user.username}`}
+              className="group flex justify-end xl:justify-normal"
+            >
               <div
-                className={`mr-3 flex items-center gap-3 
-              rounded-full px-5 py-3 text-2xl
-              tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700 ${
-                selectedPage === session?.user.username && "font-medium"
-              }`}
+                className={`flex items-center gap-3 
+                rounded-full px-5 py-3
+                 xl:after:content-['Perfil']
+                group-hover:bg-stone-700 ${
+                  selectedPage === session?.user.username && "font-medium"
+                }`}
               >
-                <UserIcon className="h-8 w-8" />
-                Perfil
+                <UserIcon height={32} width={32} />
               </div>
             </Link>
           </li>
           <li>
-            <Link href="/bookmarks" className="group flex">
+            <Link
+              href="/bookmarks"
+              className="group flex justify-end xl:justify-normal"
+            >
               <div
-                className={`mr-3 flex items-center gap-3 
-              rounded-full px-5 py-3 text-2xl
-              tracking-tight transition-colors ease-out 
-              group-hover:bg-stone-700 ${
-                selectedPage === "Salvos" && "font-medium"
-              }`}
+                className={`flex items-center gap-3 
+                rounded-full px-5 py-3
+                 xl:after:content-['Salvos']
+                group-hover:bg-stone-700 ${
+                  selectedPage === "Salvos" && "font-medium"
+                }`}
               >
-                <BookmarkIcon className="h-8 w-8" />
-                Salvos
+                <BookmarkIcon height={32} width={32} />
               </div>
             </Link>
           </li>
-        </ul>
-        <div
-          onClick={handleSignOut}
-          className="group hover:cursor-pointer"
-        >
-          <div className='grid grid-cols-[40px,auto] items-center 
-          rounded-full p-2 transition-colors 
-           group-hover:bg-stone-700 mr-4'>
-            <Image
-              className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
-              width={50}
-              height={50}
-              src={session?.user.imageUrl || defaultUserImg}
-              alt=""
-            />
-            <div className="flex items-center gap-1 justify-self-center text-lg">
-              <span className="font-normal">{'Sair de ' + session?.user.name}</span>
+          <li>
+          <div
+            onClick={handleSignOut}
+            className="hover:cursor-pointer group flex justify-end xl:justify-normal"
+          >
+            <div
+              className={`flex items-center gap-3 
+              rounded-full px-5 py-3
+              group-hover:bg-stone-700`}
+            >
+              <ArrowLeftOnRectangleIcon
+                width={32}
+                height={32}
+                className="justify-self-center rounded-full hover:cursor-pointer"
+              />
+              <span className="hidden xl:inline font-normal">
+                {"Sair de " + session?.user.name}
+              </span>
             </div>
           </div>
-        </div>
+          </li>
+        </ul>
       </nav>
       <div
-        className="flex min-h-[130vh] w-[600px] flex-col 
-        border-r border-stone-700"
+        className="flex min-h-[130vh] sm:w-[600px] flex-col 
+        sm:border-r sm:border-stone-700"
       >
         <header
           className="sticky top-0 z-20 border-b
@@ -136,38 +146,42 @@ const Layout = ({ children }) => {
         {children}
       </div>
       <div
-        className="sticky top-10 ml-4 h-min w-80 rounded-2xl 
+        className="hidden lg:inline sticky top-10 ml-4 h-min w-80 rounded-2xl 
                             bg-stone-700 pt-2 min-h-[300px]"
       >
         {isLoadingFeaturedPosts ? (
-            <Spinner />
+          <Spinner />
         ) : (
           <>
             <span className="pl-4 text-lg font-bold">Receitas em alta</span>
             <div className="mt-5 flex flex-col">
-              {featuredPosts.map(({ title, imageUrl, author, likes, id }) => (
-                <div
-                  key={id}
-                  onClick={() => router.push("/posts/" + id)}
-                  className="flex h-20 justify-between px-4 py-2 hover:cursor-pointer hover:backdrop-brightness-110"
-                >
-                  <div className="flex w-full flex-col ">
-                    <span className="flex gap-3 text-sm text-stone-400">
-                      {author.name + " · " + likes.length + " curtidas"}
-                    </span>
-                    <span className="">{title}</span>
+              {featuredPosts?.length > 0 ? (
+                featuredPosts.map(({ title, imageUrl, author, likes, id }) => (
+                  <div
+                    key={id}
+                    onClick={() => router.push("/posts/" + id)}
+                    className="flex h-20 justify-between px-4 py-2 hover:cursor-pointer hover:backdrop-brightness-110"
+                  >
+                    <div className="flex w-full flex-col ">
+                      <span className="flex gap-3 text-sm text-stone-400">
+                        {author.name + " · " + likes.length + " curtidas"}
+                      </span>
+                      <span className="">{title}</span>
+                    </div>
+                    {imageUrl && (
+                      <img
+                        className="aspect-square rounded-lg"
+                        height={80}
+                        width={70}
+                        src={imageUrl}
+                        alt=""
+                      />
+                    )}
                   </div>
-                  {imageUrl && (
-                    <img
-                      className="aspect-square rounded-lg"
-                      height={80}
-                      width={70}
-                      src={imageUrl}
-                      alt=""
-                    />
-                  )}
-                </div>
-              ))}
+                ))
+              ) : (
+                <span className="px-4 py-2">Não há receitas para exibir</span>
+              )}
             </div>
           </>
         )}
