@@ -19,8 +19,8 @@ const Signin = () => {
       <form
         autoComplete="false"
         onSubmit={handleSubmit(onSubmit)}
-        className="box-content flex w-96 flex-col 
-                        rounded-lg bg-stone-900 px-24 pb-24 pt-11"
+        className="box-content flex w-72 sm:w-96 flex-col
+                        rounded-lg bg-stone-900 px-12 sm:px-24 pb-24 pt-11"
       >
         <h1
           className="font-sans text-3xl font-medium tracking-tight 
