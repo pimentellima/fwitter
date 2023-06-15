@@ -16,8 +16,8 @@ const Comment = ({ comment: { author, title, createdAt }  }) => {
     <div className="grid grid-cols-[80px_auto] py-3">
       <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
-        width={50}
-        height={50}
+        width={40}
+        height={40}
         onClick={redirectToAuthor}
         src={author.imageUrl || defaultUserImg}
         alt=""

@@ -144,7 +144,7 @@ const ProfilePage = () => {
       {isLoadingPosts ? (
         <Spinner />
       ) : posts?.length === 0 ? (
-        <div className="mt-2 flex justify-center text-xl">
+        <div className="mt-2 flex justify-center text-lg">
           Não há receitas para exibir
         </div>
       ) : (

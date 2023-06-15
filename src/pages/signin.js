@@ -17,12 +17,8 @@ const Signin = () => {
     const res = await signIn("credentials", {
       username,
       password,
-      redirect: false,
+      callbackUrl: '/',
     });
-    if (res.ok) router.push("/");
-    else {
-      console.log("Error signing in");
-    }
   };
 
   return (

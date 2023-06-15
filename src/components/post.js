@@ -86,32 +86,29 @@ const Post = ({ post }) => {
   };
 
   return (
-    <div className="grid grid-cols-[80px_auto_80px] py-3">
+    <div className="grid grid-cols-[80px_auto] py-3">
       <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
-        width={50}
-        height={50}
+        width={40}
+        height={40}
         src={author.imageUrl || defaultUserImg}
         alt="profileImage"
       />
-      <div className="mr-6 flex w-full flex-col">
-        <div className="flex justify-between">
+      <div className="mr-6 flex flex-col">
+        <div className="flex justify-between w-full">
           <div
             onClick={redirectToAuthor}
-            className="flex items-center gap-2 hover:cursor-pointer"
+            className="flex items-center gap-2 hover:cursor-pointer w-full"
           >
-            <p
-              className="font-bold 
-                            hover:cursor-pointer hover:underline"
-            >
+            <span className="font-bold hover:cursor-pointer hover:underline">
               {author.name}
-            </p>
+            </span>
             <div
-              className="flex flex-row gap-1 
-                                  text-sm text-stone-400 hover:cursor-pointer"
+              className="flex flex-row gap-1 text-stone-400 hover:cursor-pointer"
             >
-              <p>{"@" + author.username}</p>
-              <p> {" · " + moment(createdAt).fromNow(true)}</p>
+              <span className="text-ellipsis overflow-hidden whitespace-nowrap">
+                {`@${author.username} · ${moment(createdAt).fromNow(true)}`}
+              </span>
             </div>
           </div>
         </div>
@@ -126,7 +123,7 @@ const Post = ({ post }) => {
           {imageUrl && (
             <img className="mt-4 rounded-md" src={imageUrl} alt="" />
           )}
-          <div className="flex items-center justify-between pt-4">
+          <div className="flex items-center justify-between pt-4 w-full">
             <button className="group flex h-12 w-12 items-center text-xs text-stone-400">
               <ChatBubbleOvalLeftIcon
                 className={`h-10 w-10 rounded-full p-2 text-stone-400
