@@ -94,8 +94,8 @@ const ProfilePage = () => {
               >
                 <Image
                   className="ml-2 rounded-full hover:cursor-pointer aspect-square"
-                  height={112}
-                  width={112}
+                  height={100}
+                  width={100}
                   src={profileUser?.imageUrl || defaultUserImg}
                   alt=""
                 />

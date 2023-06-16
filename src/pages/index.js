@@ -24,8 +24,8 @@ const HomePage = () => {
           className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
           src={session?.user.imageUrl || defaultUserImg}
           alt=""
-          width={50}
-          height={50}
+          width={40}
+          height={40}
         />
         <PostForm />
       </div>
