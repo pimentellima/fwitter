@@ -1,7 +1,8 @@
 import { getToken } from "next-auth/jwt";
 import prisma from "../../../prismaClient";
-import upload from "../../../utils/upload";
 import nextConnect from "next-connect";
+import uploadFile from "../../../utils/uploadFile";
+import multer, { memoryStorage } from "multer";
 
 const handler = nextConnect({
   onError(error, req, res) {
@@ -12,6 +13,8 @@ const handler = nextConnect({
   },
 });
 
+const upload = multer({ storage: memoryStorage() });
+
 handler.use(upload.single("file"));
 
 handler.put(async (req, res) => {
@@ -19,6 +22,10 @@ handler.put(async (req, res) => {
     const { name, bio } = req.body;
     const token = await getToken({ req });
     if (!token) return res.status(401).json("Unauthorized");
+
+    if (req.file) {
+      req.file.path = await uploadFile(req.file);
+    }
 
     const { imageUrl } = await prisma.user.findUnique({
       where: { id: parseInt(token.id) },

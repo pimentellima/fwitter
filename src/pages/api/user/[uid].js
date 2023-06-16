@@ -1,6 +1,7 @@
 import prisma from "../../../prismaClient";
 
 const handler = async (req, res) => {
+  if(req.method !== 'GET') return res.status(405).json("Method not allowed");
   try {
     const { uid } = req.query;
     const user = await prisma.user.findUnique({ where: { id: parseInt(uid) } });

@@ -1,6 +1,7 @@
 import {
   ArrowLeftOnRectangleIcon,
   BookmarkIcon,
+  HashtagIcon,
   HomeIcon,
   PencilSquareIcon,
   UserIcon,
@@ -27,7 +28,7 @@ const Layout = ({ children }) => {
     async () => await axios.get("../api/post/featured").then((res) => res.data)
   );
   const { pathname, query } = useRouter();
-  const [selectedPage, setSelectedPage] = useState("");
+  const [currentPage, setSelectedPage] = useState("");
 
   useEffect(() => {
     setSelectedPage(() => {
@@ -36,6 +37,8 @@ const Layout = ({ children }) => {
       switch (pathname) {
         case "/":
           return "Início";
+        case "/featured":
+          return "Explorar";
         case "/bookmarks":
           return "Salvos";
       }
@@ -54,16 +57,26 @@ const Layout = ({ children }) => {
         className="sticky bottom-0 row-start-2 flex h-10 justify-around
           border-t border-stone-700 sm:top-0 sm:row-auto sm:h-screen
           sm:flex-col sm:justify-start sm:border-r sm:border-t-0 sm:py-10
-          sm:text-2xl sm:tracking-tight"
+          sm:text-2xl sm:tracking-tight bg-stone-800"
       >
         <Link className="group flex justify-center sm:block" href="/">
           <div
             className={`flex w-fit items-center rounded-full p-1  group-hover:bg-stone-700 sm:gap-3 sm:px-5 sm:py-3 
               xl:after:content-['Inicio'] ${
-                selectedPage === "Início" && "font-medium"
+                currentPage === "Início" && "font-medium"
               }`}
           >
             <HomeIcon height={22} width={22} />
+          </div>
+        </Link>
+        <Link className="group flex justify-center sm:block" href="/featured">
+          <div
+            className={`flex w-fit items-center rounded-full p-1  group-hover:bg-stone-700 sm:gap-3 sm:px-5 sm:py-3 
+              xl:after:content-['Explorar'] ${
+                currentPage === "Explorar" && "font-medium"
+              }`}
+          >
+            <HashtagIcon height={22} width={22} />
           </div>
         </Link>
         <Link
@@ -74,7 +87,7 @@ const Layout = ({ children }) => {
             className={`flex w-fit items-center rounded-full
                 p-1 group-hover:bg-stone-700 sm:gap-3 sm:px-5 sm:py-3
                 xl:after:content-['Perfil'] ${
-                  selectedPage === session?.user.username && "font-medium"
+                  currentPage === session?.user.username && "font-medium"
                 }`}
           >
             <UserIcon height={22} width={22} />
@@ -85,7 +98,7 @@ const Layout = ({ children }) => {
             className={`flex w-fit items-center rounded-full
                 p-1 group-hover:bg-stone-700 sm:gap-3 sm:px-5 sm:py-3
                 xl:after:content-['Salvos'] ${
-                  selectedPage === "Salvos" && "font-medium"
+                  currentPage === "Salvos" && "font-medium"
                 }`}
           >
             <BookmarkIcon height={22} width={22} />
@@ -97,8 +110,8 @@ const Layout = ({ children }) => {
             onClick={() => setModalOpen(true)}
             className="flex items-center justify-center
               rounded-full bg-stone-600
-              p-5 sm:p-1 text-base font-bold transition
-              duration-100 ease-out hover:bg-stone-500 xl:w-full"
+              p-5 text-base font-bold transition duration-100
+              ease-out hover:bg-stone-500 sm:py-2 xl:w-full"
           >
             <span className="hidden xl:inline">Fweet</span>
             <PencilSquareIcon width={22} height={22} className="xl:hidden" />
@@ -165,7 +178,7 @@ const Layout = ({ children }) => {
             className="hover:cursor-pointer"
             onClick={() => window.scrollTo(0, 0)}
           >
-            {selectedPage}
+            {currentPage}
           </div>
         </header>
         <div>{children}</div>
@@ -181,29 +194,31 @@ const Layout = ({ children }) => {
             <span className="pl-4 text-lg font-bold">Receitas em alta</span>
             <div className="mt-5 flex flex-col">
               {featuredPosts?.length > 0 ? (
-                featuredPosts.map(({ title, imageUrl, author, likes, id }) => (
-                  <div
-                    key={id}
-                    onClick={() => router.push("/posts/" + id)}
-                    className="flex h-20 justify-between px-4 py-2 hover:cursor-pointer hover:backdrop-brightness-110"
-                  >
-                    <div className="flex w-full flex-col ">
-                      <span className="flex gap-3 text-sm text-stone-400">
-                        {author.name + " · " + likes.length + " curtidas"}
-                      </span>
-                      <span className="">{title}</span>
+                featuredPosts
+                  .slice(0, 5)
+                  .map(({ title, imageUrl, author, likes, id }) => (
+                    <div
+                      key={id}
+                      onClick={() => router.push("/posts/" + id)}
+                      className="flex h-20 justify-between px-4 py-2 hover:cursor-pointer hover:backdrop-brightness-110"
+                    >
+                      <div className="flex w-full flex-col ">
+                        <span className="flex gap-3 text-sm text-stone-400">
+                          {author.name + " · " + likes.length + " curtidas"}
+                        </span>
+                        <span className="">{title}</span>
+                      </div>
+                      {imageUrl && (
+                        <img
+                          className="aspect-square rounded-lg"
+                          height={80}
+                          width={70}
+                          src={imageUrl}
+                          alt=""
+                        />
+                      )}
                     </div>
-                    {imageUrl && (
-                      <img
-                        className="aspect-square rounded-lg"
-                        height={80}
-                        width={70}
-                        src={imageUrl}
-                        alt=""
-                      />
-                    )}
-                  </div>
-                ))
+                  ))
               ) : (
                 <span className="px-4 py-2">Não há receitas para exibir</span>
               )}

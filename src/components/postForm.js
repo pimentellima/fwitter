@@ -75,7 +75,7 @@ const PostForm = () => {
       <input
         {...register("title", { required: true })}
         placeholder="Que receita você está fazendo?"
-        className="mb-4 bg-inherit pl-2 text-lg 
+        className="mb-4 bg-inherit text-lg 
               text-stone-100 placeholder:text-stone-500 focus:outline-none"
       />
       {ingredients.map((ingredient, index) => (

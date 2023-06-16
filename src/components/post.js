@@ -86,7 +86,7 @@ const Post = ({ post }) => {
   };
 
   return (
-    <div className="grid grid-cols-[80px_auto] mt-3 mb-1">
+    <div className="mb-1 mt-3 grid grid-cols-[80px_auto]">
       <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         width={40}
@@ -95,25 +95,23 @@ const Post = ({ post }) => {
         alt="profileImage"
       />
       <div className="mr-6 flex flex-col ">
-        <div className="flex justify-between w-full">
+        <div className="flex w-full justify-between">
           <div
             onClick={redirectToAuthor}
-            className="flex items-center gap-2 hover:cursor-pointer w-full"
+            className="flex w-full items-center gap-2 hover:cursor-pointer"
           >
             <span className="font-bold hover:cursor-pointer hover:underline">
               {author.name}
             </span>
-            <div
-              className="flex flex-row gap-1 text-stone-400 hover:cursor-pointer"
-            >
-              <span className="text-ellipsis overflow-hidden whitespace-nowrap">
+            <div className="flex flex-row gap-1 text-stone-400 hover:cursor-pointer">
+              <span className="overflow-hidden text-ellipsis whitespace-nowrap">
                 {`@${author.username} · ${moment(createdAt).fromNow(true)}`}
               </span>
             </div>
           </div>
         </div>
         <div className="flex flex-col">
-          <p className=" text-xl">{title}</p>
+          <p className="text-xl">{title}</p>
           {ingredients?.map((ingredient, index) => (
             <p key={index} className="inline">
               {" "}
@@ -121,11 +119,19 @@ const Post = ({ post }) => {
             </p>
           ))}
           {imageUrl && (
-            <img className="mt-4 rounded-md" src={imageUrl} alt="" />
+            <div className="mt-4 h-96">
+              <img
+                className="max-h-full rounded-2xl border border-stone-700"
+                src={imageUrl}
+                alt=""
+              />
+            </div>
           )}
-          <div className="flex items-center justify-between mt-1 w-full ">
-            <button className="group flex items-center text-xs text-stone-400">
-              <ChatBubbleOvalLeftIcon height={35} width={35}
+          <div className="mt-1 flex w-full items-center justify-between ">
+            <button className="group flex items-center text-xs text-stone-400 w-14">
+              <ChatBubbleOvalLeftIcon
+                height={35}
+                width={35}
                 className={`rounded-full p-2 text-stone-400
                   transition
                   ease-out
@@ -141,9 +147,11 @@ const Post = ({ post }) => {
             </button>
             <button
               onClick={handleShare}
-              className="group flex items-center text-xs text-stone-400"
+              className="group flex items-center text-xs text-stone-400 w-14"
             >
-              <ShareIcon height={35} width={35}
+              <ShareIcon
+                height={35}
+                width={35}
                 className={`rounded-full p-2 transition
                   ease-out
                   hover:bg-stone-700
@@ -160,9 +168,11 @@ const Post = ({ post }) => {
             </button>
             <button
               onClick={handleLike}
-              className="group flex items-center text-sm text-stone-400"
+              className="group flex items-center text-sm text-stone-400 w-14"
             >
-              <HandThumbUpIcon height={35} width={35}
+              <HandThumbUpIcon
+                height={35}
+                width={35}
                 className={`rounded-full p-2 transition
            ease-out
            hover:bg-stone-700
@@ -178,9 +188,11 @@ const Post = ({ post }) => {
             </button>
             <button
               onClick={handleBookmark}
-              className="group flex items-center text-sm text-stone-400"
+              className="group flex items-center text-sm text-stone-400 w-14"
             >
-              <BookmarkIcon height={35} width={35}
+              <BookmarkIcon
+                height={35}
+                width={35}
                 className={`rounded-full p-2 transition
            ease-out
            hover:bg-stone-700

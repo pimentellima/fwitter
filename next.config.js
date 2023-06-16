@@ -1,5 +1,13 @@
-module.exports = {
+module.exports = async (phase, { defaultConfig }) => {
+  /**
+   * @type {import('next').NextConfig}
+   */
+  const nextConfig = {
+    /* config options here */
     images: {
-      domains: ['fwitter-uploads.storage.googleapis.com'],
+      domains: ["storage.googleapis.com"],
     },
-  }
+  };
+
+  return nextConfig;
+};
