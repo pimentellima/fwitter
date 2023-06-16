@@ -97,7 +97,7 @@ const Layout = ({ children }) => {
             onClick={() => setModalOpen(true)}
             className="flex items-center justify-center
               rounded-full bg-stone-600
-              p-1 text-base font-bold transition
+              p-5 sm:p-1 text-base font-bold transition
               duration-100 ease-out hover:bg-stone-500 xl:w-full"
           >
             <span className="hidden xl:inline">Fweet</span>

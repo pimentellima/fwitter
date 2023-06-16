@@ -86,7 +86,7 @@ const Post = ({ post }) => {
   };
 
   return (
-    <div className="grid grid-cols-[80px_auto] mt-3">
+    <div className="grid grid-cols-[80px_auto] mt-3 mb-1">
       <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         width={40}
@@ -113,7 +113,7 @@ const Post = ({ post }) => {
           </div>
         </div>
         <div className="flex flex-col">
-          <p className="my-1 text-xl">{title}</p>
+          <p className=" text-xl">{title}</p>
           {ingredients?.map((ingredient, index) => (
             <p key={index} className="inline">
               {" "}
@@ -123,7 +123,7 @@ const Post = ({ post }) => {
           {imageUrl && (
             <img className="mt-4 rounded-md" src={imageUrl} alt="" />
           )}
-          <div className="flex items-center justify-between mt-2 w-full ">
+          <div className="flex items-center justify-between mt-1 w-full ">
             <button className="group flex items-center text-xs text-stone-400">
               <ChatBubbleOvalLeftIcon height={35} width={35}
                 className={`rounded-full p-2 text-stone-400
