@@ -111,7 +111,7 @@ const Post = ({ post }) => {
             </span>
           </div>
         </div>
-        <span className=" overflow-hidden text-ellipsis whitespace-nowrap text-xl">
+        <span className="overflow-hidden text-ellipsis whitespace-nowrap text-xl">
           {title}
         </span>
         {ingredients?.map((ingredient, index) => (

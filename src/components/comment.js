@@ -1,10 +1,10 @@
 import moment from "moment";
-import defaultUserImg from '../../public/static/defaultUserImg.jpg'
+import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import "moment/locale/pt-br";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-const Comment = ({ comment: { author, title, createdAt }  }) => {
+const Comment = ({ comment: { author, title, createdAt } }) => {
   const router = useRouter();
 
   const redirectToAuthor = (e) => {
@@ -39,7 +39,9 @@ const Comment = ({ comment: { author, title, createdAt }  }) => {
             </span>
           </div>
         </div>
-        <p className="my-1 text-xl">{title}</p>
+        <span className="overflow-hidden text-ellipsis whitespace-nowrap text-xl">
+          {title}
+        </span>
       </div>
     </div>
   );
