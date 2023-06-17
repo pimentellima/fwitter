@@ -55,9 +55,9 @@ const Layout = ({ children }) => {
     <div className="scroll grid grid-flow-row bg-stone-800 sm:grid-flow-col sm:justify-center">
       <nav
         className="sticky bottom-0 row-start-2 flex h-10 justify-around
-          border-t border-stone-700 sm:top-0 sm:row-auto sm:h-screen
-          sm:flex-col sm:justify-start sm:border-r sm:border-t-0 sm:py-10
-          sm:text-2xl sm:tracking-tight bg-stone-800"
+          border-t border-stone-700 bg-stone-800 sm:top-0 sm:row-auto
+          sm:h-screen sm:w-60 sm:flex-col sm:justify-start sm:border-r
+          sm:border-t-0 sm:py-10 sm:text-2xl sm:tracking-tight "
       >
         <Link className="group flex justify-center sm:block" href="/">
           <div
@@ -160,9 +160,9 @@ const Layout = ({ children }) => {
               height={22}
               className="justify-self-center rounded-full hover:cursor-pointer"
             />
-            <span className="hidden font-normal xl:inline">
+            <div className="hidden w-32 overflow-hidden text-ellipsis font-normal xl:inline">
               {"Sair de " + session?.user.name}
-            </span>
+            </div>
           </div>
         </div>
       </nav>

@@ -9,6 +9,7 @@ const handler = async (req, res) => {
         }
       })
 
+
       if(!user) return res.status(404).json('User not found');
       const isPasswordCorrect = bcrypt.compareSync(
         req.body.password,
@@ -19,7 +20,6 @@ const handler = async (req, res) => {
         return res.status(200).json(other);
       }
       return res.status(403).json("Incorrect password");
-      
     }
     catch(error) {
       console.log(error)

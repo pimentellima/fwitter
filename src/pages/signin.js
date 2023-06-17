@@ -8,13 +8,12 @@ const Signin = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { isValid },
   } = useForm({ mode: "onBlur" });
-  const router = useRouter();
 
   const onSubmit = async (data) => {
     const { username, password } = data;
-    const res = await signIn("credentials", {
+    await signIn("credentials", {
       username,
       password,
       callbackUrl: '/',
