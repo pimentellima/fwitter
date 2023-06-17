@@ -43,8 +43,9 @@ const EditProfileModal = () => {
         file: data.file ? data.file[0] : null,
       },
       {
-        onSuccess: ({ data }) => {
-          update({
+        onSuccess: async ({ data }) => {
+          console.log(data)
+          await update({
             name: data.name,
             imageUrl: data.imageUrl,
           });
