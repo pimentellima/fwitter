@@ -53,7 +53,9 @@ const HomePage = () => {
                   e.stopPropagation();
                   router.push("/" + post.shareAuthor.username);
                 }}
-                className="ml-5 text-sm font-medium text-stone-400 hover:cursor-pointer hover:underline"
+                className="ml-5 overflow-hidden text-ellipsis whitespace-nowrap text-sm 
+                font-medium text-stone-400 hover:cursor-pointer hover:underline
+                "
               >
                 {`Refweetado por ${post.shareAuthor?.name}`}
               </span>
