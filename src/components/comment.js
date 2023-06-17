@@ -13,20 +13,19 @@ const Comment = ({ comment: { author, title, createdAt } }) => {
   };
 
   return (
-    <div className="grid grid-cols-[80px,minmax(0px,1fr)] py-3">
+    <div className="mb-1 mt-3 grid grid-cols-[80px,minmax(0px,1fr)]">
       <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         width={40}
         height={40}
-        onClick={redirectToAuthor}
         src={author.imageUrl || defaultUserImg}
-        alt=""
+        alt="profileImage"
       />
-      <div className="mr-6 flex w-full flex-col">
-        <div className="flex justify-between">
+      <div className="flex flex-col">
+        <div className="flex w-full justify-between">
           <div
             onClick={redirectToAuthor}
-            className="flex items-center gap-2 hover:cursor-pointer"
+            className="flex w-full items-center gap-2 hover:cursor-pointer"
           >
             <span
               className=" overflow-hidden text-ellipsis whitespace-nowrap
@@ -42,6 +41,13 @@ const Comment = ({ comment: { author, title, createdAt } }) => {
         <span className="overflow-hidden text-ellipsis whitespace-nowrap text-xl">
           {title}
         </span>
+        {author.imageUrl && (
+          <img
+            className="max-h-96 max-w-[200px] rounded-2xl border border-stone-700"
+            src={author.imageUrl}
+            alt=""
+          />
+        )}
       </div>
     </div>
   );
