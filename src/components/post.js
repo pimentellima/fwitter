@@ -119,7 +119,7 @@ const Post = ({ post }) => {
             </p>
           ))}
           {imageUrl && (
-            <div className="mt-4 h-96">
+            <div className="mt-4 max-h-96">
               <img
                 className="max-h-full rounded-2xl border border-stone-700"
                 src={imageUrl}
@@ -127,7 +127,7 @@ const Post = ({ post }) => {
               />
             </div>
           )}
-          <div className="mt-1 flex w-full items-center justify-between ">
+          <div className="mt-1 grid grid-cols-4">
             <button className="group flex items-center text-xs text-stone-400 w-14">
               <ChatBubbleOvalLeftIcon
                 height={35}

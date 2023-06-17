@@ -56,7 +56,7 @@ const Layout = ({ children }) => {
       <nav
         className="sticky bottom-0 row-start-2 flex h-10 justify-around
           border-t border-stone-700 bg-stone-800 sm:top-0 sm:row-auto
-          sm:h-screen sm:w-60 sm:flex-col sm:justify-start sm:border-r
+          sm:h-screen xl:w-60 sm:flex-col sm:justify-start sm:border-r
           sm:border-t-0 sm:py-10 sm:text-2xl sm:tracking-tight "
       >
         <Link className="group flex justify-center sm:block" href="/">
@@ -134,9 +134,9 @@ const Layout = ({ children }) => {
             >
               <XMarkIcon width={24} height={24} />
             </button>
-            <div className="block sm:grid sm:grid-cols-[80px_auto]">
+            <div className="grid grid-cols-[80px_auto]">
               <Image
-                className="hidden aspect-square justify-self-center rounded-full hover:cursor-pointer sm:block"
+                className="aspect-square justify-self-center rounded-full hover:cursor-pointer sm:block"
                 src={session?.user.imageUrl || defaultUserImg}
                 alt=""
                 width={40}

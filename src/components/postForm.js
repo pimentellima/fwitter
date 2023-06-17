@@ -141,10 +141,9 @@ const PostForm = () => {
           </div>
         </div>
       )}
-      <div className="mt-6 grid grid-cols-3 place-items-center justify-items-center">
+      <div className="mt-6 grid grid-cols-3 place-items-center">
         <button
           type="button"
-          className="hover:cursor-pointer"
           onClick={() => append({ name: "", qt: "", unity: "" })}
         >
           Adicionar ingrediente
@@ -156,7 +155,7 @@ const PostForm = () => {
         <button
           disabled={!isValid}
           className="mr-3 flex h-10 items-center
-            justify-center justify-self-end rounded-3xl 
+            justify-center rounded-3xl 
             bg-stone-600 px-5 py-1 text-base font-bold
             transition duration-100 ease-out hover:bg-stone-500
             disabled:opacity-70 disabled:hover:cursor-default disabled:hover:bg-stone-600"

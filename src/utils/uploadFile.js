@@ -17,7 +17,7 @@ export default (file) =>
     const stream = bucketFile.createWriteStream();
 
     stream.on("error", (err) => {
-      reject("Error uploading image do gcs");
+      reject(err);
     });
 
     stream.on("finish", () => {
