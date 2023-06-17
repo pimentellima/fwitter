@@ -18,8 +18,8 @@ const HomePage = () => {
   );
 
   return (
-    <>
-      <div className="hidden grid-cols-[80px_auto] border-b border-stone-700 py-3 sm:grid">
+    <div>
+      <div className="hidden grid-cols-[80px,minmax(0px,1fr)] border-b border-stone-700 py-3 sm:grid">
         <Image
           className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
           src={session?.user.imageUrl || defaultUserImg}
@@ -62,7 +62,7 @@ const HomePage = () => {
           </div>
         ))
       )}
-    </>
+    </div>
   );
 };
 

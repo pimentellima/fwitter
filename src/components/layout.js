@@ -52,11 +52,11 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="scroll grid grid-flow-row bg-stone-800 sm:grid-flow-col sm:justify-center">
+    <div className="grid grid-flow-row bg-stone-800 sm:grid-flow-col sm:justify-center">
       <nav
-        className="sticky bottom-0 row-start-2 flex h-10 justify-around
-          border-t border-stone-700 bg-stone-800 sm:top-0 sm:row-auto
-          sm:h-screen sm:flex-col sm:justify-start sm:border-r sm:border-t-0
+        className="sticky bottom-0 row-start-2 flex h-11 justify-around border-t
+          border-stone-700 bg-stone-800 sm:top-0 sm:row-auto sm:h-screen
+          sm:flex-col sm:justify-start sm:border-r sm:border-t-0
           sm:py-10 sm:text-2xl sm:tracking-tight xl:w-60 "
       >
         <Link className="group flex justify-center sm:block" href="/">
@@ -66,7 +66,7 @@ const Layout = ({ children }) => {
                 currentPage === "Início" && "font-medium"
               }`}
           >
-            <HomeIcon height={22} width={22} />
+            <HomeIcon height={20} width={20} />
           </div>
         </Link>
         <Link className="group flex justify-center sm:block" href="/featured">
@@ -76,7 +76,7 @@ const Layout = ({ children }) => {
                 currentPage === "Explorar" && "font-medium"
               }`}
           >
-            <HashtagIcon height={22} width={22} />
+            <HashtagIcon height={20} width={20} />
           </div>
         </Link>
         <Link
@@ -90,7 +90,7 @@ const Layout = ({ children }) => {
                   currentPage === session?.user.username && "font-medium"
                 }`}
           >
-            <UserIcon height={22} width={22} />
+            <UserIcon height={20} width={20} />
           </div>
         </Link>
         <Link className="group flex justify-center sm:block" href="/bookmarks">
@@ -101,7 +101,7 @@ const Layout = ({ children }) => {
                   currentPage === "Salvos" && "font-medium"
                 }`}
           >
-            <BookmarkIcon height={22} width={22} />
+            <BookmarkIcon height={20} width={20} />
           </div>
         </Link>
 
@@ -134,9 +134,9 @@ const Layout = ({ children }) => {
             >
               <XMarkIcon width={24} height={24} />
             </button>
-            <div className="grid grid-cols-[80px_auto]">
+            <div className="grid sm:grid-cols-[80px,minmax(0px,1fr)]">
               <Image
-                className="aspect-square justify-self-center rounded-full hover:cursor-pointer sm:block"
+                className="hidden aspect-square justify-self-center rounded-full hover:cursor-pointer sm:block"
                 src={session?.user.imageUrl || defaultUserImg}
                 alt=""
                 width={40}
@@ -167,8 +167,8 @@ const Layout = ({ children }) => {
         </div>
       </nav>
       <div
-        className="flex min-h-[130vh] flex-col sm:w-[580px] 
-        sm:border-r sm:border-stone-700"
+        className="min-h-[130vh] w-screen
+        sm:w-[580px] sm:border-r sm:border-stone-700"
       >
         <header
           className="sticky top-0 z-20 border-b
@@ -181,7 +181,7 @@ const Layout = ({ children }) => {
             {currentPage}
           </div>
         </header>
-        <div>{children}</div>
+        {children}
       </div>
       <div
         className="sticky top-10 ml-4 hidden h-min min-h-[300px] w-80 rounded-2xl 

@@ -87,7 +87,7 @@ const EditProfileModal = () => {
       <Popup onClose={handleClose} open={open} modal lockScroll>
         <form
           autoComplete="off"
-          className="flex w-screen h-screen sm:h-auto sm:w-[600px] flex-col rounded-xl  bg-stone-900 pb-14"
+          className="flex w-screen h-screen sm:h-auto sm:w-[600px] flex-col sm:rounded-xl  bg-stone-900 pb-14"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex items-center justify-between px-5 py-3">

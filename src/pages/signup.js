@@ -28,8 +28,8 @@ const Signup = () => {
         password,
       })
       .then(() => {
-        reset();
         router.push("/");
+        reset();
       })
       .catch((err) => {
         console.log(err)
@@ -43,8 +43,8 @@ const Signup = () => {
       <form
         autoComplete="false"
         onSubmit={handleSubmit(onSubmit)}
-        className="box-content flex w-72 sm:w-96 flex-col
-                          rounded-lg bg-stone-900 px-12 sm:px-24 pb-24 pt-11"
+        className="flex h-screen w-screen flex-col bg-stone-900 
+        px-8 pt-11 sm:h-auto sm:w-96 sm:rounded-lg sm:px-12 sm:pb-24"
       >
         <h1
           className="font-sans text-3xl font-medium tracking-tight 

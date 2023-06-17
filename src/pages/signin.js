@@ -8,28 +8,38 @@ const Signin = () => {
   const {
     register,
     handleSubmit,
-    formState: { isValid },
+    setError,
+    formState: { isValid, errors },
   } = useForm({ mode: "onBlur" });
+
+  const router = useRouter();
 
   const onSubmit = async (data) => {
     const { username, password } = data;
-    await signIn("credentials", {
+    const res = await signIn("credentials", {
       username,
       password,
-      callbackUrl: '/',
+      redirect: false,
     });
+    if (res.ok) {
+      router.push("/");
+    } else {
+      setError("username", {
+        message: "Login inválido",
+      });
+    }
   };
 
   return (
     <div
       className="grid min-h-screen 
-                  items-center justify-center bg-stone-800"
+              items-center justify-center bg-stone-800"
     >
       <form
         autoComplete="false"
         onSubmit={handleSubmit(onSubmit)}
-        className="box-content flex w-72 sm:w-96 flex-col
-                          rounded-lg bg-stone-900 px-12 sm:px-24 pb-24 pt-11"
+        className="flex h-screen w-screen flex-col bg-stone-900 
+        px-8 pt-11 sm:h-auto sm:w-96 sm:rounded-lg sm:px-12 sm:pb-24"
       >
         <h1
           className="font-sans text-3xl font-medium tracking-tight 
@@ -38,16 +48,24 @@ const Signin = () => {
           Entrar no fwitter
         </h1>
         <div className="mt-10 flex flex-col gap-3">
-          <input
-            placeholder="Nome de usuário"
-            {...register("username", { required: true })}
-            className="h-14 w-full rounded-md border
-                      border-stone-700 bg-inherit px-3 py-1 align-middle 
-                      text-xl text-white outline-none transition-colors
-                      placeholder:text-stone-500 hover:border-stone-600 
-                      focus:border-stone-500 focus:placeholder:invisible 
-                      "
-          />
+          <div>
+            <input
+              placeholder="Nome de usuário"
+              {...register("username", { required: true })}
+              className="h-14 w-full rounded-md border
+                        border-stone-700 bg-inherit px-3 py-1 align-middle
+                        text-xl text-white outline-none transition-colors
+                        placeholder:text-stone-500 hover:border-stone-600
+                        focus:border-stone-500 focus:placeholder:invisible
+                        "
+            />
+            {errors.username && (
+              <span className="text-sm text-red-600">
+                {errors.username.message}
+              </span>
+            )}
+          </div>
+
           <input
             type="password"
             placeholder="Senha"

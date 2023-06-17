@@ -37,7 +37,7 @@ const CommentForm = ({ post_id }) => {
   };
 
   return (
-    <div className="grid grid-cols-[80px_auto] border-b border-stone-700 py-3">
+    <div className="grid grid-cols-[80px,minmax(0px,1fr)] border-b border-stone-700 py-3">
       <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         width={40}

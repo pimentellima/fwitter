@@ -86,7 +86,7 @@ const Post = ({ post }) => {
   };
 
   return (
-    <div className="mb-1 mt-3 grid grid-cols-[80px_auto]">
+    <div className="mb-1 mt-3 grid grid-cols-[80px,minmax(0px,1fr)]">
       <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         width={40}
@@ -94,14 +94,14 @@ const Post = ({ post }) => {
         src={author.imageUrl || defaultUserImg}
         alt="profileImage"
       />
-      <div className="mr-6 flex flex-col ">
+      <div className="flex flex-col">
         <div className="flex w-full justify-between">
           <div
             onClick={redirectToAuthor}
             className="flex w-full items-center gap-2 hover:cursor-pointer"
           >
             <span
-              className="max-w-[120px] overflow-hidden text-ellipsis whitespace-nowrap
+              className=" overflow-hidden text-ellipsis whitespace-nowrap
                font-bold hover:cursor-pointer hover:underline"
             >
               {author.name}
@@ -113,103 +113,103 @@ const Post = ({ post }) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col">
-          <p className="text-xl">{title}</p>
-          {ingredients?.map((ingredient, index) => (
-            <p key={index} className="inline">
-              {" "}
-              {ingredient.qt + " " + ingredient.unity + " " + ingredient.name}
+        <span className=" overflow-hidden text-ellipsis whitespace-nowrap text-xl">
+          {title}
+        </span>
+        {ingredients?.map((ingredient, index) => (
+          <span
+            key={index}
+            className="inline  overflow-hidden text-ellipsis whitespace-nowrap"
+          >
+            {ingredient.qt + " " + ingredient.unity + " " + ingredient.name}
+          </span>
+        ))}
+        {imageUrl && (
+          <img
+            className="max-h-96 max-w-[200px] rounded-2xl border border-stone-700"
+            src={imageUrl}
+            alt=""
+          />
+        )}
+        <div className="mt-1 grid grid-cols-4">
+          <button className="group flex w-14 items-center text-xs text-stone-400">
+            <ChatBubbleOvalLeftIcon
+              height={35}
+              width={35}
+              className={`rounded-full p-2 text-stone-400
+                    transition
+                    ease-out
+                    hover:bg-stone-700
+                    hover:text-blue-400`}
+            />
+            <p
+              className="text-xs transition ease-out
+                  group-hover:text-blue-400"
+            >
+              {comments.length > 0 && comments.length}
             </p>
-          ))}
-          {imageUrl && (
-            <div className="mt-4 max-h-96">
-              <img
-                className="max-h-full rounded-2xl border border-stone-700"
-                src={imageUrl}
-                alt=""
-              />
-            </div>
-          )}
-          <div className="mt-1 grid grid-cols-4">
-            <button className="group flex w-14 items-center text-xs text-stone-400">
-              <ChatBubbleOvalLeftIcon
-                height={35}
-                width={35}
-                className={`rounded-full p-2 text-stone-400
-                  transition
-                  ease-out
-                  hover:bg-stone-700
-                  hover:text-blue-400`}
-              />
-              <p
-                className="text-xs transition ease-out 
-                group-hover:text-blue-400"
-              >
-                {comments.length > 0 && comments.length}
-              </p>
-            </button>
-            <button
-              onClick={handleShare}
-              className="group flex w-14 items-center text-xs text-stone-400"
+          </button>
+          <button
+            onClick={handleShare}
+            className="group flex w-14 items-center text-xs text-stone-400"
+          >
+            <ShareIcon
+              height={35}
+              width={35}
+              className={`rounded-full p-2 transition
+                    ease-out
+                    hover:bg-stone-700
+                    hover:text-green-400
+                    group-hover:text-green-400 ${shared && "text-green-400"}`}
+            />
+            <p
+              className={`text-xs ${
+                shared && "text-green-400"
+              } transition ease-out group-hover:text-green-400`}
             >
-              <ShareIcon
-                height={35}
-                width={35}
-                className={`rounded-full p-2 transition
-                  ease-out
-                  hover:bg-stone-700
-                  hover:text-green-400
-                  group-hover:text-green-400 ${shared && "text-green-400"}`}
-              />
-              <p
-                className={`text-xs ${
-                  shared && "text-green-400"
-                } transition ease-out group-hover:text-green-400`}
-              >
-                {shares.length > 0 && shares.length}
-              </p>
-            </button>
-            <button
-              onClick={handleLike}
-              className="group flex items-center text-sm text-stone-400"
+              {shares.length > 0 && shares.length}
+            </p>
+          </button>
+          <button
+            onClick={handleLike}
+            className="group flex items-center text-sm text-stone-400"
+          >
+            <HandThumbUpIcon
+              height={35}
+              width={35}
+              className={`rounded-full p-2 transition
+             ease-out
+             hover:bg-stone-700
+             hover:text-red-400 ${liked && "text-red-400"}`}
+            />
+            <p
+              className={`${
+                liked && "text-red-400"
+              } transition ease-out group-hover:text-red-400`}
             >
-              <HandThumbUpIcon
-                height={35}
-                width={35}
-                className={`rounded-full p-2 transition
-           ease-out
-           hover:bg-stone-700
-           hover:text-red-400 ${liked && "text-red-400"}`}
-              />
-              <p
-                className={`${
-                  liked && "text-red-400"
-                } transition ease-out group-hover:text-red-400`}
-              >
-                {likes.length > 0 && likes.length}
-              </p>
-            </button>
-            <button
-              onClick={handleBookmark}
-              className="group flex items-center text-sm text-stone-400"
+              {likes.length > 0 && likes.length}
+            </p>
+          </button>
+          <button
+            onClick={handleBookmark}
+            className="group flex items-center text-sm text-stone-400"
+          >
+            <BookmarkIcon
+              height={35}
+              width={35}
+              className={`rounded-full p-2 transition
+             ease-out
+             hover:bg-stone-700
+             hover:text-orange-400 ${bookmarked && "text-orange-400"}`}
+            />
+            <p
+              className={`${
+                bookmarked && "text-orange-400"
+              } transition ease-out group-hover:text-orange-400`}
             >
-              <BookmarkIcon
-                height={35}
-                width={35}
-                className={`rounded-full p-2 transition
-           ease-out
-           hover:bg-stone-700
-           hover:text-orange-400 ${bookmarked && "text-orange-400"}`}
-              />
-              <p
-                className={`${
-                  bookmarked && "text-orange-400"
-                } transition ease-out group-hover:text-orange-400`}
-              >
-                {bookmarks.length > 0 && bookmarks.length}
-              </p>
-            </button>
-          </div>
+              {bookmarks.length > 0 && bookmarks.length}
+            </p>
+          </button>
         </div>
       </div>
     </div>

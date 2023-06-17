@@ -75,9 +75,9 @@ const ProfilePage = () => {
     setIsFollowedByUser(false);
     setFollowers((n) => --n);
   };
-
+  
   return (
-    <div>
+    <>
       <div
         className="flex h-[430px] flex-col 
               border-b border-stone-700 pb-10"
@@ -87,7 +87,7 @@ const ProfilePage = () => {
         ) : (
           <>
             <div className="relative h-64">
-              <div className="h-44 w-full bg-stone-600" />
+              <div className="h-44 w-full bg-stone-600"/>
               <div
                 className="absolute top-1/2 flex 
                         w-full items-end justify-between"
@@ -104,7 +104,7 @@ const ProfilePage = () => {
                 ) : isFollowedByUser ? (
                   <button
                     onClick={handleUnfollow}
-                    className="bg-sto ne-700 hover:
+                    className="bg-stone-700 hover:
                 mr-2 h-10 cursor-pointer rounded-full
                 border border-stone-700 
                 px-4 
@@ -161,7 +161,7 @@ const ProfilePage = () => {
           </div>
         ))
       )}
-    </div>
+    </>
   );
 };
 

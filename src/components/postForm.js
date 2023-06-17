@@ -60,7 +60,7 @@ const PostForm = ({ closeModal = () => {} }) => {
       {
         onSuccess: () => {
           queryClient.invalidateQueries(["homePosts"]);
-          queryClient.invalidateQueries(["userPosts"]);
+          queryClient.invalidateQueries(["profilePosts"]);
           closeModal()
           reset();
         },
@@ -93,7 +93,7 @@ const PostForm = ({ closeModal = () => {} }) => {
             key={ingredient.id}
           >
             <div
-              className=" grid grid-cols-[1fr,1fr,1fr] rounded-md border border-stone-700 px-2 py-4
+              className=" grid grid-cols-3 rounded-md border border-stone-700 px-2 py-4
                     transition ease-out focus-within:ring-1
                     focus-within:ring-stone-500"
             >
