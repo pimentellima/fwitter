@@ -34,13 +34,9 @@ const Comment = ({ comment: { author, title, createdAt }  }) => {
             >
               {author.name}
             </span>
-            <div
-              className="flex flex-row gap-1 
-                                  text-sm text-stone-400 hover:cursor-pointer"
-            >
-              <p>{"@" + author.username}</p>
-              <p> {" · " + moment(createdAt).fromNow(true)}</p>
-            </div>
+            <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+                {`@${author.username} · ${moment(createdAt).fromNow(true)}`}
+              </span>
           </div>
         </div>
         <p className="my-1 text-xl">{title}</p>
