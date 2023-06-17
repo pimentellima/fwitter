@@ -52,7 +52,8 @@ const CommentForm = ({ post_id }) => {
       >
         <input
           {...register("title", { required: true })}
-          placeholder="O que você achou dessa receita?"
+          maxLength={35}
+          placeholder="Comente algo..."
           className="h-12 bg-inherit pl-2 text-lg text-stone-100
           placeholder:text-stone-500 focus:outline-none "
         />

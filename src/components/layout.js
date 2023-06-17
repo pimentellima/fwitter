@@ -203,7 +203,8 @@ const Layout = ({ children }) => {
                       className="flex h-20 justify-between px-4 py-2 hover:cursor-pointer hover:backdrop-brightness-110"
                     >
                       <div className="flex w-full flex-col ">
-                        <span className="flex gap-3 text-sm text-stone-400">
+                        <span className="text-sm text-stone-400 
+                        overflow-hidden text-ellipsis whitespace-nowrap">
                           {author.name + " · " + likes.length + " curtidas"}
                         </span>
                         <span className="max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">

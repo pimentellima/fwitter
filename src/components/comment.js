@@ -28,12 +28,12 @@ const Comment = ({ comment: { author, title, createdAt }  }) => {
             onClick={redirectToAuthor}
             className="flex items-center gap-2 hover:cursor-pointer"
           >
-            <p
-              className="font-bold 
-                            hover:cursor-pointer hover:underline"
+            <span
+              className=" overflow-hidden text-ellipsis whitespace-nowrap
+               font-bold hover:cursor-pointer hover:underline"
             >
               {author.name}
-            </p>
+            </span>
             <div
               className="flex flex-row gap-1 
                                   text-sm text-stone-400 hover:cursor-pointer"
