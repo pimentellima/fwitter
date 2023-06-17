@@ -19,7 +19,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="hidden border-b border-stone-700 sm:grid grid-cols-[80px_auto] py-3">
+      <div className="hidden grid-cols-[80px_auto] border-b border-stone-700 py-3 sm:grid">
         <Image
           className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
           src={session?.user.imageUrl || defaultUserImg}
@@ -47,6 +47,17 @@ const HomePage = () => {
             className="border-b border-stone-700 hover:cursor-pointer hover:backdrop-brightness-105"
             key={post.id}
           >
+            {post.type === "share" && (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push("/" + post.shareAuthor.username);
+                }}
+                className="ml-5 text-sm font-medium text-stone-400 hover:cursor-pointer hover:underline"
+              >
+                {`Refweetado por ${post.shareAuthor?.name}`}
+              </span>
+            )}
             <Post post={post} />
           </div>
         ))

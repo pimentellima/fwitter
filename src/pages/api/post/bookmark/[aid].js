@@ -19,6 +19,7 @@ const handler = async (req, res) => {
       orderBy: {
         createdAt: "desc",
       },
+      take: 15,
     });
     return res.status(200).json(posts.map(post => ({
       ...post,

@@ -15,6 +15,7 @@ const handler = async (req, res) => {
           bookmarks: true,
           author: true,
         },
+        take: 15,
         orderBy: {
           createdAt: "desc",
         },

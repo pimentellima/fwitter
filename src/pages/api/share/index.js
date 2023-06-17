@@ -25,7 +25,7 @@ const handler = async (req, res) => {
           },
         });
         if (deletedShare) return res.status(200).json(deletedShare);
-        return res.status(500).json("Error");
+        return res.status(500).json("Error deleting share");
     }
   } catch (error) {
     console.log(error);

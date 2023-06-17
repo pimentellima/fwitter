@@ -168,7 +168,7 @@ const Post = ({ post }) => {
             </button>
             <button
               onClick={handleLike}
-              className="group flex items-center text-sm text-stone-400 w-14"
+              className="group flex items-center text-sm text-stone-400"
             >
               <HandThumbUpIcon
                 height={35}
@@ -188,7 +188,7 @@ const Post = ({ post }) => {
             </button>
             <button
               onClick={handleBookmark}
-              className="group flex items-center text-sm text-stone-400 w-14"
+              className="group flex items-center text-sm text-stone-400"
             >
               <BookmarkIcon
                 height={35}

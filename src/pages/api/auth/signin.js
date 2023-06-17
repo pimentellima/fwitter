@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt';
 
 const handler = async (req, res) => {
   try {
-    console.log(req)
       const user = await prisma.user.findFirst({
         where: {
           username: req.body.username

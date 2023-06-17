@@ -69,6 +69,7 @@ model share {
   author_id Int
   createdAt DateTime @default(now())
   post      post     @relation(fields: [post_id], references: [id])
+  author    user     @relation(fields: [author_id], references: [id])
 
   @@index([post_id])
   @@unique([author_id, post_id])
@@ -85,6 +86,7 @@ model user {
   posts      post[]
   comments  comment[]
 
+  shares  share[]
   followers follow[] @relation("Followers")
   following follow[] @relation("Following")
 }

@@ -18,6 +18,7 @@ const handler = async (req, res) => {
           }
         }
       },
+      take: 15,
       orderBy: {
         likes: {
           _count: "desc",
