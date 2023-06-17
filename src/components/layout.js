@@ -126,7 +126,7 @@ const Layout = ({ children }) => {
         >
           <div
             className="flex h-screen w-screen flex-col gap-3 bg-stone-800 px-3 py-4
-             sm:h-auto sm:w-[500px] sm:rounded-2xl"
+             sm:h-auto sm:w-[500px] sm:rounded-2xl z-20"
           >
             <button
               onClick={() => setModalOpen(false)}
@@ -142,7 +142,7 @@ const Layout = ({ children }) => {
                 width={40}
                 height={40}
               />
-              <PostForm />
+              <PostForm closeModal={() => setModalOpen(false)}/>
             </div>
           </div>
         </Popup>

@@ -6,8 +6,8 @@ const handler = async (req, res) => {
   try {
     const { username, name, password } = req.body;
     z.object({
-      username: z.string().min(6),
-      password: z.string().min(6),
+      username: z.string().min(6).max(15),
+      password: z.string().min(6).max(15),
       name: z.string(),
     }).parse({
       username,

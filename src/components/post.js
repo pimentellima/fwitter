@@ -100,7 +100,10 @@ const Post = ({ post }) => {
             onClick={redirectToAuthor}
             className="flex w-full items-center gap-2 hover:cursor-pointer"
           >
-            <span className="font-bold hover:cursor-pointer hover:underline">
+            <span
+              className="max-w-[120px] overflow-hidden text-ellipsis whitespace-nowrap
+               font-bold hover:cursor-pointer hover:underline"
+            >
               {author.name}
             </span>
             <div className="flex flex-row gap-1 text-stone-400 hover:cursor-pointer">
@@ -128,7 +131,7 @@ const Post = ({ post }) => {
             </div>
           )}
           <div className="mt-1 grid grid-cols-4">
-            <button className="group flex items-center text-xs text-stone-400 w-14">
+            <button className="group flex w-14 items-center text-xs text-stone-400">
               <ChatBubbleOvalLeftIcon
                 height={35}
                 width={35}
@@ -147,7 +150,7 @@ const Post = ({ post }) => {
             </button>
             <button
               onClick={handleShare}
-              className="group flex items-center text-xs text-stone-400 w-14"
+              className="group flex w-14 items-center text-xs text-stone-400"
             >
               <ShareIcon
                 height={35}

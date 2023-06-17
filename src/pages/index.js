@@ -38,14 +38,14 @@ const HomePage = () => {
           Não há receitas para exibir
         </div>
       ) : (
-        posts?.map((post) => (
+        posts?.map((post, index) => (
           <div
             onClick={(e) => {
               e.stopPropagation();
               router.push("/posts/" + post.id);
             }}
             className="border-b border-stone-700 hover:cursor-pointer hover:backdrop-brightness-105"
-            key={post.id}
+            key={index}
           >
             {post.type === "share" && (
               <span

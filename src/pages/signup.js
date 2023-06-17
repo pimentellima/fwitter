@@ -55,7 +55,7 @@ const Signup = () => {
         <div className="mt-10 flex flex-col gap-3">
           <input
             placeholder="Nome"
-            {...register("name", { required: true })}
+            {...register("name", { required: true, maxLength: 50 })}
             className="placeholder:text-stone-500 rounded-md bg-inherit h-14
                         text-white align-middle outline-none py-1 text-xl
                         border px-3 border-stone-700 w-full
@@ -70,7 +70,11 @@ const Signup = () => {
                 required: true,
                 minLength: {
                   value: 6,
-                  message: "Digite um nome de usuário válido",
+                  message: "O nome de usuário deve ser maior",
+                },
+                maxLength: {
+                  value: 15,
+                  message: "O nome de usuário deve ser menor",
                 },
                 validate: isUsernameAvailable,
               })}

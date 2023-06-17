@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 
-const PostForm = () => {
+const PostForm = ({ closeModal = () => {} }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const queryClient = useQueryClient();
   const mutation = useMutation(async (data) => {
@@ -19,8 +19,9 @@ const PostForm = () => {
     reset,
     control,
     watch,
-    formState: { isValid },
+    formState: { isValid, errors },
   } = useForm({
+    mode: "all",
     defaultValues: {
       title: "",
       ingredients: [],
@@ -60,6 +61,7 @@ const PostForm = () => {
         onSuccess: () => {
           queryClient.invalidateQueries(["homePosts"]);
           queryClient.invalidateQueries(["userPosts"]);
+          closeModal()
           reset();
         },
       }
@@ -73,56 +75,64 @@ const PostForm = () => {
       className="flex w-full flex-col"
     >
       <input
-        {...register("title", { required: true })}
+        {...register("title", {
+          required: true,
+        })}
+        maxLength={35}
         placeholder="Que receita você está fazendo?"
-        className="mb-4 bg-inherit text-lg 
-              text-stone-100 placeholder:text-stone-500 focus:outline-none"
+        className="mr-4 flex flex-col overflow-clip rounded-md bg-inherit p-2
+          text-lg text-stone-100 placeholder:text-stone-500 focus:outline-none"
       />
-      {ingredients.map((ingredient, index) => (
-        <div
-          className="mt-1 grid grid-cols-[9fr,1fr] grid-flow-row"
-          key={ingredient.id}
-        >
+      {errors.title && (
+        <span className="text-sm text-red-600">{errors.title.message}</span>
+      )}
+      <div className="mt-3">
+        {ingredients.map((ingredient, index) => (
           <div
-            className=" grid grid-cols-[1fr,1fr,1fr] rounded-md border border-stone-700 px-2 py-4
-                  transition ease-out focus-within:ring-1
-                  focus-within:ring-stone-500"
+            className="mt-1 grid grid-flow-row grid-cols-[9fr,1fr]"
+            key={ingredient.id}
           >
-            <input
-              {...register(`ingredients.${index}.name`, { required: true })}
-              placeholder="Ingrediente"
-              className="w-full bg-transparent placeholder:text-stone-500 focus:outline-none"
-            />
-            <input
-              {...register(`ingredients.${index}.qt`, { required: true })}
-              placeholder="Quantidade"
-              type="number"
-              className="w-full bg-transparent placeholder:text-stone-500 focus:outline-none"
-            />
-            <select
-              {...register(`ingredients.${index}.unity`, { required: true })}
-              required
-              className="w-full bg-stone-800 
-              invalid:text-stone-500 focus:outline-none [&_*]:bg-inherit [&_option]:text-stone-300"
+            <div
+              className=" grid grid-cols-[1fr,1fr,1fr] rounded-md border border-stone-700 px-2 py-4
+                    transition ease-out focus-within:ring-1
+                    focus-within:ring-stone-500"
             >
-              <option disabled hidden value="">
-                Unidade
-              </option>
-              <option value="g">g</option>
-              <option value="kg">kg</option>
-              <option value="ml">ml</option>
-              <option value="tbsp">Tbsp</option>
-              <option value="tsp">tsp</option>
-              <option value="inteiro">inteiro</option>
-            </select>
+              <input
+                {...register(`ingredients.${index}.name`, { required: true })}
+                placeholder="Ingrediente"
+                className="w-full bg-transparent placeholder:text-stone-500 focus:outline-none"
+              />
+              <input
+                {...register(`ingredients.${index}.qt`, { required: true })}
+                placeholder="Quantidade"
+                type="number"
+                className="w-full bg-transparent placeholder:text-stone-500 focus:outline-none"
+              />
+              <select
+                {...register(`ingredients.${index}.unity`, { required: true })}
+                required
+                className="w-full bg-stone-800
+                invalid:text-stone-500 focus:outline-none [&_*]:bg-inherit [&_option]:text-stone-300"
+              >
+                <option disabled hidden value="">
+                  Unidade
+                </option>
+                <option value="g">g</option>
+                <option value="kg">kg</option>
+                <option value="ml">ml</option>
+                <option value="tbsp">Tbsp</option>
+                <option value="tsp">tsp</option>
+                <option value="inteiro">inteiro</option>
+              </select>
+            </div>
+            <div className="flex items-center justify-center">
+              <button type="button" onClick={() => remove(index)}>
+                <MinusCircleIcon width={20} />
+              </button>
+            </div>
           </div>
-          <div className="flex items-center justify-center">
-            <button type="button" onClick={() => remove(index)}>
-              <MinusCircleIcon width={20} />
-            </button>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
       {imagePreview && (
         <div className="relative mr-5 mt-3">
           <img

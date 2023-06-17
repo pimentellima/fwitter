@@ -3,6 +3,7 @@ import { getToken } from "next-auth/jwt";
 import nextConnect from "next-connect";
 import prisma from "../../../prismaClient";
 import uploadFile from "../../../utils/uploadFile";
+import { z } from "zod";
 
 const handler = nextConnect({
   onError(error, req, res) {
@@ -22,6 +23,12 @@ handler.post(async (req, res) => {
     const token = await getToken({ req });
     if (!token) return res.status(401).json("Unauthorized");
 
+    z.object({
+      title: z.string().max(35),
+    }).parse({
+      title: req.body?.title,
+    });
+
     if (req.file) {
       req.file.path = await uploadFile(req.file);
     }
@@ -37,7 +44,7 @@ handler.post(async (req, res) => {
     });
     return res.status(200).json(newPost);
   } catch (err) {
-    return res.status(500).json('Internal error');
+    return res.status(500).json("Internal error");
   }
 });
 
