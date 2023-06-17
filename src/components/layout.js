@@ -56,8 +56,8 @@ const Layout = ({ children }) => {
       <nav
         className="sticky bottom-0 row-start-2 flex h-10 justify-around
           border-t border-stone-700 bg-stone-800 sm:top-0 sm:row-auto
-          sm:h-screen xl:w-60 sm:flex-col sm:justify-start sm:border-r
-          sm:border-t-0 sm:py-10 sm:text-2xl sm:tracking-tight "
+          sm:h-screen sm:flex-col sm:justify-start sm:border-r sm:border-t-0
+          sm:py-10 sm:text-2xl sm:tracking-tight xl:w-60 "
       >
         <Link className="group flex justify-center sm:block" href="/">
           <div
@@ -125,8 +125,8 @@ const Layout = ({ children }) => {
           onClose={() => setModalOpen(false)}
         >
           <div
-            className="flex h-screen w-screen flex-col gap-3 bg-stone-800 px-3 py-4
-             sm:h-auto sm:w-[500px] sm:rounded-2xl z-20"
+            className="z-20 flex h-screen w-screen flex-col gap-3 bg-stone-800 px-3
+             py-4 sm:h-auto sm:w-[500px] sm:rounded-2xl"
           >
             <button
               onClick={() => setModalOpen(false)}
@@ -142,7 +142,7 @@ const Layout = ({ children }) => {
                 width={40}
                 height={40}
               />
-              <PostForm closeModal={() => setModalOpen(false)}/>
+              <PostForm closeModal={() => setModalOpen(false)} />
             </div>
           </div>
         </Popup>
@@ -206,7 +206,9 @@ const Layout = ({ children }) => {
                         <span className="flex gap-3 text-sm text-stone-400">
                           {author.name + " · " + likes.length + " curtidas"}
                         </span>
-                        <span className="">{title}</span>
+                        <span className="max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">
+                          {title}
+                        </span>
                       </div>
                       {imageUrl && (
                         <img
