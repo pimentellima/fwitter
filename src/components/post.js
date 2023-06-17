@@ -106,11 +106,9 @@ const Post = ({ post }) => {
             >
               {author.name}
             </span>
-            <div className="flex flex-row gap-1 text-stone-400 hover:cursor-pointer">
-              <span className="overflow-hidden text-ellipsis whitespace-nowrap">
-                {`@${author.username} · ${moment(createdAt).fromNow(true)}`}
-              </span>
-            </div>
+            <span className="overflow-hidden text-ellipsis whitespace-nowrap text-stone-400">
+              {`@${author.username} · ${moment(createdAt).fromNow(true)}`}
+            </span>
           </div>
         </div>
         <span className=" overflow-hidden text-ellipsis whitespace-nowrap text-xl">

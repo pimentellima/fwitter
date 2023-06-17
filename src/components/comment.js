@@ -34,9 +34,9 @@ const Comment = ({ comment: { author, title, createdAt }  }) => {
             >
               {author.name}
             </span>
-            <span className="overflow-hidden text-ellipsis whitespace-nowrap">
-                {`@${author.username} · ${moment(createdAt).fromNow(true)}`}
-              </span>
+            <span className="overflow-hidden text-ellipsis whitespace-nowrap text-stone-400">
+              {`@${author.username} · ${moment(createdAt).fromNow(true)}`}
+            </span>
           </div>
         </div>
         <p className="my-1 text-xl">{title}</p>
