@@ -153,6 +153,7 @@ const PostForm = ({ closeModal = () => {} }) => {
       )}
       <div className="mt-6 grid grid-cols-3 place-items-center">
         <button
+          disabled={ingredients?.length > 8}
           type="button"
           onClick={() => append({ name: "", qt: "", unity: "" })}
         >
