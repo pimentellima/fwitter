@@ -38,7 +38,7 @@ export const authOptions = {
       name: "Credentials",
       authorize: async (credentials, req) => {
         const res = await axios.post(
-          process.env.WEBSITE_URL + "/api/auth/signin",
+          process.env.NEXTAUTH_URL + "/api/auth/signin",
           credentials
         );
         if (res.data) return res.data;
