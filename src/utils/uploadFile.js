@@ -1,10 +1,14 @@
 import { Storage } from "@google-cloud/storage";
 
+const credentials = JSON.parse(
+  Buffer.from(process.env.GOOGLE_SERVICE_KEY, "base64").toString()
+);
+
 const storage = new Storage({
-  projectId: process.env.GCS_PROJECT_ID,
+  projectId: credentials.project_id,
   credentials: {
-    client_email: process.env.GCS_CLIENT_EMAIL,
-    private_key: Buffer.from(process.env.GCS_PRIVATE_KEY, 'base64').toString(),
+    client_email: credentials.client_email,
+    private_key: credentials.private_key,
   },
 });
 

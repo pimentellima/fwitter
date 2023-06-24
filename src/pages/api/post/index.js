@@ -26,25 +26,26 @@ handler.post(async (req, res) => {
     z.object({
       title: z.string().max(35),
     }).parse({
-      title: req.body?.title,
+      title: req.body.title,
     });
 
     if (req.file) {
       req.file.path = await uploadFile(req.file);
     }
-    const { title, ingredients } = req.body;
 
     const newPost = await prisma.post.create({
       data: {
-        title,
-        ingredients,
+        title: req.body.title,
+        ingredients: req.body.ingredients,
         author_id: parseInt(token.id),
         imageUrl: req.file?.path,
       },
     });
-    return res.status(200).json(newPost);
-  } catch (err) {
+    if(newPost) res.status(200).json(newPost);
     return res.status(500).json("Internal error");
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json(err);
   }
 });
 

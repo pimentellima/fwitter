@@ -65,7 +65,7 @@ const handler = async (req, res) => {
           },
         },
       },
-      take: 15,
+      take: 30,
     });
 
     const postsWithShares = [
@@ -87,7 +87,7 @@ const handler = async (req, res) => {
       if (aValue < bValue) return 1;
       if (aValue > bValue) return -1;
       else return 0;
-    });
+    }).slice(0,15);
 
     return res.status(200).json(postsWithShares);
   } catch (error) {

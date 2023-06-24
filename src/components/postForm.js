@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 
-const PostForm = ({ closeModal = () => {} }) => {
+const PostForm = ({ closeModal = () => {}, namekey }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const queryClient = useQueryClient();
   const mutation = useMutation(async (data) => {
@@ -39,13 +39,7 @@ const PostForm = ({ closeModal = () => {} }) => {
   });
 
   const fileWatch = watch("file");
-
-  useEffect(() => {
-    if (fileWatch?.length) {
-      const url = URL.createObjectURL(fileWatch[0]);
-      setImagePreview(url);
-    } else setImagePreview("");
-  }, [fileWatch]);
+  const url = fileWatch.length ? URL.createObjectURL(fileWatch[0]) : "";
 
   const onSubmit = (data) => {
     const { ingredients, file, title } = data;
@@ -61,7 +55,7 @@ const PostForm = ({ closeModal = () => {} }) => {
         onSuccess: () => {
           queryClient.invalidateQueries(["homePosts"]);
           queryClient.invalidateQueries(["profilePosts"]);
-          closeModal()
+          closeModal();
           reset();
         },
       }
@@ -133,13 +127,9 @@ const PostForm = ({ closeModal = () => {} }) => {
           </div>
         ))}
       </div>
-      {imagePreview && (
+      {url && (
         <div className="relative mr-5 mt-3">
-          <img
-            className="max-h-96 max-w-full rounded-xl"
-            src={imagePreview}
-            alt=""
-          />
+          <img src={url} className="max-h-96 max-w-full rounded-xl" alt="" />
           <div
             onClick={() => reset({ file: [] })}
             className="absolute top-0 z-10 ml-1 
@@ -153,16 +143,16 @@ const PostForm = ({ closeModal = () => {} }) => {
       )}
       <div className="mt-6 grid grid-cols-3 place-items-center">
         <button
-          disabled={ingredients?.length > 8}
+          disabled={ingredients?.length > 7}
           type="button"
           onClick={() => append({ name: "", qt: "", unity: "" })}
         >
           Adicionar ingrediente
         </button>
-        <label htmlFor="file" className="hover:cursor-pointer">
+        <label className="hover:cursor-pointer">
+          <input type="file" className="hidden" {...register("file")} />
           Adicionar imagem
         </label>
-        <input id="file" type="file" className="hidden" {...register("file")} />
         <button
           disabled={!isValid}
           className="mr-3 flex h-10 items-center
