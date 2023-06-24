@@ -41,7 +41,7 @@ handler.post(async (req, res) => {
         imageUrl: req.file?.path,
       },
     });
-    if(newPost) res.status(200).json(newPost);
+    if(newPost) return res.status(200).json(newPost);
     return res.status(500).json("Internal error");
   } catch (err) {
     console.log(err)
