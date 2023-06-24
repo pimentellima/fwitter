@@ -1,11 +1,9 @@
 import { MinusCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 
 const PostForm = ({ closeModal = () => {}, namekey }) => {
-  const [imagePreview, setImagePreview] = useState(null);
   const queryClient = useQueryClient();
   const mutation = useMutation(async (data) => {
     return await axios.post("api/post", data, {
