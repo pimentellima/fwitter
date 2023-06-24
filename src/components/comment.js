@@ -41,13 +41,6 @@ const Comment = ({ comment: { author, title, createdAt } }) => {
         <span className="overflow-hidden text-ellipsis whitespace-nowrap text-xl">
           {title}
         </span>
-        {author.imageUrl && (
-          <img
-            className="max-h-96 max-w-[200px] rounded-2xl border border-stone-700"
-            src={author.imageUrl}
-            alt=""
-          />
-        )}
       </div>
     </div>
   );
