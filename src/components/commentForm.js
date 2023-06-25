@@ -37,7 +37,7 @@ const CommentForm = ({ post_id }) => {
   };
 
   return (
-    <div className="grid grid-cols-[80px,minmax(0px,1fr)] border-b border-stone-700 py-3">
+    <div className="grid grid-cols-[80px,minmax(0px,1fr)] border-b border-slate-200 py-3">
       <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         width={40}
@@ -48,24 +48,23 @@ const CommentForm = ({ post_id }) => {
       <form
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full flex-col"
+        className="flex w-full flex-col pr-3"
       >
         <input
           {...register("title", { required: true })}
           maxLength={35}
           placeholder="Comente algo..."
-          className="h-12 bg-inherit pl-2 text-lg text-stone-100
-          placeholder:text-stone-500 focus:outline-none "
+          className="h-12 bg-inherit pl-2 text-xl
+          placeholder:text-gray-500 focus:outline-none "
         />
         <div className="flex justify-end">
           <button
             disabled={!isValid}
-            className="mr-3 flex h-10
-              w-28 items-center justify-center rounded-3xl 
-              bg-stone-600 px-5 py-1 text-base font-bold
-              transition duration-100 ease-out hover:bg-stone-500
-              disabled:opacity-70 disabled:hover:cursor-default disabled:hover:bg-stone-600"
-          >
+            className="flex h-9 items-center
+            justify-center rounded-3xl 
+            bg-sky-500 px-5 text-base font-bold
+            transition duration-100 ease-out enabled:hover:bg-sky-600 text-white
+            disabled:opacity-70 disabled:hover:cursor-default ">
             Comentar
           </button>
         </div>

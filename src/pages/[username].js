@@ -6,7 +6,7 @@ import { useMutation, useQuery } from "react-query";
 import Layout from "../components/layout";
 import Post from "../components/post";
 import Spinner from "../components/spinner";
-import defaultUserImg from '../../public/static/defaultUserImg.jpg'
+import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import EditProfileModal from "../components/editProfileModal";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -14,7 +14,7 @@ import Image from "next/image";
 const ProfilePage = () => {
   const { status, data: session } = useSession();
   const router = useRouter();
-  const query = router.query
+  const query = router.query;
 
   const { data: profileUser, isLoading: isLoadingUser } = useQuery(
     ["profileUser", { username: query?.username }],
@@ -75,27 +75,27 @@ const ProfilePage = () => {
     setIsFollowedByUser(false);
     setFollowers((n) => --n);
   };
-  
+
   return (
     <>
       <div
         className="flex h-[430px] flex-col 
-              border-b border-stone-700 pb-10"
+              border-b border-slate-200 pb-10"
       >
         {isLoadingUser ? (
           <Spinner />
         ) : (
           <>
             <div className="relative h-64">
-              <div className="h-44 w-full bg-stone-600"/>
+              <div className="h-44 w-full bg-slate-300" />
               <div
                 className="absolute top-1/2 flex 
                         w-full items-end justify-between"
               >
                 <Image
-                  className="ml-2 rounded-full hover:cursor-pointer aspect-square"
-                  height={100}
-                  width={100}
+                  className="ml-2 aspect-square rounded-full ring-4 ring-white hover:cursor-pointer"
+                  height={120}
+                  width={120}
                   src={profileUser?.imageUrl || defaultUserImg}
                   alt=""
                 />
@@ -104,21 +104,20 @@ const ProfilePage = () => {
                 ) : isFollowedByUser ? (
                   <button
                     onClick={handleUnfollow}
-                    className="bg-stone-700 hover:
-                mr-2 h-10 cursor-pointer rounded-full
-                border border-stone-700 
-                px-4 
-                font-bold transition-colors hover:bg-stone-600 active:border-stone-500"
+                    className="mr-2 h-10 cursor-pointer rounded-full
+                      border border-gray-300
+                      px-4 
+                      font-bold transition-colors hover:bg-gray-200"
                   >
                     Deixar de seguir
                   </button>
                 ) : (
                   <button
                     onClick={handleFollow}
-                    className="bg-sto ne-700 hover:
-                mr-2 h-10 cursor-pointer rounded-full
-                border border-stone-700 
-                px-4 font-bold transition-colors hover:bg-stone-600 active:border-stone-500"
+                    className="mr-2 h-10 cursor-pointer rounded-full
+                      border border-gray-300
+                      px-4 
+                      font-bold transition-colors hover:bg-gray-200"
                   >
                     Seguir
                   </button>
@@ -126,16 +125,16 @@ const ProfilePage = () => {
               </div>
             </div>
             <div className="mt-3 flex flex-col pl-5">
-              <p className="text-2xl">{profileUser?.name + "  "}</p>
-              <p className="text-stone-400">{"@" + profileUser?.username}</p>
-              <p className="mt-3 text-stone-400">
+              <span className="text-2xl">{profileUser?.name + "  "}</span>
+              <span className="text-gray-500">{"@" + profileUser?.username}</span>
+              <span className="mt-3 text-gray-500">
                 {`Juntou-se em ${moment(profileUser?.createdAt).format("ll")}`}
-              </p>
-              <div className="mt-2 flex gap-2 font-medium">
-                <p className="first-letter:text-white">{`${following}  Seguindo`}</p>
-                <p className="first-letter:text-white">
+              </span>
+              <div className="mt-2 flex gap-2 text-gray-500">
+                <span className="first-letter:font-bold first-letter:text-slate-950">{`${following}  Seguindo`}</span>
+                <span className="first-letter:font-bold first-letter:text-slate-950">
                   {`${followers}  Seguidores`}
-                </p>
+                </span>
               </div>
             </div>
           </>
@@ -154,7 +153,7 @@ const ProfilePage = () => {
               e.stopPropagation();
               router.push("/posts/" + post.id);
             }}
-            className="border-b border-stone-700 hover:cursor-pointer hover:backdrop-brightness-105"
+            className="border-b border-slate-200 hover:cursor-pointer hover:bg-gray-100"
             key={post.id}
           >
             <Post post={post} />

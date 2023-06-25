@@ -1,9 +1,14 @@
-import { MinusCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  MinusCircleIcon,
+  PhotoIcon,
+  PlusCircleIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 
-const PostForm = ({ closeModal = () => {}, namekey }) => {
+const PostForm = ({ closeModal = () => {} }) => {
   const queryClient = useQueryClient();
   const mutation = useMutation(async (data) => {
     return await axios.post("api/post", data, {
@@ -64,7 +69,7 @@ const PostForm = ({ closeModal = () => {}, namekey }) => {
     <form
       autoComplete="off"
       onSubmit={handleSubmit(onSubmit)}
-      className="flex w-full flex-col"
+      className="flex w-full flex-col px-2"
     >
       <input
         {...register("title", {
@@ -72,39 +77,39 @@ const PostForm = ({ closeModal = () => {}, namekey }) => {
         })}
         maxLength={35}
         placeholder="Que receita você está fazendo?"
-        className="mr-4 flex flex-col overflow-clip rounded-md bg-inherit p-2
-          text-lg text-stone-100 placeholder:text-stone-500 focus:outline-none"
+        className="mr-4 flex flex-col overflow-clip rounded-md bg-inherit py-2
+          text-xl placeholder:text-gray-500 focus:outline-none"
       />
       {errors.title && (
         <span className="text-sm text-red-600">{errors.title.message}</span>
       )}
-      <div className="mt-3">
+      <div className="pb-4 pt-2">
         {ingredients.map((ingredient, index) => (
           <div
             className="mt-1 grid grid-flow-row grid-cols-[9fr,1fr]"
             key={ingredient.id}
           >
             <div
-              className=" grid grid-cols-3 rounded-md border border-stone-700 px-2 py-4
+              className=" grid grid-cols-3 rounded-md border border-gray-300 px-2 py-4
                     transition ease-out focus-within:ring-1
-                    focus-within:ring-stone-500"
+                    focus-within:ring-sky-400"
             >
               <input
                 {...register(`ingredients.${index}.name`, { required: true })}
                 placeholder="Ingrediente"
-                className="w-full bg-transparent placeholder:text-stone-500 focus:outline-none"
+                className="w-full bg-transparent placeholder:text-gray-500 focus:outline-none"
               />
               <input
                 {...register(`ingredients.${index}.qt`, { required: true })}
                 placeholder="Quantidade"
                 type="number"
-                className="w-full bg-transparent placeholder:text-stone-500 focus:outline-none"
+                className="w-full bg-transparent placeholder:text-gray-500 focus:outline-none"
               />
               <select
                 {...register(`ingredients.${index}.unity`, { required: true })}
                 required
-                className="w-full bg-stone-800
-                invalid:text-stone-500 focus:outline-none [&_*]:bg-inherit [&_option]:text-stone-300"
+                className="w-full
+                invalid:text-gray-500 focus:outline-none [&_*]:bg-inherit [&_option]:text-slate-950"
               >
                 <option disabled hidden value="">
                   Unidade
@@ -117,47 +122,50 @@ const PostForm = ({ closeModal = () => {}, namekey }) => {
                 <option value="inteiro">inteiro</option>
               </select>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center text-sky-600">
               <button type="button" onClick={() => remove(index)}>
-                <MinusCircleIcon width={20} />
+                <MinusCircleIcon className="h-5 w-5" />
               </button>
             </div>
           </div>
         ))}
       </div>
       {url && (
-        <div className="relative mr-5 mt-3">
+        <div className="relative mr-5 mt-3 pb-3">
           <img src={url} className="max-h-96 max-w-full rounded-xl" alt="" />
           <div
             onClick={() => reset({ file: [] })}
             className="absolute top-0 z-10 ml-1 
                 mt-1 h-9 w-9 rounded-full 
-                bg-black bg-opacity-60 p-2 
-                transition duration-150 ease-in hover:cursor-pointer hover:bg-opacity-40"
+                bg-gray-200 bg-opacity-50 p-2 
+                transition duration-150 
+                ease-in hover:cursor-pointer hover:bg-opacity-40"
           >
             <XMarkIcon />
           </div>
         </div>
       )}
-      <div className="mt-6 grid grid-cols-3 place-items-center">
-        <button
-          disabled={ingredients?.length > 7}
-          type="button"
-          onClick={() => append({ name: "", qt: "", unity: "" })}
-        >
-          Adicionar ingrediente
-        </button>
-        <label className="hover:cursor-pointer">
-          <input type="file" className="hidden" {...register("file")} />
-          Adicionar imagem
-        </label>
+      <div className="flex justify-between border-t border-slate-200 pt-2 text-sky-600">
+        <div className="flex items-center justify-center gap-5">
+          <button
+            disabled={ingredients?.length > 7}
+            type="button"
+            onClick={() => append({ name: "", qt: "", unity: "" })}
+          >
+            <PlusCircleIcon className="h-5 w-5" />
+          </button>
+          <label className="hover:cursor-pointer">
+            <input type="file" className="hidden" {...register("file")} />
+            <PhotoIcon className="h-5 w-5" />
+          </label>
+        </div>
         <button
           disabled={!isValid}
-          className="mr-3 flex h-10 items-center
+          className="flex h-9 items-center
             justify-center rounded-3xl 
-            bg-stone-600 px-5 py-1 text-base font-bold
-            transition duration-100 ease-out hover:bg-stone-500
-            disabled:opacity-70 disabled:hover:cursor-default disabled:hover:bg-stone-600"
+            bg-sky-500 px-5 text-base font-bold
+            text-white transition duration-100 ease-out enabled:hover:bg-sky-600
+            disabled:opacity-70 disabled:hover:cursor-default "
         >
           Fweet
         </button>

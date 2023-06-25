@@ -1,18 +1,18 @@
 import {
   BookmarkIcon,
   ChatBubbleOvalLeftIcon,
-  HandThumbUpIcon,
+  HeartIcon,
   ShareIcon,
 } from "@heroicons/react/24/outline";
 import axios from "axios";
 import moment from "moment";
 import "moment/locale/pt-br";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import defaultUserImg from "../../public/static/defaultUserImg.jpg";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
 
 const Post = ({ post }) => {
   const { data: session } = useSession();
@@ -86,7 +86,7 @@ const Post = ({ post }) => {
   };
 
   return (
-    <div className="mb-1 mt-3 grid grid-cols-[80px,minmax(0px,1fr)]">
+    <div className="pb-1 pt-3 grid grid-cols-[80px,minmax(0px,1fr)]">
       <Image
         className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
         width={40}
@@ -94,11 +94,11 @@ const Post = ({ post }) => {
         src={author.imageUrl || defaultUserImg}
         alt="profileImage"
       />
-      <div className="flex flex-col">
+      <div className="flex flex-col pr-5">
         <div className="flex w-full justify-between">
           <div
             onClick={redirectToAuthor}
-            className="flex w-full items-center gap-2 hover:cursor-pointer"
+            className="flex w-full flex-col items-start hover:cursor-pointer sm:flex-row sm:items-center sm:gap-2"
           >
             <span
               className=" overflow-hidden text-ellipsis whitespace-nowrap
@@ -106,107 +106,96 @@ const Post = ({ post }) => {
             >
               {author.name}
             </span>
-            <span className="overflow-hidden text-ellipsis whitespace-nowrap text-stone-400">
+            <span className="overflow-hidden text-ellipsis whitespace-nowrap text-gray-500">
               {`@${author.username} · ${moment(createdAt).fromNow(true)}`}
             </span>
           </div>
         </div>
-        <span className="overflow-hidden text-ellipsis whitespace-nowrap text-xl">
+        <span className="overflow-hidden text-ellipsis whitespace-nowrap text-gray-800">
           {title}
         </span>
         {ingredients?.map((ingredient, index) => (
           <span
             key={index}
-            className="inline  overflow-hidden text-ellipsis whitespace-nowrap"
+            className="inline  overflow-hidden text-ellipsis whitespace-nowrap text-sm"
           >
             {ingredient.qt + " " + ingredient.unity + " " + ingredient.name}
           </span>
         ))}
         {imageUrl && (
           <img
-            className="max-h-96 max-w-[200px] rounded-2xl border border-stone-700"
+            className="mt-2 max-h-[500px] max-w-full rounded-2xl border border-slate-200"
             src={imageUrl}
             alt=""
           />
         )}
-        <div className="mt-1 grid grid-cols-4">
-          <button className="group flex w-14 items-center text-xs text-stone-400">
+        <div className="mt-1 grid grid-cols-4 text-gray-600">
+          <button className="group flex w-14 items-center gap-1 text-xs">
             <ChatBubbleOvalLeftIcon
-              height={35}
-              width={35}
-              className={`rounded-full p-2 text-stone-400
-                    transition
-                    ease-out
-                    hover:bg-stone-700
-                    hover:text-blue-400`}
+              className={`h-9 w-9 rounded-full p-2
+                    transition hover:bg-sky-200
+                    group-hover:text-sky-500`}
             />
-            <p
-              className="text-xs transition ease-out
+            <span
+              className="text-xs transition
                   group-hover:text-blue-400"
             >
               {comments.length > 0 && comments.length}
-            </p>
+            </span>
           </button>
           <button
             onClick={handleShare}
-            className="group flex w-14 items-center text-xs text-stone-400"
+            className="group flex w-14 items-center gap-1 text-xs"
           >
             <ShareIcon
               height={35}
               width={35}
-              className={`rounded-full p-2 transition
-                    ease-out
-                    hover:bg-stone-700
-                    hover:text-green-400
+              className={`h-9 w-9 rounded-full p-2
+                    transition hover:bg-green-100
                     group-hover:text-green-400 ${shared && "text-green-400"}`}
             />
-            <p
+            <span
               className={`text-xs ${
                 shared && "text-green-400"
-              } transition ease-out group-hover:text-green-400`}
+              } transition group-hover:text-green-400`}
             >
               {shares.length > 0 && shares.length}
-            </p>
+            </span>
           </button>
           <button
             onClick={handleLike}
-            className="group flex items-center text-sm text-stone-400"
+            className="group flex w-14 items-center gap-1 text-xs"
           >
-            <HandThumbUpIcon
-              height={35}
-              width={35}
-              className={`rounded-full p-2 transition
-             ease-out
-             hover:bg-stone-700
-             hover:text-red-400 ${liked && "text-red-400"}`}
+            <HeartIcon
+              className={`h-9 w-9 rounded-full p-2
+             transition hover:bg-red-100
+             group-hover:text-red-400 ${liked && "text-red-400"}`}
             />
-            <p
+            <span
               className={`${
                 liked && "text-red-400"
               } transition ease-out group-hover:text-red-400`}
             >
               {likes.length > 0 && likes.length}
-            </p>
+            </span>
           </button>
           <button
             onClick={handleBookmark}
-            className="group flex items-center text-sm text-stone-400"
+            className="group flex w-14 items-center gap-1 text-xs"
           >
             <BookmarkIcon
-              height={35}
-              width={35}
-              className={`rounded-full p-2 transition
-             ease-out
-             hover:bg-stone-700
+              className={`h-9 w-9 
+             rounded-full p-2 transition 
+             hover:bg-orange-100
              hover:text-orange-400 ${bookmarked && "text-orange-400"}`}
             />
-            <p
+            <span
               className={`${
                 bookmarked && "text-orange-400"
-              } transition ease-out group-hover:text-orange-400`}
+              } transition group-hover:text-orange-400`}
             >
               {bookmarks.length > 0 && bookmarks.length}
-            </p>
+            </span>
           </button>
         </div>
       </div>

@@ -19,7 +19,7 @@ const HomePage = () => {
 
   return (
     <div>
-      <div className="hidden grid-cols-[80px,minmax(0px,1fr)] border-b border-stone-700 py-3 sm:grid">
+      <div className="hidden grid-cols-[80px,minmax(0px,1fr)] border-b border-slate-200 py-3 sm:grid">
         <Image
           className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
           src={session?.user.imageUrl || defaultUserImg}
@@ -44,7 +44,7 @@ const HomePage = () => {
               e.stopPropagation();
               router.push("/posts/" + post.id);
             }}
-            className="border-b border-stone-700 hover:cursor-pointer hover:backdrop-brightness-105"
+            className="border-b border-slate-200 hover:cursor-pointer hover:bg-gray-100"
             key={post.id}
           >
             {post.type === "share" && (
@@ -54,7 +54,7 @@ const HomePage = () => {
                   router.push("/" + post.shareAuthor.username);
                 }}
                 className="ml-5 overflow-hidden text-ellipsis whitespace-nowrap text-sm 
-                font-medium text-stone-400 hover:cursor-pointer hover:underline
+                font-medium text-gray-400 hover:cursor-pointer hover:underline
                 "
               >
                 {`Refweetado por ${post.shareAuthor?.name}`}

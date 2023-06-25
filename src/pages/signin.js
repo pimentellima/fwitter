@@ -1,7 +1,6 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const Signin = () => {
@@ -33,17 +32,17 @@ const Signin = () => {
   return (
     <div
       className="grid min-h-screen 
-              items-center justify-center bg-stone-800"
+              items-center justify-center bg-gray-300 text-slate-950"
     >
       <form
         autoComplete="false"
         onSubmit={handleSubmit(onSubmit)}
-        className="flex h-screen w-screen flex-col bg-stone-900 
+        className="flex h-screen w-screen flex-col bg-white 
         px-8 pt-11 sm:h-auto sm:w-96 sm:rounded-lg sm:px-12 sm:pb-24"
       >
         <h1
           className="font-sans text-3xl font-medium tracking-tight 
-                          text-white antialiased"
+                          antialiased"
         >
           Entrar no fwitter
         </h1>
@@ -52,12 +51,9 @@ const Signin = () => {
             <input
               placeholder="Nome de usuário"
               {...register("username", { required: true })}
-              className="h-14 w-full rounded-md border
-                        border-stone-700 bg-inherit px-3 py-1 align-middle
-                        text-xl text-white outline-none transition-colors
-                        placeholder:text-stone-500 hover:border-stone-600
-                        focus:border-stone-500 focus:placeholder:invisible
-                        "
+              className="h-14 w-full rounded-lg border border-gray-300 bg-inherit
+              pl-2 text-lg transition
+              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
             />
             {errors.username && (
               <span className="text-sm text-red-600">
@@ -65,33 +61,28 @@ const Signin = () => {
               </span>
             )}
           </div>
-
           <input
             type="password"
             placeholder="Senha"
             {...register("password", { required: true })}
-            className="h-14 w-full rounded-md border
-                      border-stone-700 bg-inherit px-3 py-1 align-middle 
-                      text-xl text-white outline-none transition-colors
-                      placeholder:text-stone-500 hover:border-stone-600 
-                      focus:border-stone-500 focus:placeholder:invisible 
-                      "
+            className="h-14 w-full rounded-lg border border-gray-300 bg-inherit
+              pl-2 text-lg transition
+              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
           />
         </div>
-        <div>
-          <button
-            disabled={!isValid}
-            className="mt-6 h-9 w-full 
-                          rounded-2xl bg-gray-50 font-bold 
-                          text-black transition-colors enabled:hover:bg-gray-200
-                          enabled:active:bg-gray-200 disabled:cursor-default disabled:opacity-40"
-          >
-            Avançar
-          </button>
-        </div>
-        <div className="font-sm mt-16 flex gap-1 text-gray-100">
+        <button
+          disabled={!isValid}
+          className={`mt-6 h-8 cursor-pointer rounded-full
+              border border-gray-300 bg-gray-900 px-4 font-semibold
+              text-white
+              transition-colors enabled:hover:bg-gray-700 disabled:bg-gray-500 
+              disabled:opacity-90 disabled:hover:cursor-default`}
+        >
+          Avançar
+        </button>
+        <div className="font-sm mt-16 flex gap-1">
           <p>Ainda não tem uma conta?</p>
-          <Link className="text-stone-500 hover:underline" href="/signup">
+          <Link className="hover:underline text-sky-500" href="/signup">
             Inscrever-se
           </Link>
         </div>

@@ -44,7 +44,7 @@ const EditProfileModal = () => {
       },
       {
         onSuccess: async ({ data }) => {
-          console.log(data)
+          console.log(data);
           await update({
             name: data.name,
             imageUrl: data.imageUrl,
@@ -60,9 +60,9 @@ const EditProfileModal = () => {
   };
 
   const handleClose = () => {
-    reset()
-    setOpen(false)
-  }
+    reset();
+    setOpen(false);
+  };
 
   useEffect(() => {
     if (imageWatch?.length) {
@@ -78,39 +78,46 @@ const EditProfileModal = () => {
       <button
         onClick={() => setOpen((open) => !open)}
         className="mr-2 h-10 
-                rounded-full border border-stone-700 
-                bg-stone-700 px-4 
-                font-bold transition-colors hover:cursor-pointer hover:bg-stone-600 active:border-stone-500"
+                rounded-full border border-gray-300 
+               px-4 
+                font-bold transition-colors hover:cursor-pointer hover:bg-gray-200"
       >
         Editar perfil
       </button>
-      <Popup onClose={handleClose} open={open} modal lockScroll>
+      <Popup
+        onClose={handleClose}
+        open={open}
+        modal
+        lockScroll
+        overlayStyle={{
+          backgroundColor: "rgba(0,0,0, 0.3)",
+        }}
+      >
         <form
           autoComplete="off"
-          className="flex w-screen h-screen sm:h-auto sm:w-[600px] flex-col sm:rounded-xl  bg-stone-900 pb-14"
+          className="flex h-screen w-screen flex-col bg-white pb-14 text-slate-950 sm:h-auto sm:w-[600px] sm:rounded-xl"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex items-center justify-between px-5 py-3">
             <div className="flex items-center gap-8">
               <button type="button" onClick={() => setOpen(false)}>
-                <XMarkIcon className="w-10 rounded-full p-2 transition-all hover:bg-stone-700" />
+                <XMarkIcon className="w-10 h-10 rounded-full p-2 transition-all hover:bg-slate-100" />
               </button>
               <p className="text-xl font-semibold">Editar perfil</p>
             </div>
             <button
               disabled={!isValid}
-              className={`flex h-8 w-20
-              items-center justify-center rounded-3xl bg-stone-100 
-              px-5 py-1 text-sm font-bold 
-              text-stone-800 transition duration-100 ease-out
-              hover:cursor-pointer hover:bg-stone-200 
-              disabled:opacity-40 disabled:hover:cursor-default disabled:hover:bg-stone-100`}
+              className={`mr-2 h-8 cursor-pointer rounded-full
+              border border-gray-300 bg-gray-900 px-4 font-semibold
+              text-white
+              transition-colors enabled:hover:bg-gray-700 disabled:bg-gray-500 
+              disabled:opacity-90 disabled:hover:cursor-default`}
             >
               Salvar
             </button>
           </div>
           <div className="relative h-64">
-            <div className="absolute flex h-44 w-full items-center justify-center bg-stone-600" />
+            <div className="absolute flex h-44 w-full items-center justify-center bg-slate-300" />
             <input
               id="file"
               className="hidden"
@@ -130,7 +137,7 @@ const EditProfileModal = () => {
               <label
                 htmlFor="file"
                 className="absolute z-30 h-10 
-                          w-10 rounded-full bg-black bg-opacity-50 
+                          w-10 rounded-full bg-gray-100 bg-opacity-50 
                           p-2 hover:cursor-pointer hover:bg-opacity-40"
               >
                 <ArrowUpIcon />
@@ -142,18 +149,18 @@ const EditProfileModal = () => {
             <input
               {...register("name", { required: true })}
               name="name"
-              className="rounded-md border border-stone-500 bg-inherit p-2
-            text-stone-300 transition-shadow placeholder:text-stone-500 
-            focus:outline-none focus:ring-1 focus:ring-stone-500"
+              className="h-12 rounded-lg border border-gray-300 bg-inherit
+              pl-2 text-lg transition
+              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
               placeholder="Digite aqui... "
             />
             <label htmlFor="bio">Biografia</label>
             <input
               {...register("bio")}
               name="bio"
-              className="rounded-md border border-stone-500 bg-inherit p-2
-            text-stone-300 transition-shadow placeholder:text-stone-500 
-            focus:outline-none focus:ring-1 focus:ring-stone-500"
+              className="h-12 rounded-lg border border-gray-300 bg-inherit
+              pl-2 text-lg transition
+              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
               placeholder="Digite aqui... "
             />
           </div>

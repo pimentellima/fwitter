@@ -21,7 +21,7 @@ const Comment = ({ comment: { author, title, createdAt } }) => {
         src={author.imageUrl || defaultUserImg}
         alt="profileImage"
       />
-      <div className="flex flex-col">
+      <div className="flex flex-col pb-2">
         <div className="flex w-full justify-between">
           <div
             onClick={redirectToAuthor}
@@ -33,12 +33,12 @@ const Comment = ({ comment: { author, title, createdAt } }) => {
             >
               {author.name}
             </span>
-            <span className="overflow-hidden text-ellipsis whitespace-nowrap text-stone-400">
+            <span className="overflow-hidden text-ellipsis whitespace-nowrap text-gray-500">
               {`@${author.username} · ${moment(createdAt).fromNow(true)}`}
             </span>
           </div>
         </div>
-        <span className="overflow-hidden text-ellipsis whitespace-nowrap text-xl">
+        <span className="overflow-hidden text-ellipsis whitespace-nowrap text-gray-800">
           {title}
         </span>
       </div>

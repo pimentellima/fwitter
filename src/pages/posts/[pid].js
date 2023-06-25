@@ -22,12 +22,12 @@ const PostPage = () => {
 
   return (
     <>
-      <div className="border-b border-stone-700">
+      <div className="border-b border-slate-200">
         <Post post={post} />
       </div>
       <CommentForm post_id={query.pid} />
       {post?.comments.map((comment) => (
-        <div key={comment.id} className="border-b border-stone-700">
+        <div key={comment.id} className="border-b border-slate-200">
           <Comment comment={comment} />
         </div>
       ))}

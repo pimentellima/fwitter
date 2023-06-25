@@ -28,27 +28,27 @@ const Signup = () => {
         password,
       })
       .then(() => {
-        router.push("/");
+        router.push("/signin");
         reset();
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
       });
   };
   return (
     <div
       className="grid min-h-screen 
-                  items-center justify-center bg-stone-800"
+      items-center justify-center bg-gray-300 text-slate-950"
     >
       <form
         autoComplete="false"
         onSubmit={handleSubmit(onSubmit)}
-        className="flex h-screen w-screen flex-col bg-stone-900 
+        className="flex h-screen w-screen flex-col bg-white 
         px-8 pt-11 sm:h-auto sm:w-96 sm:rounded-lg sm:px-12 sm:pb-24"
       >
         <h1
           className="font-sans text-3xl font-medium tracking-tight 
-                          text-white antialiased"
+                    antialiased"
         >
           Inscrever-se
         </h1>
@@ -56,12 +56,9 @@ const Signup = () => {
           <input
             placeholder="Nome"
             {...register("name", { required: true, maxLength: 50 })}
-            className="placeholder:text-stone-500 rounded-md bg-inherit h-14
-                        text-white align-middle outline-none py-1 text-xl
-                        border px-3 border-stone-700 w-full
-                        transition-colors focus:placeholder:invisible
-                        focus:border-stone-500 hover:border-stone-600
-                        "
+            className="h-14 w-full rounded-lg border border-gray-300 bg-inherit
+              pl-2 text-lg transition
+              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
           />
           <div>
             <input
@@ -78,12 +75,9 @@ const Signup = () => {
                 },
                 validate: isUsernameAvailable,
               })}
-              className="placeholder:text-stone-500 rounded-md bg-inherit h-14
-                        text-white align-middle outline-none py-1 text-xl
-                        border px-3 border-stone-700 w-full
-                        transition-colors focus:placeholder:invisible
-                        focus:border-stone-500 hover:border-stone-600
-                        "
+              className="h-14 w-full rounded-lg border border-gray-300 bg-inherit
+              pl-2 text-lg transition
+              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
             />
             {errors.username && (
               <span className="text-sm text-red-600">
@@ -104,12 +98,9 @@ const Signup = () => {
                 required: true,
                 minLength: { value: 6, message: "Digite uma senha válida" },
               })}
-              className="placeholder:text-stone-500 rounded-md bg-inherit h-14
-                        text-white align-middle outline-none py-1 text-xl
-                        border px-3 border-stone-700 w-full
-                        transition-colors focus:placeholder:invisible
-                        focus:border-stone-500 hover:border-stone-600
-                        "
+              className="h-14 w-full rounded-lg border border-gray-300 bg-inherit
+              pl-2 text-lg transition
+              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
             />
             {errors.password && (
               <span className="text-sm text-red-600">
@@ -118,20 +109,19 @@ const Signup = () => {
             )}
           </div>
         </div>
-        <div>
-          <button
-            disabled={!isValid}
-            className="mt-6 h-9 w-full 
-                          rounded-2xl bg-gray-50 font-bold 
-                          text-black transition-colors enabled:hover:bg-gray-200
-                          enabled:active:bg-gray-200 disabled:cursor-default disabled:opacity-40"
-          >
-            Avançar
-          </button>
-        </div>
-        <div className="font-sm mt-16 flex gap-1 text-gray-100">
+        <button
+          disabled={!isValid}
+          className={`mt-6 h-8 cursor-pointer rounded-full
+              border border-gray-300 bg-gray-900 px-4 font-semibold
+              text-white
+              transition-colors enabled:hover:bg-gray-700 disabled:bg-gray-500 
+              disabled:opacity-90 disabled:hover:cursor-default`}
+        >
+          Avançar
+        </button>
+        <div className="font-sm mt-16 flex gap-1">
           <p>Já tem uma conta?</p>
-          <Link className="text-stone-500 hover:underline" href="/signin">
+          <Link className="text-sky-500 hover:underline" href="/signin">
             Fazer login
           </Link>
         </div>

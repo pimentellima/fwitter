@@ -1,4 +1,11 @@
 import {
+  ArrowLeftOnRectangleIcon as ArrowLeftOnRectangleIconSolid,
+  BookmarkIcon as BookmarkIconSolid,
+  HashtagIcon as HashtagIconSolid,
+  HomeIcon as HomeIconSolid,
+  UserIcon as UserIconSolid,
+} from "@heroicons/react/24/solid";
+import {
   ArrowLeftOnRectangleIcon,
   BookmarkIcon,
   HashtagIcon,
@@ -52,31 +59,39 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="grid grid-flow-row bg-stone-800 sm:grid-flow-col sm:justify-center">
+    <div className="grid grid-flow-row bg-white text-slate-950 sm:grid-flow-col sm:justify-center">
       <nav
         className="sticky bottom-0 row-start-2 flex h-11 justify-around border-t
-          border-stone-700 bg-stone-800 sm:top-0 sm:row-auto sm:h-screen
-          sm:flex-col sm:justify-start sm:border-r sm:border-t-0
-          sm:py-10 sm:text-2xl sm:tracking-tight xl:w-60 "
+          border-slate-200 bg-white sm:top-0 sm:row-auto
+          sm:h-screen sm:flex-col sm:justify-start sm:border-r
+          sm:border-t-0 sm:py-10 sm:pr-3 sm:text-2xl sm:tracking-tight xl:w-60"
       >
         <Link className="group flex justify-center sm:block" href="/">
           <div
-            className={`flex w-fit items-center rounded-full p-1  group-hover:bg-stone-700 sm:gap-3 sm:px-5 sm:py-3 
+            className={`flex w-fit items-center rounded-full p-1  group-hover:bg-gray-300 sm:gap-3 sm:px-5 sm:py-3 
               xl:after:content-['Inicio'] ${
                 currentPage === "Início" && "font-medium"
               }`}
           >
-            <HomeIcon height={20} width={20} />
+            {currentPage === "Início" ? (
+              <HomeIconSolid className="h-5 w-5" />
+            ) : (
+              <HomeIcon className="h-5 w-5" />
+            )}
           </div>
         </Link>
         <Link className="group flex justify-center sm:block" href="/featured">
           <div
-            className={`flex w-fit items-center rounded-full p-1  group-hover:bg-stone-700 sm:gap-3 sm:px-5 sm:py-3 
+            className={`flex w-fit items-center rounded-full p-1 group-hover:bg-gray-300 sm:gap-3 sm:px-5 sm:py-3 
               xl:after:content-['Explorar'] ${
                 currentPage === "Explorar" && "font-medium"
               }`}
           >
-            <HashtagIcon height={20} width={20} />
+            {currentPage === "Explorar" ? (
+              <HashtagIconSolid className="h-5 w-5" />
+            ) : (
+              <HashtagIcon className="h-5 w-5" />
+            )}
           </div>
         </Link>
         <Link
@@ -85,23 +100,31 @@ const Layout = ({ children }) => {
         >
           <div
             className={`flex w-fit items-center rounded-full
-                p-1 group-hover:bg-stone-700 sm:gap-3 sm:px-5 sm:py-3
+                p-1 group-hover:bg-gray-300 sm:gap-3 sm:px-5 sm:py-3
                 xl:after:content-['Perfil'] ${
                   currentPage === session?.user.username && "font-medium"
                 }`}
           >
-            <UserIcon height={20} width={20} />
+            {currentPage === session?.user.username ? (
+              <UserIconSolid className="h-5 w-5" />
+            ) : (
+              <UserIcon className="h-5 w-5" />
+            )}
           </div>
         </Link>
         <Link className="group flex justify-center sm:block" href="/bookmarks">
           <div
             className={`flex w-fit items-center rounded-full
-                p-1 group-hover:bg-stone-700 sm:gap-3 sm:px-5 sm:py-3
+                p-1 group-hover:bg-gray-300 sm:gap-3 sm:px-5 sm:py-3
                 xl:after:content-['Salvos'] ${
                   currentPage === "Salvos" && "font-medium"
                 }`}
           >
-            <BookmarkIcon height={20} width={20} />
+            {currentPage === "Salvos" ? (
+              <BookmarkIconSolid className="h-5 w-5" />
+            ) : (
+              <BookmarkIcon className="h-5 w-5" />
+            )}
           </div>
         </Link>
 
@@ -109,9 +132,9 @@ const Layout = ({ children }) => {
           <button
             onClick={() => setModalOpen(true)}
             className="flex items-center justify-center
-              rounded-full bg-stone-600
-              p-5 text-base font-bold transition duration-100
-              ease-out hover:bg-stone-500 sm:py-2 xl:w-full"
+              rounded-full bg-sky-500 p-5 text-base
+              font-bold text-white transition duration-100 ease-out
+              hover:bg-sky-600 focus:outline-none sm:py-2 xl:w-full"
           >
             <span className="hidden xl:inline">Fweet</span>
             <PencilSquareIcon width={22} height={22} className="xl:hidden" />
@@ -119,20 +142,17 @@ const Layout = ({ children }) => {
         </div>
         <Popup
           overlayStyle={{
-            backgroundColor: "rgba(255, 255, 255, 0.02)",
+            backgroundColor: "rgba(0,0,0, 0.3)",
           }}
           open={modalOpen}
           onClose={() => setModalOpen(false)}
         >
           <div
-            className="z-20 flex h-screen w-screen flex-col gap-3 bg-stone-800 px-3
-             py-4 sm:h-auto sm:w-[500px] sm:rounded-2xl"
+            className="z-20 flex h-screen w-screen flex-col gap-3 bg-white px-3
+             py-4 text-slate-950 sm:h-auto sm:w-[500px] sm:rounded-2xl"
           >
-            <button
-              onClick={() => setModalOpen(false)}
-              className="flex w-12 justify-self-center"
-            >
-              <XMarkIcon width={24} height={24} />
+            <button onClick={() => setModalOpen(false)}>
+              <XMarkIcon className="h-10 w-10 rounded-full p-2 transition-all hover:bg-slate-100" />
             </button>
             <div className="grid sm:grid-cols-[80px,minmax(0px,1fr)]">
               <Image
@@ -153,7 +173,7 @@ const Layout = ({ children }) => {
           <div
             onClick={handleSignOut}
             className="flex w-fit items-center rounded-full
-              p-1 group-hover:bg-stone-700 sm:gap-3 sm:px-5 sm:py-3"
+              p-1 group-hover:bg-gray-300 sm:gap-3 sm:px-5 sm:py-3"
           >
             <ArrowLeftOnRectangleIcon
               width={22}
@@ -168,11 +188,11 @@ const Layout = ({ children }) => {
       </nav>
       <div
         className="min-h-[130vh] w-screen
-        sm:w-[580px] sm:border-r sm:border-stone-700"
+        sm:w-[580px] sm:border-r sm:border-slate-200"
       >
         <header
           className="sticky top-0 z-20 border-b
-          border-stone-700 bg-stone-800 pb-4 pl-3 pt-2 text-xl font-medium"
+          border-slate-200 bg-white pb-4 pl-3 pt-2 text-xl font-medium"
         >
           <div
             className="hover:cursor-pointer"
@@ -185,7 +205,7 @@ const Layout = ({ children }) => {
       </div>
       <div
         className="sticky top-10 ml-4 hidden h-min min-h-[300px] w-80 rounded-2xl 
-                            bg-stone-700 pt-2 lg:inline"
+                  bg-gray-100 pt-2 lg:inline"
       >
         {isLoadingFeaturedPosts ? (
           <Spinner />
@@ -200,21 +220,27 @@ const Layout = ({ children }) => {
                     <div
                       key={id}
                       onClick={() => router.push("/posts/" + id)}
-                      className="flex h-20 justify-between px-4 py-2 hover:cursor-pointer hover:backdrop-brightness-110"
+                      className="flex h-20 justify-between px-4 py-2 
+                      last:rounded-b-2xl hover:cursor-pointer hover:bg-gray-200"
                     >
                       <div className="flex w-full flex-col ">
-                        <span className="text-sm text-stone-400 
-                        overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span
+                          className="overflow-hidden text-ellipsis 
+                        whitespace-nowrap text-sm text-gray-500"
+                        >
                           {author.name + " · " + likes.length + " curtidas"}
                         </span>
-                        <span className="max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span
+                          className="max-w-[200px] overflow-hidden text-ellipsis 
+                          whitespace-nowrap font-semibold"
+                        >
                           {title}
                         </span>
                       </div>
                       {imageUrl && (
                         <img
                           className="aspect-square rounded-lg"
-                          height={80}
+                          height={70}
                           width={70}
                           src={imageUrl}
                           alt=""
