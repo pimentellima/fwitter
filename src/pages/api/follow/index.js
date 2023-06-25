@@ -2,6 +2,9 @@ import prisma from "../../../prismaClient";
 
 const handler = async (req, res) => {
   try {
+    const token = await getToken({ req });
+    if(!token) return res.status(401).json('Unauthorized');
+    
     const { follower_id, followed_id } = req.body;
     if (req.method === "POST") {
       const newFollow = await prisma.follow.create({
