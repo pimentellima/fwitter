@@ -8,7 +8,7 @@ import axios from "axios";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 
-const PostForm = ({ closeModal = () => {} }) => {
+const CreatePostWizard = ({ closeModal = () => {} }) => {
   const queryClient = useQueryClient();
   const mutation = useMutation(async (data) => {
     return await axios.post("api/post", data, {
@@ -174,4 +174,4 @@ const PostForm = ({ closeModal = () => {} }) => {
   );
 };
 
-export default PostForm;
+export default CreatePostWizard;

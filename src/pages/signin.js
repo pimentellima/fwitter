@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
-const Signin = () => {
+const SignInPage = () => {
   const {
     register,
     handleSubmit,
@@ -91,4 +91,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default SignInPage;

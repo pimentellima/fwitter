@@ -1,13 +1,11 @@
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import Layout from "../components/layout";
-import Post from "../components/post";
-import Spinner from "../components/spinner";
+import Head from "next/head";
+import PostFeed from "../components/postFeed";
 
 const BookmarksPage = () => {
-  const router = useRouter();
   const { data: session } = useSession();
 
   const { data: posts, isLoading: isLoadingPosts } = useQuery(
@@ -19,34 +17,16 @@ const BookmarksPage = () => {
     }
   );
 
-  if (isLoadingPosts) return <Spinner />;
-
   return (
     <>
-      {posts?.length === 0 ? (
-        <div className="mt-2 flex justify-center text-lg">
-          Não há receitas para exibir
-        </div>
-      ) : (
-        posts?.map((post) => (
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push("/posts/" + post.id);
-            }}
-            className="border-b border-slate-200 hover:cursor-pointer hover:bg-gray-100"
-            key={post.id}
-          >
-            <Post post={post}/>
-          </div>
-        ))
-      )}
+      <Head>
+        <title>Salvos / Fwitter</title>
+      </Head>
+      <Layout>
+        <PostFeed posts={posts} isLoading={isLoadingPosts} />
+      </Layout>
     </>
   );
-};
-
-BookmarksPage.getLayout = (page) => {
-  return <Layout>{page}</Layout>;
 };
 
 export default BookmarksPage;

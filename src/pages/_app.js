@@ -12,12 +12,10 @@ const queryClient = new QueryClient({
 });
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
-  const getLayout = Component.getLayout || ((page) => page);
-
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
-        {getLayout(<Component {...pageProps} />)}
+        <Component {...pageProps} />
       </QueryClientProvider>
     </SessionProvider>
   );

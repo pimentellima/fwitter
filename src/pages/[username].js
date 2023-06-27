@@ -1,22 +1,22 @@
+import { ArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import moment from "moment";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import Popup from "reactjs-popup";
 import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import Layout from "../components/layout";
-import Post from "../components/post";
+import PostFeed from "../components/postFeed";
 import Spinner from "../components/spinner";
-import { useForm } from "react-hook-form";
-import Popup from "reactjs-popup";
-import { ArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-const ProfilePage = () => {
-  const { data: session, update } = useSession();
-  const [open, setOpen] = useState(false);
+const EditProfileWizard = () => {
   const queryClient = useQueryClient();
+  const { data: session, update } = useSession();
 
   const mutation = useMutation(
     async (data) =>
@@ -28,18 +28,21 @@ const ProfilePage = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { isValid },
     watch,
   } = useForm({
     defaultValues: {
-      name: session?.user?.name,
-      bio: session?.user?.bio,
+      name: session?.user.name,
+      bio: session?.user.bio,
       file: [],
     },
   });
 
   const imageWatch = watch("file");
+  const url = imageWatch?.length
+    ? URL.createObjectURL(imageWatch[0])
+    : session?.user.imageUrl;
+
   const onSubmit = (data) => {
     mutation.mutate(
       {
@@ -63,14 +66,87 @@ const ProfilePage = () => {
     );
   };
 
-  const handleClose = () => {
-    reset();
-    setOpen(false);
-  };
+  return (
+    <form
+      autoComplete="off"
+      className="flex h-screen w-screen flex-col bg-white pb-14 text-slate-950 sm:h-auto sm:w-[600px] sm:rounded-xl"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="flex items-center justify-between px-5 py-3">
+        <div className="flex items-center gap-8">
+          <button type="button" onClick={() => setOpen(false)}>
+            <XMarkIcon className="h-10 w-10 rounded-full p-2 transition-all hover:bg-slate-100" />
+          </button>
+          <p className="text-xl font-semibold">Editar perfil</p>
+        </div>
+        <button
+          disabled={!isValid}
+          className={`mr-2 h-8 cursor-pointer rounded-full
+              border border-gray-300 bg-gray-900 px-4 font-semibold
+              text-white
+              transition-colors enabled:hover:bg-gray-700 disabled:bg-gray-500 
+              disabled:opacity-90 disabled:hover:cursor-default`}
+        >
+          Salvar
+        </button>
+      </div>
+      <div className="relative h-64">
+        <div className="absolute flex h-44 w-full items-center justify-center bg-slate-300" />
+        <input id="file" className="hidden" type="file" {...register("file")} />
+        <div className="absolute top-1/2 flex h-32 w-32 items-center justify-center">
+          <div className="absolute z-20 h-full w-full p-4">
+            <Image
+              className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
+              width={120}
+              height={120}
+              src={url || defaultUserImg}
+              alt=""
+            />
+          </div>
+          <label
+            htmlFor="file"
+            className="absolute z-30 h-10 
+                          w-10 rounded-full bg-gray-100 bg-opacity-50 
+                          p-2 hover:cursor-pointer hover:bg-opacity-40"
+          >
+            <ArrowUpIcon />
+          </label>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 px-4">
+        <label htmlFor="name">Nome</label>
+        <input
+          {...register("name", { required: true })}
+          name="name"
+          className="h-12 rounded-lg border border-gray-300 bg-inherit
+              pl-2 text-lg transition
+              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
+          placeholder="Digite aqui... "
+        />
+        <label htmlFor="bio">Biografia</label>
+        <input
+          {...register("bio")}
+          name="bio"
+          className="h-12 rounded-lg border border-gray-300 bg-inherit
+              pl-2 text-lg transition
+              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
+          placeholder="Digite aqui... "
+        />
+      </div>
+    </form>
+  );
+};
 
-  const url = imageWatch?.length ? URL.createObjectURL(imageWatch[0]) : "";
+const ProfilePage = () => {
   const router = useRouter();
   const query = router.query;
+  const { data: session } = useSession();
+  const followMutation = useMutation(
+    async (data) => await axios.post("/api/follow", { ...data })
+  );
+  const unfollowMutation = useMutation(
+    async (data) => await axios.delete("/api/follow", { ...data })
+  );
 
   const { data: profileUser, isLoading: isLoadingUser } = useQuery(
     ["profileUser", { username: query?.username }],
@@ -80,7 +156,6 @@ const ProfilePage = () => {
       enabled: !!query.username,
     }
   );
-  const isCurrentUser = profileUser?.id === session?.user.id;
 
   const { data: posts, isLoading: isLoadingPosts } = useQuery(
     ["profilePosts", { username: query?.username }],
@@ -92,26 +167,11 @@ const ProfilePage = () => {
   );
 
   const [followers, setFollowers] = useState(0);
-  const following = profileUser?.following.length;
   const [isFollowedByUser, setIsFollowedByUser] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (profileUser) {
-      setFollowers(profileUser?.followers.length);
-      setIsFollowedByUser(
-        profileUser?.followers.filter(
-          (follow) => follow.follower_id === session?.user.id
-        ).length > 0
-      );
-    }
-  }, [profileUser]);
-
-  const followMutation = useMutation(
-    async (data) => await axios.post("/api/follow", { ...data })
-  );
-  const unfollowMutation = useMutation(
-    async (data) => await axios.delete("/api/follow", { ...data })
-  );
+  const isCurrentUser = profileUser?.id === session?.user.id;
+  const following = profileUser?.following.length;
 
   const handleFollow = () => {
     followMutation.mutate({
@@ -133,190 +193,106 @@ const ProfilePage = () => {
     setFollowers((n) => --n);
   };
 
+  useEffect(() => {
+    if (profileUser) {
+      setFollowers(profileUser?.followers.length);
+      setIsFollowedByUser(
+        profileUser?.followers.filter(
+          (follow) => follow.follower_id === session?.user.id
+        ).length > 0
+      );
+    }
+  }, [profileUser]);
+
+  if (!profileUser) return <Spinner />;
+
   return (
     <>
-      <Popup
-        onClose={handleClose}
-        open={open}
-        modal
-        lockScroll
-        overlayStyle={{
-          backgroundColor: "rgba(0,0,0, 0.3)",
-        }}
-      >
-        <form
-          autoComplete="off"
-          className="flex h-screen w-screen flex-col bg-white pb-14 text-slate-950 sm:h-auto sm:w-[600px] sm:rounded-xl"
-          onSubmit={handleSubmit(onSubmit)}
+      <Head>
+        <title>{`${profileUser?.username} / Fwitter`}</title>
+      </Head>
+      <Layout>
+        <Popup
+          onClose={() => setProfileModalOpen(false)}
+          open={profileModalOpen}
+          modal
+          lockScroll
+          overlayStyle={{
+            backgroundColor: "rgba(0,0,0, 0.3)",
+          }}
         >
-          <div className="flex items-center justify-between px-5 py-3">
-            <div className="flex items-center gap-8">
-              <button type="button" onClick={() => setOpen(false)}>
-                <XMarkIcon className="h-10 w-10 rounded-full p-2 transition-all hover:bg-slate-100" />
-              </button>
-              <p className="text-xl font-semibold">Editar perfil</p>
-            </div>
-            <button
-              disabled={!isValid}
-              className={`mr-2 h-8 cursor-pointer rounded-full
-              border border-gray-300 bg-gray-900 px-4 font-semibold
-              text-white
-              transition-colors enabled:hover:bg-gray-700 disabled:bg-gray-500 
-              disabled:opacity-90 disabled:hover:cursor-default`}
-            >
-              Salvar
-            </button>
-          </div>
-          <div className="relative h-64">
-            <div className="absolute flex h-44 w-full items-center justify-center bg-slate-300" />
-            <input
-              id="file"
-              className="hidden"
-              type="file"
-              {...register("file")}
-            />
-            <div className="absolute top-1/2 flex h-32 w-32 items-center justify-center">
-              <div className="absolute z-20 h-full w-full p-4">
-                <Image
-                  className="aspect-square justify-self-center rounded-full hover:cursor-pointer"
-                  width={120}
-                  height={120}
-                  src={url || defaultUserImg}
-                  alt=""
-                />
-              </div>
-              <label
-                htmlFor="file"
-                className="absolute z-30 h-10 
-                          w-10 rounded-full bg-gray-100 bg-opacity-50 
-                          p-2 hover:cursor-pointer hover:bg-opacity-40"
-              >
-                <ArrowUpIcon />
-              </label>
-            </div>
-          </div>
-          <div className="flex flex-col gap-2 px-4">
-            <label htmlFor="name">Nome</label>
-            <input
-              {...register("name", { required: true })}
-              name="name"
-              className="h-12 rounded-lg border border-gray-300 bg-inherit
-              pl-2 text-lg transition
-              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
-              placeholder="Digite aqui... "
-            />
-            <label htmlFor="bio">Biografia</label>
-            <input
-              {...register("bio")}
-              name="bio"
-              className="h-12 rounded-lg border border-gray-300 bg-inherit
-              pl-2 text-lg transition
-              placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
-              placeholder="Digite aqui... "
-            />
-          </div>
-        </form>
-      </Popup>
-      <div
-        className="flex h-[430px] flex-col 
+          <EditProfileWizard />
+        </Popup>
+        <div
+          className="flex h-[430px] flex-col 
               border-b border-slate-200 pb-10"
-      >
-        {isLoadingUser ? (
-          <Spinner />
-        ) : (
-          <>
-            <div className="relative h-64">
-              <div className="h-44 w-full bg-slate-300" />
-              <div
-                className="absolute top-1/2 flex 
+        >
+          <div className="relative h-64">
+            <div className="h-44 w-full bg-slate-300" />
+            <div
+              className="absolute top-1/2 flex 
                         w-full items-end justify-between"
-              >
-                <Image
-                  className="ml-2 aspect-square rounded-full ring-4 ring-white hover:cursor-pointer"
-                  height={120}
-                  width={120}
-                  src={profileUser?.imageUrl || defaultUserImg}
-                  alt=""
-                />
-                {isCurrentUser && (
-                  <button
-                    onClick={() => setOpen((open) => !open)}
-                    className="mr-2 h-10 
+            >
+              <Image
+                className="ml-2 aspect-square rounded-full ring-4 ring-white hover:cursor-pointer"
+                height={120}
+                width={120}
+                src={profileUser?.imageUrl || defaultUserImg}
+                alt=""
+              />
+              {isCurrentUser && (
+                <button
+                  onClick={() => setProfileModalOpen((open) => !open)}
+                  className="mr-2 h-10 
                 rounded-full border border-gray-300 
                px-4 
                 font-bold transition-colors hover:cursor-pointer hover:bg-gray-200"
-                  >
-                    Editar perfil
-                  </button>
-                )}
-                {!isCurrentUser && isFollowedByUser && (
-                  <button
-                    onClick={handleUnfollow}
-                    className="mr-2 h-10 cursor-pointer rounded-full
+                >
+                  Editar perfil
+                </button>
+              )}
+              {!isCurrentUser && isFollowedByUser && (
+                <button
+                  onClick={handleUnfollow}
+                  className="mr-2 h-10 cursor-pointer rounded-full
                       border border-gray-300
                       px-4 
                       font-bold transition-colors hover:bg-gray-200"
-                  >
-                    Deixar de seguir
-                  </button>
-                )}
-                {!isCurrentUser && !isFollowedByUser && (
-                  <button
-                    onClick={handleFollow}
-                    className="mr-2 h-10 cursor-pointer rounded-full
+                >
+                  Deixar de seguir
+                </button>
+              )}
+              {!isCurrentUser && !isFollowedByUser && (
+                <button
+                  onClick={handleFollow}
+                  className="mr-2 h-10 cursor-pointer rounded-full
                       border border-gray-300
                       px-4 
                       font-bold transition-colors hover:bg-gray-200"
-                  >
-                    Seguir
-                  </button>
-                )}
-              </div>
+                >
+                  Seguir
+                </button>
+              )}
             </div>
-            <div className="mt-3 flex flex-col pl-5">
-              <span className="text-2xl">{profileUser?.name + "  "}</span>
-              <span className="text-gray-500">
-                {"@" + profileUser?.username}
-              </span>
-              <span className="mt-3 text-gray-500">
-                {`Juntou-se em ${moment(profileUser?.createdAt).format("ll")}`}
-              </span>
-              <div className="mt-2 flex gap-2 text-gray-500">
-                <span className="first-letter:font-bold first-letter:text-slate-950">{`${following}  Seguindo`}</span>
-                <span className="first-letter:font-bold first-letter:text-slate-950">
-                  {`${followers}  Seguidores`}
-                </span>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-      {isLoadingPosts ? (
-        <Spinner />
-      ) : posts?.length === 0 ? (
-        <div className="mt-2 flex justify-center text-lg">
-          Não há receitas para exibir
-        </div>
-      ) : (
-        posts?.map((post) => (
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push("/posts/" + post.id);
-            }}
-            className="border-b border-slate-200 hover:cursor-pointer hover:bg-gray-100"
-            key={post.id}
-          >
-            <Post post={post} />
           </div>
-        ))
-      )}
+          <div className="mt-3 flex flex-col pl-5">
+            <span className="text-2xl">{profileUser?.name + "  "}</span>
+            <span className="text-gray-500">{"@" + profileUser?.username}</span>
+            <span className="mt-3 text-gray-500">
+              {`Juntou-se em ${moment(profileUser?.createdAt).format("ll")}`}
+            </span>
+            <div className="mt-2 flex gap-2 text-gray-500">
+              <span className="first-letter:font-bold first-letter:text-slate-950">{`${following}  Seguindo`}</span>
+              <span className="first-letter:font-bold first-letter:text-slate-950">
+                {`${followers}  Seguidores`}
+              </span>
+            </div>
+          </div>
+        </div>
+        <PostFeed posts={posts} isLoading={isLoadingPosts} />
+      </Layout>
     </>
   );
-};
-
-ProfilePage.getLayout = (page) => {
-  return <Layout>{page}</Layout>;
 };
 
 export default ProfilePage;

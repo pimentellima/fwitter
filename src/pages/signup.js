@@ -1,10 +1,9 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-const Signup = () => {
+const SignUpPage = () => {
   const {
     register,
     handleSubmit,
@@ -130,4 +129,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignUpPage;

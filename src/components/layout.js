@@ -24,7 +24,7 @@ import { useQuery } from "react-query";
 import Popup from "reactjs-popup";
 import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import Spinner from "../components/spinner";
-import PostForm from "./postForm";
+import CreatePostWizard from "./createPostWizard";
 
 const Layout = ({ children }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -162,7 +162,7 @@ const Layout = ({ children }) => {
                 width={40}
                 height={40}
               />
-              <PostForm closeModal={() => setModalOpen(false)} />
+              <CreatePostWizard closeModal={() => setModalOpen(false)} />
             </div>
           </div>
         </Popup>
@@ -180,9 +180,9 @@ const Layout = ({ children }) => {
               height={22}
               className="justify-self-center rounded-full hover:cursor-pointer"
             />
-            <div className="hidden w-32 overflow-hidden text-ellipsis font-normal xl:inline">
-              {"Sair de " + session?.user.name}
-            </div>
+            <span className="hidden w-32 overflow-hidden text-ellipsis xl:inline">
+              Sair
+            </span>
           </div>
         </div>
       </nav>
