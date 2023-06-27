@@ -74,7 +74,7 @@ const EditProfileWizard = ({ closeModal }) => {
     >
       <div className="flex items-center justify-between px-5 py-3">
         <div className="flex items-center gap-8">
-          <button type="button" onClick={closeModal()}>
+          <button type="button" onClick={closeModal}>
             <XMarkIcon className="h-10 w-10 rounded-full p-2 transition-all hover:bg-slate-100" />
           </button>
           <p className="text-xl font-semibold">Editar perfil</p>
@@ -137,7 +137,9 @@ const EditProfileWizard = ({ closeModal }) => {
   );
 };
 
-const ProfileCard = ({ profileUser }) => {
+const ProfilePage = () => {
+  const router = useRouter();
+  const query = router.query;
   const { data: session } = useSession();
   const followMutation = useMutation(
     async (data) => await axios.post("/api/follow", { ...data })
@@ -146,8 +148,27 @@ const ProfileCard = ({ profileUser }) => {
     async (data) => await axios.delete("/api/follow", { ...data })
   );
 
+  const { data: profileUser } = useQuery(
+    ["profileUser", { username: query?.username }],
+    async () =>
+      axios.get(`api/profile/${query?.username}`).then((res) => res.data),
+    {
+      enabled: !!query.username,
+    }
+  );
+
+  const { data: posts, isLoading: isLoadingPosts } = useQuery(
+    ["profilePosts", { username: query?.username }],
+    async () =>
+      axios.get("api/post/authorid/" + profileUser?.id).then((res) => res.data),
+    {
+      enabled: !!profileUser,
+    }
+  );
+
   const [followers, setFollowers] = useState(0);
   const [isFollowedByUser, setIsFollowedByUser] = useState(false);
+  const [profileModal, setProfileModal] = useState(false);
 
   const isCurrentUser = profileUser?.id === session?.user.id;
   const following = profileUser?.following.length;
@@ -186,99 +207,6 @@ const ProfileCard = ({ profileUser }) => {
   if (!profileUser) return <Spinner />;
 
   return (
-    <div
-      className="flex h-[430px] flex-col 
-              border-b border-slate-200 pb-10"
-    >
-      <div className="relative h-64">
-        <div className="h-44 w-full bg-slate-300" />
-        <div
-          className="absolute top-1/2 flex 
-                        w-full items-end justify-between"
-        >
-          <Image
-            className="ml-2 aspect-square rounded-full ring-4 ring-white hover:cursor-pointer"
-            height={120}
-            width={120}
-            src={profileUser?.imageUrl || defaultUserImg}
-            alt=""
-          />
-          {isCurrentUser && (
-            <button
-              onClick={() => setProfileModal((open) => !open)}
-              className="mr-2 h-10 
-                rounded-full border border-gray-300 
-               px-4 
-                font-bold transition-colors hover:cursor-pointer hover:bg-gray-200"
-            >
-              Editar perfil
-            </button>
-          )}
-          {!isCurrentUser && isFollowedByUser && (
-            <button
-              onClick={handleUnfollow}
-              className="mr-2 h-10 cursor-pointer rounded-full
-                      border border-gray-300
-                      px-4 
-                      font-bold transition-colors hover:bg-gray-200"
-            >
-              Deixar de seguir
-            </button>
-          )}
-          {!isCurrentUser && !isFollowedByUser && (
-            <button
-              onClick={handleFollow}
-              className="mr-2 h-10 cursor-pointer rounded-full
-                      border border-gray-300
-                      px-4 
-                      font-bold transition-colors hover:bg-gray-200"
-            >
-              Seguir
-            </button>
-          )}
-        </div>
-      </div>
-      <div className="mt-3 flex flex-col pl-5">
-        <span className="text-2xl">{profileUser?.name + "  "}</span>
-        <span className="text-gray-500">{"@" + profileUser?.username}</span>
-        <span className="mt-3 text-gray-500">
-          {`Juntou-se em ${moment(profileUser?.createdAt).format("ll")}`}
-        </span>
-        <div className="mt-2 flex gap-2 text-gray-500">
-          <span className="first-letter:font-bold first-letter:text-slate-950">{`${following}  Seguindo`}</span>
-          <span className="first-letter:font-bold first-letter:text-slate-950">
-            {`${followers}  Seguidores`}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ProfilePage = () => {
-  const router = useRouter();
-  const query = router.query;
-  const [profileModal, setProfileModal] = useState(false);
-
-  const { data: profileUser } = useQuery(
-    ["profileUser", { username: query?.username }],
-    async () =>
-      axios.get(`api/profile/${query?.username}`).then((res) => res.data),
-    {
-      enabled: !!query.username,
-    }
-  );
-
-  const { data: posts, isLoading: isLoadingPosts } = useQuery(
-    ["profilePosts", { username: query?.username }],
-    async () =>
-      axios.get("api/post/authorid/" + profileUser?.id).then((res) => res.data),
-    {
-      enabled: !!profileUser,
-    }
-  );
-
-  return (
     <>
       <Head>
         <title>{`${profileUser?.username} / Fwitter`}</title>
@@ -295,7 +223,78 @@ const ProfilePage = () => {
         >
           <EditProfileWizard closeModal={() => setProfileModal(false)} />
         </Popup>
-        <ProfileCard profileUser={profileUser} />
+        {profileUser ? (
+          <div
+            className="flex h-[430px] flex-col 
+              border-b border-slate-200 pb-10"
+          >
+            <div className="relative h-64">
+              <div className="h-44 w-full bg-slate-300" />
+              <div
+                className="absolute top-1/2 flex 
+                        w-full items-end justify-between"
+              >
+                <Image
+                  className="ml-2 aspect-square rounded-full ring-4 ring-white hover:cursor-pointer"
+                  height={120}
+                  width={120}
+                  src={profileUser?.imageUrl || defaultUserImg}
+                  alt=""
+                />
+                {isCurrentUser && (
+                  <button
+                    onClick={() => setProfileModal((open) => !open)}
+                    className="mr-2 h-10 
+                rounded-full border border-gray-300 
+               px-4 
+                font-bold transition-colors hover:cursor-pointer hover:bg-gray-200"
+                  >
+                    Editar perfil
+                  </button>
+                )}
+                {!isCurrentUser && isFollowedByUser && (
+                  <button
+                    onClick={handleUnfollow}
+                    className="mr-2 h-10 cursor-pointer rounded-full
+                      border border-gray-300
+                      px-4 
+                      font-bold transition-colors hover:bg-gray-200"
+                  >
+                    Deixar de seguir
+                  </button>
+                )}
+                {!isCurrentUser && !isFollowedByUser && (
+                  <button
+                    onClick={handleFollow}
+                    className="mr-2 h-10 cursor-pointer rounded-full
+                      border border-gray-300
+                      px-4 
+                      font-bold transition-colors hover:bg-gray-200"
+                  >
+                    Seguir
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="mt-3 flex flex-col pl-5">
+              <span className="text-2xl">{profileUser?.name + "  "}</span>
+              <span className="text-gray-500">
+                {"@" + profileUser?.username}
+              </span>
+              <span className="mt-3 text-gray-500">
+                {`Juntou-se em ${moment(profileUser?.createdAt).format("ll")}`}
+              </span>
+              <div className="mt-2 flex gap-2 text-gray-500">
+                <span className="first-letter:font-bold first-letter:text-slate-950">{`${following}  Seguindo`}</span>
+                <span className="first-letter:font-bold first-letter:text-slate-950">
+                  {`${followers}  Seguidores`}
+                </span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <Spinner />
+        )}
         <PostFeed posts={posts} isLoading={isLoadingPosts} />
       </Layout>
     </>
