@@ -14,7 +14,7 @@ import Layout from "../components/layout";
 import PostFeed from "../components/postFeed";
 import Spinner from "../components/spinner";
 
-const EditProfileWizard = () => {
+const EditProfileWizard = ({ closeModal }) => {
   const queryClient = useQueryClient();
   const { data: session, update } = useSession();
 
@@ -60,7 +60,7 @@ const EditProfileWizard = () => {
             "profileUser",
             { username: session?.user?.username },
           ]);
-          setOpen(false);
+          closeModal()
         },
       }
     );
@@ -168,7 +168,7 @@ const ProfilePage = () => {
 
   const [followers, setFollowers] = useState(0);
   const [isFollowedByUser, setIsFollowedByUser] = useState(false);
-  const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const [profileModal, setProfileModal] = useState(false);
 
   const isCurrentUser = profileUser?.id === session?.user.id;
   const following = profileUser?.following.length;
@@ -213,15 +213,15 @@ const ProfilePage = () => {
       </Head>
       <Layout>
         <Popup
-          onClose={() => setProfileModalOpen(false)}
-          open={profileModalOpen}
+          onClose={() => setProfileModal(false)}
+          open={profileModal}
           modal
           lockScroll
           overlayStyle={{
             backgroundColor: "rgba(0,0,0, 0.3)",
           }}
         >
-          <EditProfileWizard />
+          <EditProfileWizard closeModal={() => setProfileModal(false)}/>
         </Popup>
         <div
           className="flex h-[430px] flex-col 
@@ -242,7 +242,7 @@ const ProfilePage = () => {
               />
               {isCurrentUser && (
                 <button
-                  onClick={() => setProfileModalOpen((open) => !open)}
+                  onClick={() => setProfileModal((open) => !open)}
                   className="mr-2 h-10 
                 rounded-full border border-gray-300 
                px-4 
