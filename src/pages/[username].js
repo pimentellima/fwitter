@@ -204,8 +204,6 @@ const ProfilePage = () => {
     }
   }, [profileUser]);
 
-  if (!profileUser) return <Spinner />;
-
   return (
     <>
       <Head>
