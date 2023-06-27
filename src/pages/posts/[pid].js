@@ -136,19 +136,23 @@ const PostPage = () => {
     }
   );
 
-  if (!post) return <Spinner />;
-
   return (
     <>
       <Head>
         <title>Fweet</title>
       </Head>
       <Layout>
-        <div className="border-b border-slate-200">
-          <Post post={post} />
-        </div>
-        <CreateCommentWizard />
-        <CommentFeed comments={post.comments} />
+        {post ? (
+          <>
+            <div className="border-b border-slate-200">
+              <Post post={post} />
+            </div>
+            <CreateCommentWizard />
+            <CommentFeed comments={post.comments} />
+          </>
+        ) : (
+          <Spinner />
+        )}
       </Layout>
     </>
   );

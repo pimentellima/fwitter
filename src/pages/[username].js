@@ -148,7 +148,7 @@ const ProfilePage = () => {
     async (data) => await axios.delete("/api/follow", { ...data })
   );
 
-  const { data: profileUser, isLoading: isLoadingUser } = useQuery(
+  const { data: profileUser } = useQuery(
     ["profileUser", { username: query?.username }],
     async () =>
       axios.get(`api/profile/${query?.username}`).then((res) => res.data),
