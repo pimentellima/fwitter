@@ -12,14 +12,14 @@ const PostFeed = ({ posts, isLoading }) => {
       </div>
     );
 
-  if (!posts)
+  if (posts?.length === 0)
     return (
       <div className="mt-2 flex justify-center text-lg">
         Não há receitas para exibir
       </div>
     );
 
-  return posts.map((post) => (
+  return posts?.map((post) => (
     <div
       onClick={(e) => {
         e.stopPropagation();
