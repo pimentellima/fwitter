@@ -24,6 +24,7 @@ import Spinner from "../components/spinner";
 import CreatePost from "./createpost";
 
 const FeaturedPostsBar = () => {
+  const router = useRouter()
   const { data: featuredPosts, isLoading: isLoadingFeaturedPosts } = useQuery(
     ["featuredPosts"],
     async () => await axios.get("../api/post/featured").then((res) => res.data)
