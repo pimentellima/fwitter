@@ -17,7 +17,7 @@ const HomePage = () => {
         <title>Início / Fwitter</title>
       </Head>
       <Layout>
-        <div className="border-b py-2">
+        <div className="hidden sm:block border-b py-2">
           <CreatePost />
         </div>
         <PostFeed posts={posts} isLoading={isLoadingPosts} />
