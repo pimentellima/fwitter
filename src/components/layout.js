@@ -1,11 +1,4 @@
 import {
-  ArrowLeftOnRectangleIcon as ArrowLeftOnRectangleIconSolid,
-  BookmarkIcon as BookmarkIconSolid,
-  HashtagIcon as HashtagIconSolid,
-  HomeIcon as HomeIconSolid,
-  UserIcon as UserIconSolid,
-} from "@heroicons/react/24/solid";
-import {
   ArrowLeftOnRectangleIcon,
   BookmarkIcon,
   HashtagIcon,
@@ -14,17 +7,76 @@ import {
   UserIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import {
+  BookmarkIcon as BookmarkIconSolid,
+  HashtagIcon as HashtagIconSolid,
+  HomeIcon as HomeIconSolid,
+  UserIcon as UserIconSolid
+} from "@heroicons/react/24/solid";
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Popup from "reactjs-popup";
-import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import Spinner from "../components/spinner";
-import CreatePostWizard from "./createPostWizard";
+import CreatePost from "./createpost";
+
+const FeaturedPostsBar = () => {
+  const { data: featuredPosts, isLoading: isLoadingFeaturedPosts } = useQuery(
+    ["featuredPosts"],
+    async () => await axios.get("../api/post/featured").then((res) => res.data)
+  );
+
+  if (isLoadingFeaturedPosts) return <Spinner />;
+
+  return (
+    <>
+      <span className="pl-4 text-lg font-bold">Receitas em alta</span>
+      <div className="mt-5 flex flex-col">
+        {featuredPosts?.length > 0 ? (
+          featuredPosts
+            .slice(0, 5)
+            .map(({ title, imageUrl, author, likes, id }) => (
+              <div
+                key={id}
+                onClick={() => router.push("/posts/" + id)}
+                className="flex h-20 justify-between px-4 py-2 
+                      last:rounded-b-2xl hover:cursor-pointer hover:bg-gray-200"
+              >
+                <div className="flex w-full flex-col ">
+                  <span
+                    className="overflow-hidden text-ellipsis 
+                        whitespace-nowrap text-sm text-gray-500"
+                  >
+                    {author.name + " · " + likes.length + " curtidas"}
+                  </span>
+                  <span
+                    className="max-w-[200px] overflow-hidden text-ellipsis 
+                          whitespace-nowrap font-semibold"
+                  >
+                    {title}
+                  </span>
+                </div>
+                {imageUrl && (
+                  <img
+                    className="aspect-square rounded-lg"
+                    height={70}
+                    width={70}
+                    src={imageUrl}
+                    alt=""
+                  />
+                )}
+              </div>
+            ))
+        ) : (
+          <span className="px-4 py-2">Não há receitas para exibir</span>
+        )}
+      </div>
+    </>
+  );
+};
 
 const Layout = ({ children }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -154,16 +206,7 @@ const Layout = ({ children }) => {
             <button onClick={() => setModalOpen(false)}>
               <XMarkIcon className="h-10 w-10 rounded-full p-2 transition-all hover:bg-slate-100" />
             </button>
-            <div className="grid sm:grid-cols-[80px,minmax(0px,1fr)]">
-              <Image
-                className="hidden aspect-square justify-self-center rounded-full hover:cursor-pointer sm:block"
-                src={session?.user.imageUrl || defaultUserImg}
-                alt=""
-                width={40}
-                height={40}
-              />
-              <CreatePostWizard closeModal={() => setModalOpen(false)} />
-            </div>
+            <CreatePost />
           </div>
         </Popup>
         <div
@@ -207,53 +250,7 @@ const Layout = ({ children }) => {
         className="sticky top-10 ml-4 hidden h-min min-h-[300px] w-80 rounded-2xl 
                   bg-gray-100 pt-2 lg:inline"
       >
-        {isLoadingFeaturedPosts ? (
-          <Spinner />
-        ) : (
-          <>
-            <span className="pl-4 text-lg font-bold">Receitas em alta</span>
-            <div className="mt-5 flex flex-col">
-              {featuredPosts?.length > 0 ? (
-                featuredPosts
-                  .slice(0, 5)
-                  .map(({ title, imageUrl, author, likes, id }) => (
-                    <div
-                      key={id}
-                      onClick={() => router.push("/posts/" + id)}
-                      className="flex h-20 justify-between px-4 py-2 
-                      last:rounded-b-2xl hover:cursor-pointer hover:bg-gray-200"
-                    >
-                      <div className="flex w-full flex-col ">
-                        <span
-                          className="overflow-hidden text-ellipsis 
-                        whitespace-nowrap text-sm text-gray-500"
-                        >
-                          {author.name + " · " + likes.length + " curtidas"}
-                        </span>
-                        <span
-                          className="max-w-[200px] overflow-hidden text-ellipsis 
-                          whitespace-nowrap font-semibold"
-                        >
-                          {title}
-                        </span>
-                      </div>
-                      {imageUrl && (
-                        <img
-                          className="aspect-square rounded-lg"
-                          height={70}
-                          width={70}
-                          src={imageUrl}
-                          alt=""
-                        />
-                      )}
-                    </div>
-                  ))
-              ) : (
-                <span className="px-4 py-2">Não há receitas para exibir</span>
-              )}
-            </div>
-          </>
-        )}
+        <FeaturedPostsBar />
       </div>
     </div>
   );

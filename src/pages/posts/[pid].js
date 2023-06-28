@@ -11,7 +11,7 @@ import Post from "../../components/post";
 import Spinner from "../../components/spinner";
 import Head from "next/head";
 
-const CreateCommentWizard = () => {
+const CreateComment = () => {
   const router = useRouter();
   const query = router.query;
   const queryClient = useQueryClient();
@@ -82,7 +82,6 @@ const CreateCommentWizard = () => {
 
 const CommentFeed = ({ comments }) => {
   const router = useRouter();
-
   if (!comments) return <></>;
 
   return comments.map(({ id, author, title, createdAt }) => (
@@ -126,7 +125,6 @@ const CommentFeed = ({ comments }) => {
 
 const PostPage = () => {
   const { query } = useRouter();
-
   const { data: post } = useQuery(
     ["post", { post_id: query.pid }],
     async () =>
@@ -147,7 +145,7 @@ const PostPage = () => {
             <div className="border-b border-slate-200">
               <Post post={post} />
             </div>
-            <CreateCommentWizard />
+            <CreateComment />
             <CommentFeed comments={post.comments} />
           </>
         ) : (

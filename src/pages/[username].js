@@ -5,16 +5,16 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import Popup from "reactjs-popup";
 import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import Layout from "../components/layout";
-import PostFeed from "../components/postFeed";
+import PostFeed from "../components/postfeed";
 import Spinner from "../components/spinner";
 
-const EditProfileWizard = ({ closeModal }) => {
+const EditProfile = ({ closeModal }) => {
   const queryClient = useQueryClient();
   const { data: session, update } = useSession();
 
@@ -148,35 +148,43 @@ const ProfilePage = () => {
     async (data) => await axios.delete("/api/follow", { ...data })
   );
 
-  const { data: profileUser } = useQuery(
+  const { data: profile } = useQuery(
     ["profileUser", { username: query?.username }],
     async () =>
-      axios.get(`api/profile/${query?.username}`).then((res) => res.data),
+      axios.get(`api/profile/${query?.username}`).then((res) => {
+        const profileUser = res.data;
+        setFollowers(profileUser?.followers.length);
+        setIsFollowedByUser(
+          profileUser?.followers.filter(
+            (follow) => follow.follower_id === session?.user.id
+          ).length > 0
+        );
+        return profileUser;
+      }),
     {
       enabled: !!query.username,
     }
   );
 
   const { data: posts, isLoading: isLoadingPosts } = useQuery(
-    ["profilePosts", { username: query?.username }],
+    ["profilePosts", { username: router.query?.username }],
     async () =>
-      axios.get("api/post/authorid/" + profileUser?.id).then((res) => res.data),
+      axios.get("api/post/authorid/" + profile.id).then((res) => res.data),
     {
-      enabled: !!profileUser,
+      enabled: !!profile,
     }
   );
 
   const [followers, setFollowers] = useState(0);
   const [isFollowedByUser, setIsFollowedByUser] = useState(false);
   const [profileModal, setProfileModal] = useState(false);
-
-  const isCurrentUser = profileUser?.id === session?.user.id;
-  const following = profileUser?.following.length;
+  const isCurrentUser = profile?.id === session?.user.id;
+  const following = profile?.following.length;
 
   const handleFollow = () => {
     followMutation.mutate({
       follower_id: session?.user.id,
-      followed_id: profileUser?.id,
+      followed_id: profile?.id,
     });
     setIsFollowedByUser(true);
     setFollowers((n) => ++n);
@@ -186,28 +194,29 @@ const ProfilePage = () => {
     unfollowMutation.mutate({
       data: {
         follower_id: session?.user.id,
-        followed_id: profileUser?.id,
+        followed_id: profile?.id,
       },
     });
     setIsFollowedByUser(false);
     setFollowers((n) => --n);
   };
 
-  useEffect(() => {
-    if (profileUser) {
-      setFollowers(profileUser?.followers.length);
-      setIsFollowedByUser(
-        profileUser?.followers.filter(
-          (follow) => follow.follower_id === session?.user.id
-        ).length > 0
-      );
-    }
-  }, [profileUser]);
+  if (!profile)
+    return (
+      <>
+        <Head>
+          <title>Fwitter</title>
+        </Head>
+        <Layout>
+          <Spinner />
+        </Layout>
+      </>
+    );
 
   return (
     <>
       <Head>
-        <title>{`${profileUser?.username} / Fwitter`}</title>
+        <title>{`${profile.username} / Fwitter`}</title>
       </Head>
       <Layout>
         <Popup
@@ -219,80 +228,74 @@ const ProfilePage = () => {
             backgroundColor: "rgba(0,0,0, 0.3)",
           }}
         >
-          <EditProfileWizard closeModal={() => setProfileModal(false)} />
+          <EditProfile closeModal={() => setProfileModal(false)} />
         </Popup>
-        {profileUser ? (
-          <div
-            className="flex h-[430px] flex-col 
+        <div
+          className="flex h-[430px] flex-col 
               border-b border-slate-200 pb-10"
-          >
-            <div className="relative h-64">
-              <div className="h-44 w-full bg-slate-300" />
-              <div
-                className="absolute top-1/2 flex 
+        >
+          <div className="relative h-64">
+            <div className="h-44 w-full bg-slate-300" />
+            <div
+              className="absolute top-1/2 flex 
                         w-full items-end justify-between"
-              >
-                <Image
-                  className="ml-2 aspect-square rounded-full ring-4 ring-white hover:cursor-pointer"
-                  height={120}
-                  width={120}
-                  src={profileUser?.imageUrl || defaultUserImg}
-                  alt=""
-                />
-                {isCurrentUser && (
-                  <button
-                    onClick={() => setProfileModal((open) => !open)}
-                    className="mr-2 h-10 
+            >
+              <Image
+                className="ml-2 aspect-square rounded-full ring-4 ring-white hover:cursor-pointer"
+                height={120}
+                width={120}
+                src={profile.imageUrl || defaultUserImg}
+                alt=""
+              />
+              {isCurrentUser && (
+                <button
+                  onClick={() => setProfileModal((open) => !open)}
+                  className="mr-2 h-10 
                 rounded-full border border-gray-300 
                px-4 
                 font-bold transition-colors hover:cursor-pointer hover:bg-gray-200"
-                  >
-                    Editar perfil
-                  </button>
-                )}
-                {!isCurrentUser && isFollowedByUser && (
-                  <button
-                    onClick={handleUnfollow}
-                    className="mr-2 h-10 cursor-pointer rounded-full
+                >
+                  Editar perfil
+                </button>
+              )}
+              {!isCurrentUser && isFollowedByUser && (
+                <button
+                  onClick={handleUnfollow}
+                  className="mr-2 h-10 cursor-pointer rounded-full
                       border border-gray-300
                       px-4 
                       font-bold transition-colors hover:bg-gray-200"
-                  >
-                    Deixar de seguir
-                  </button>
-                )}
-                {!isCurrentUser && !isFollowedByUser && (
-                  <button
-                    onClick={handleFollow}
-                    className="mr-2 h-10 cursor-pointer rounded-full
+                >
+                  Deixar de seguir
+                </button>
+              )}
+              {!isCurrentUser && !isFollowedByUser && (
+                <button
+                  onClick={handleFollow}
+                  className="mr-2 h-10 cursor-pointer rounded-full
                       border border-gray-300
                       px-4 
                       font-bold transition-colors hover:bg-gray-200"
-                  >
-                    Seguir
-                  </button>
-                )}
-              </div>
-            </div>
-            <div className="mt-3 flex flex-col pl-5">
-              <span className="text-2xl">{profileUser?.name + "  "}</span>
-              <span className="text-gray-500">
-                {"@" + profileUser?.username}
-              </span>
-              <span className="mt-3 text-gray-500">
-                {`Juntou-se em ${moment(profileUser?.createdAt).format("ll")}`}
-              </span>
-              <div className="mt-2 flex gap-2 text-gray-500">
-                <span className="first-letter:font-bold first-letter:text-slate-950">{`${following}  Seguindo`}</span>
-                <span className="first-letter:font-bold first-letter:text-slate-950">
-                  {`${followers}  Seguidores`}
-                </span>
-              </div>
+                >
+                  Seguir
+                </button>
+              )}
             </div>
           </div>
-        ) : (
-          <Spinner />
-        )}
+          <div className="mt-3 flex flex-col pl-5">
+            <span className="text-2xl">{profile.name + "  "}</span>
+            <span className="text-gray-500">{"@" + profile.username}</span>
+            <span className="mt-3 text-gray-500">
+              {`Juntou-se em ${moment(profile.createdAt).format("ll")}`}
+            </span>
+            <div className="mt-2 flex gap-2 text-gray-500">
+              <span className="first-letter:font-bold first-letter:text-slate-950">{`${following}  Seguindo`}</span>
+              <span className="first-letter:font-bold first-letter:text-slate-950">
+                {`${followers}  Seguidores`}
+              </span>
+            </div>
+          </div>
+        </div>
         <PostFeed posts={posts} isLoading={isLoadingPosts} />
       </Layout>
     </>

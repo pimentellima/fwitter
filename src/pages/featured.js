@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 import Layout from "../components/layout";
-import PostFeed from "../components/postFeed";
+import PostFeed from "../components/postfeed";
 import Head from "next/head";
 
 const FeaturedPage = () => {
