@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useQuery } from "react-query";
 import Layout from "../components/layout";
 import Head from "next/head";
-import PostFeed from "../components/postFeed";
+import PostFeed from "../components/postfeed";
 
 const BookmarksPage = () => {
   const { data: session } = useSession();
