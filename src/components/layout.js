@@ -207,7 +207,7 @@ const Layout = ({ children }) => {
             <button onClick={() => setModalOpen(false)}>
               <XMarkIcon className="h-10 w-10 rounded-full p-2 transition-all hover:bg-slate-100" />
             </button>
-            <CreatePost />
+            <CreatePost closeModal={() => setModalOpen(false)}/>
           </div>
         </Popup>
         <div
