@@ -5,11 +5,11 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import defaultUserImg from "../../public/static/defaultUserImg.jpg";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
 
 const CreatePost = ({ closeModal = () => {} }) => {
   const { data: session } = useSession();
@@ -174,14 +174,18 @@ const CreatePost = ({ closeModal = () => {} }) => {
             </label>
           </div>
           <button
-            disabled={!isValid}
+            disabled={mutation.isLoading}
             className="flex h-9 items-center
-            justify-center rounded-3xl 
-            bg-sky-500 px-5 text-base font-bold
-            text-white transition duration-100 ease-out enabled:hover:bg-sky-600
-            disabled:opacity-70 disabled:hover:cursor-default "
+                      justify-center rounded-3xl 
+                      bg-sky-500 px-5 text-base font-bold
+                      text-white transition duration-100 ease-out enabled:hover:bg-sky-600
+                      disabled:opacity-70 disabled:hover:cursor-default"
           >
-            Fweet
+            {mutation.isLoading ? (
+              <ClipLoader color="white" size={20} />
+            ) : (
+              "Fweet"
+            )}
           </button>
         </div>
       </form>

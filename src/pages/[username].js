@@ -13,6 +13,7 @@ import defaultUserImg from "../../public/static/defaultUserImg.jpg";
 import Layout from "../components/layout";
 import PostFeed from "../components/postfeed";
 import Spinner from "../components/spinner";
+import { ClipLoader } from "react-spinners";
 
 const EditProfile = ({ closeModal }) => {
   const queryClient = useQueryClient();
@@ -80,14 +81,18 @@ const EditProfile = ({ closeModal }) => {
           <p className="text-xl font-semibold">Editar perfil</p>
         </div>
         <button
-          disabled={!isValid}
+          disabled={!isValid || mutation.isLoading}
           className={`mr-2 h-8 cursor-pointer rounded-full
               border border-gray-300 bg-gray-900 px-4 font-semibold
-              text-white
-              transition-colors enabled:hover:bg-gray-700 disabled:bg-gray-500 
+              text-white flex items-center justify-center
+              transition-colors enabled:hover:bg-gray-700
               disabled:opacity-90 disabled:hover:cursor-default`}
         >
-          Salvar
+          {mutation.isLoading ? (
+            <ClipLoader color="white" size={20} />
+          ) : (
+            "Salvar"
+          )}
         </button>
       </div>
       <div className="relative h-64">

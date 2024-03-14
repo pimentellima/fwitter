@@ -33,6 +33,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.2",
     "react-query": "^3.39.3",
+    "react-spinners": "^0.13.8",
     "reactjs-popup": "^2.0.5",
     "sharp": "^0.32.1",
     "url": "^0.11.0",
