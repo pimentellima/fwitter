@@ -1,4 +1,5 @@
 import { QueryClientProvider, QueryClient } from "react-query";
+import { Analytics } from '@vercel/analytics/react';
 import "../globals.css";
 
 import { SessionProvider } from "next-auth/react"
@@ -16,6 +17,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
+        <Analytics />
       </QueryClientProvider>
     </SessionProvider>
   );
