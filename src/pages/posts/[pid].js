@@ -10,6 +10,7 @@ import Layout from "../../components/layout";
 import Post from "../../components/post";
 import Spinner from "../../components/spinner";
 import Head from "next/head";
+import { ClipLoader } from "react-spinners";
 
 const CreateComment = () => {
   const router = useRouter();
@@ -72,7 +73,11 @@ const CreateComment = () => {
             text-white transition duration-100 ease-out enabled:hover:bg-sky-600
             disabled:opacity-70 disabled:hover:cursor-default "
           >
-            Comentar
+            {mutation.isLoading ? (
+              <ClipLoader size={20} color="white" />
+            ) : (
+              "Comentar"
+            )}
           </button>
         </div>
       </form>
