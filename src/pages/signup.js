@@ -1,7 +1,9 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { ClipLoader } from "react-spinners";
 
 const SignUpPage = () => {
   const {
@@ -10,6 +12,7 @@ const SignUpPage = () => {
     reset,
     formState: { errors, isValid },
   } = useForm({ mode: "onBlur" });
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -20,19 +23,18 @@ const SignUpPage = () => {
   };
 
   const onSubmit = async ({ name, username, password }) => {
-    await axios
-      .post("/api/auth/signup", {
+    try {
+      setIsLoading(true);
+      await axios.post("/api/auth/signup", {
         name,
         username,
         password,
-      })
-      .then(() => {
-        router.push("/signin");
-        reset();
-      })
-      .catch((err) => {
-        console.log(err);
       });
+      router.push("/signin");
+      reset();
+    } catch {
+      setIsLoading(false);
+    }
   };
   return (
     <div
@@ -112,11 +114,11 @@ const SignUpPage = () => {
           disabled={!isValid}
           className={`mt-6 h-8 cursor-pointer rounded-full
               border border-gray-300 bg-gray-900 px-4 font-semibold
-              text-white
+              text-white flex items-center justify-center
               transition-colors enabled:hover:bg-gray-700 disabled:bg-gray-500 
               disabled:opacity-90 disabled:hover:cursor-default`}
         >
-          Avançar
+          {isLoading ? <ClipLoader size={20} color="white" /> : "Avançar"}
         </button>
         <div className="font-sm mt-16 flex gap-1">
           <p>Já tem uma conta?</p>

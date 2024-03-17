@@ -1,7 +1,10 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import Spinner from "../components/spinner";
+import { ClipLoader } from "react-spinners";
 
 const SignInPage = () => {
   const {
@@ -11,10 +14,13 @@ const SignInPage = () => {
     formState: { isValid, errors },
   } = useForm({ mode: "onBlur" });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   const onSubmit = async (data) => {
     const { username, password } = data;
+    setIsLoading(true);
     const res = await signIn("credentials", {
       username,
       password,
@@ -26,6 +32,7 @@ const SignInPage = () => {
       setError("username", {
         message: "Login inválido",
       });
+      setIsLoading(false);
     }
   };
 
@@ -72,17 +79,17 @@ const SignInPage = () => {
         </div>
         <button
           disabled={!isValid}
-          className={`mt-6 h-8 cursor-pointer rounded-full
-              border border-gray-300 bg-gray-900 px-4 font-semibold
-              text-white
+          className={`mt-6 flex h-8 cursor-pointer
+              items-center justify-center rounded-full border border-gray-300
+              bg-gray-900 px-4 font-semibold text-white
               transition-colors enabled:hover:bg-gray-700 disabled:bg-gray-500 
               disabled:opacity-90 disabled:hover:cursor-default`}
         >
-          Avançar
+          {isLoading ? <ClipLoader size={20} color="white" /> : "Avançar"}
         </button>
         <div className="font-sm mt-16 flex gap-1">
           <p>Ainda não tem uma conta?</p>
-          <Link className="hover:underline text-sky-500" href="/signup">
+          <Link className="text-sky-500 hover:underline" href="/signup">
             Inscrever-se
           </Link>
         </div>
